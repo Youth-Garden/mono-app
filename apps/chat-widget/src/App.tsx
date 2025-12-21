@@ -1,5 +1,5 @@
-import { ChatBubble } from './components/ChatBubble';
-import { ChatWindow } from './components/ChatWindow';
+import { ChatBubble } from './components/chat-bubble';
+import { ChatWindow } from './components/chat-window';
 import { isOpen } from './store';
 
 // This needs to be imported here for Vite to bundle it as a string

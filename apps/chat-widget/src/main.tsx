@@ -1,8 +1,8 @@
 import { render } from 'preact';
 import { App } from './App';
 import styles from './style.css?inline';
-import { eventBus } from './utils/eventBus'; // Import Bus
 import { SpectreAPI } from './types';
+import { eventBus } from './utils/event-bus'; // Import Bus
 
 const WIDGET_ID = 'spectre-chat-host';
 

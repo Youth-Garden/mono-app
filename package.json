@@ -2,9 +2,12 @@
   "name": "scroll-trigger-mono",
   "private": true,
   "scripts": {
+    "dev:docs": "turbo run dev --filter=docs",
+    "dev:portfolio": "turbo run dev --filter=portfolio",
+    "dev:chat": "turbo run dev --filter=chat-widget",
     "build": "turbo run build",
     "build:docs": "turbo run build --filter=docs",
-    "build:web": "turbo run build --filter=web",
+    "build:portfolio": "turbo run build --filter=portfolio",
     "build:chat": "turbo run build --filter=chat-widget",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
