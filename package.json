@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:docs": "turbo run build --filter=docs",
+    "build:web": "turbo run build --filter=web",
+    "build:chat": "turbo run build --filter=chat-widget",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -16,5 +19,11 @@
   "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "^18",
+      "@types/react-dom": "^18"
+    }
   }
 }
