@@ -1,6 +1,10 @@
 'use client';
-import { ReactNode, useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { ReactNode, useEffect } from 'react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -11,6 +15,8 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       gestureOrientation: 'vertical',
       smoothWheel: true,
     });
+
+    lenis.on('scroll', ScrollTrigger.update);
 
     function raf(time: number) {
       lenis.raf(time);

@@ -1,18 +1,17 @@
+import Contact from '@/components/sections/Contact';
 import Hero from '@/components/sections/hero';
-import TechnicalWork from '@/components/sections/technical-work';
+import Philosophy from '@/components/sections/Philosophy';
+import SelectedWorks from '@/components/sections/SelectedWorks';
+import Stack from '@/components/sections/Stack';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-white selection:text-black">
       <Hero />
-      <TechnicalWork />
-
-      {/* Spacer for scrolling */}
-      <div className="h-screen w-full flex items-center justify-center border-t border-white/10">
-        <p className="text-gray-500 uppercase tracking-widest text-xs">
-          Footer / Contact
-        </p>
-      </div>
+      <Philosophy />
+      <SelectedWorks />
+      <Stack />
+      <Contact />
     </main>
   );
 }

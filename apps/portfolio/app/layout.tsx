@@ -1,7 +1,7 @@
+import SmoothScroll from '@/components/SmoothScroll';
 import type { Metadata } from 'next';
 import { Outfit } from 'next/font/google';
 import './globals.css';
-import SmoothScroll from '@/components/SmoothScroll';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -10,8 +10,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: 'Quan Tran | Creative Developer',
-  description: 'Web3 & Full-Stack Architecture',
+  title: 'QUAN TRAN | Full Stack Architecture',
+  description:
+    'Building high-performance decentralized systems and scalable web protocols.',
 };
 
 export default function RootLayout({
