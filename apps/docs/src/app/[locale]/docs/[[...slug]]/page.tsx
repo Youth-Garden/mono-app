@@ -1,6 +1,6 @@
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
+import { DocsBody, DocsPage } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
-import { source } from '../../../source';
+import { source } from '../../../../../source';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;

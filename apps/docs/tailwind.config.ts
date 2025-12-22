@@ -3,9 +3,10 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './content/**/*.{md,mdx}',
+    './src/components/**/*.{ts,tsx}',
+    './src/app/**/*.{ts,tsx}',
+    './src/content/**/*.{md,mdx}',
+    './src/mdx-components.tsx',
     './mdx-components.tsx',
   ],
   presets: [createPreset() as unknown as Config],
