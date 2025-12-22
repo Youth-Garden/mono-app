@@ -1,6 +1,6 @@
-import { map } from './.map';
-import { createMDXSource } from 'fumadocs-mdx';
 import { loader } from 'fumadocs-core/source';
+import { createMDXSource } from 'fumadocs-mdx';
+import { map } from '../.map';
 
 export const source = loader({
   baseUrl: '/docs',

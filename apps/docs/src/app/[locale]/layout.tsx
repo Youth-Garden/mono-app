@@ -9,11 +9,12 @@ const inter = Inter({ subsets: ['latin'] });
 
 export default async function Layout({
   children,
-  params: { locale },
+  params,
 }: {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const messages = await getMessages();
 
   return (
