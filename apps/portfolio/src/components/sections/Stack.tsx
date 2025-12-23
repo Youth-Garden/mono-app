@@ -1,11 +1,14 @@
 export default function Stack() {
   return (
-    <section className="border-b border-white/10 bg-background">
+    <section
+      id="stack"
+      className="min-h-screen border-b border-white/10 bg-background snap-start"
+    >
       <div className="grid grid-cols-1 md:grid-cols-12">
         {/* Header */}
         <div className="md:col-span-3 border-r border-white/10 p-6 md:p-12">
           <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-4">
-            02 / Arsenal
+            03 / Arsenal
           </h2>
           <h3 className="text-3xl font-bold uppercase tracking-tight">
             Tech
@@ -24,18 +27,18 @@ export default function Stack() {
 
           {/* Rows */}
           {[
-            { domain: 'CORE', tech: 'TypeScript, Rust, Solidity, Move' },
+            { domain: 'CORE', tech: 'TypeScript, Java, Rust, Solidity' },
             {
               domain: 'FRONTEND',
-              tech: 'Next.js 15, React, Svelte, GSAP, WebGL',
+              tech: 'Next.js 15, React, Shadcn UI, GSAP, Tailwind',
             },
             {
               domain: 'BACKEND',
-              tech: 'NestJS, Fastify, PostgreSQL, Prisma, Redis',
+              tech: 'Spring Boot, NestJS, Prisma, PostgreSQL, MongoDB',
             },
             {
-              domain: 'DEVOPS',
-              tech: 'Docker, Turborepo, Vercel, CI/CD Pipelines',
+              domain: 'INFRA',
+              tech: 'Docker, AWS, Redis, Vercel, Turborepo',
             },
             { domain: 'WEB3', tech: 'Hardhat, Viem, Aptos SDK, IPFS' },
           ].map((row, i) => (

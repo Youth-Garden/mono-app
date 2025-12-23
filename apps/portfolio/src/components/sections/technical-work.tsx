@@ -7,7 +7,6 @@ import { useRef } from 'react';
 gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
-  { id: '01', name: 'HUNNYPLAY', role: 'Architecture', img: '/project1.jpg' },
   { id: '02', name: 'CEDRA HUB', role: 'Smart Contract', img: '/project2.jpg' },
 ];
 

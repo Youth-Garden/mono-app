@@ -1,6 +1,7 @@
-import SmoothScroll from '@/components/SmoothScroll';
+import ClientLayout from '@/components/client-layout';
+import SmoothScroll from '@/components/smooth-scroll';
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
+import { Outfit, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
 const outfit = Outfit({
@@ -9,10 +10,37 @@ const outfit = Outfit({
   display: 'swap',
 });
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'QUAN TRAN | Full Stack Architecture',
   description:
     'Building high-performance decentralized systems and scalable web protocols.',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'QUAN TRAN | Full Stack Architecture',
+    description:
+      'Building high-performance decentralized systems and scalable web protocols.',
+    images: ['/me.jpg'],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'QUAN TRAN | Full Stack Architecture',
+    description:
+      'Building high-performance decentralized systems and scalable web protocols.',
+    images: ['/me.jpg'],
+  },
 };
 
 export default function RootLayout({
@@ -23,9 +51,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${outfit.variable} font-sans bg-background text-foreground antialiased selection:bg-white selection:text-black`}
+        className={`${outfit.variable} ${playfair.variable} font-sans bg-background text-foreground antialiased selection:bg-white selection:text-black`}
       >
-        <SmoothScroll>{children}</SmoothScroll>
+        <ClientLayout>
+          <SmoothScroll>{children}</SmoothScroll>
+        </ClientLayout>
       </body>
     </html>
   );

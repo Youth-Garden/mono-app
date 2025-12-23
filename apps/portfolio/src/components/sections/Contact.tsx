@@ -2,13 +2,16 @@ import { ArrowUpRight } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <section className="min-h-[80vh] flex flex-col justify-between p-6 md:p-12 relative overflow-hidden">
+    <section
+      id="contact"
+      className="min-h-screen flex flex-col justify-between p-6 md:p-12 relative overflow-hidden snap-start"
+    >
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
 
       <div className="flex justify-between items-start w-full">
         <span className="text-xs text-gray-500 uppercase tracking-widest">
-          03 / Contact
+          05 / Contact
         </span>
         <span className="text-xs text-green-500 uppercase tracking-widest animate-pulse">
           ● Available for Contracts
@@ -16,7 +19,10 @@ export default function Contact() {
       </div>
 
       <div className="flex flex-col items-center justify-center flex-1 my-24">
-        <a href="mailto:your_email@example.com" className="group relative">
+        <a
+          href="mailto:hoangquan.tran.work@gmail.com"
+          className="group relative"
+        >
           <h2 className="text-[8vw] md:text-[6vw] font-bold tracking-tighter uppercase leading-none hover:text-transparent hover:stroke-white transition-all duration-300">
             Initiate <br />
             <span className="italic font-serif group-hover:not-italic group-hover:font-sans transition-all duration-300">
@@ -31,14 +37,27 @@ export default function Contact() {
         <div>
           <span className="text-xs text-[#666] block mb-2">Socials</span>
           <div className="flex flex-col gap-2 text-sm">
-            <a href="#" className="hover:text-blue-400 transition-colors">
-              GITHUB / KAITOU
+            <a
+              href="https://github.com/Quantaphocpython"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-400 transition-colors"
+            >
+              GITHUB / QUANTAPHOCPYTHON
             </a>
-            <a href="#" className="hover:text-blue-400 transition-colors">
-              TWITTER / X
+            <a
+              href="https://www.linkedin.com/in/qu%C3%A2n-tr%E1%BA%A7n-714134398/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-400 transition-colors"
+            >
+              LINKEDIN / QUÂN TRẦN
             </a>
-            <a href="#" className="hover:text-blue-400 transition-colors">
-              LINKEDIN
+            <a
+              href="mailto:hoangquan.tran.work@gmail.com"
+              className="hover:text-blue-400 transition-colors"
+            >
+              EMAIL / HOANGQUAN.TRAN.WORK
             </a>
           </div>
         </div>
