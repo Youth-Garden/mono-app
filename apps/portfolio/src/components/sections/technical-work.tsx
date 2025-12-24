@@ -1,14 +1,14 @@
 'use client';
+import {
+  TECHNICAL_PROJECTS,
+  TECHNICAL_WORK_META,
+} from '@/constants/technical-work';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const projects = [
-  { id: '02', name: 'CEDRA HUB', role: 'Smart Contract', img: '/project2.jpg' },
-];
 
 export default function TechnicalWork() {
   const container = useRef(null);
@@ -17,12 +17,13 @@ export default function TechnicalWork() {
     () => {
       const rows = gsap.utils.toArray('.project-row');
 
-      rows.forEach((row: any) => {
-        gsap.from(row.querySelector('.p-id'), {
+      rows.forEach((row) => {
+        const element = row as HTMLElement;
+        gsap.from(element.querySelector('.p-id'), {
           x: -50,
           opacity: 0,
           scrollTrigger: {
-            trigger: row,
+            trigger: element,
             start: 'top 80%',
             toggleActions: 'play none none reverse',
           },
@@ -36,12 +37,12 @@ export default function TechnicalWork() {
     <section ref={container} className="w-full py-24">
       <div className="px-6 mb-12">
         <h2 className="text-xs font-bold tracking-widest uppercase text-gray-500 mb-4 border-b border-white/10 pb-4">
-          Selected Works (2024-2025)
+          {TECHNICAL_WORK_META.title}
         </h2>
       </div>
 
       <div className="border-t border-white/10">
-        {projects.map((project) => (
+        {TECHNICAL_PROJECTS.map((project) => (
           <div
             key={project.id}
             className="project-row group relative grid grid-cols-1 md:grid-cols-12 border-b border-white/10 transition-colors hover:bg-white/5"
@@ -68,7 +69,7 @@ export default function TechnicalWork() {
               <div className="absolute inset-0 bg-gray-800 flex items-center justify-center text-gray-600">
                 {/* Placeholder for Image - replace with <Image /> when assets are available */}
                 <span className="text-xs uppercase tracking-widest">
-                  [Project Preview]
+                  {TECHNICAL_WORK_META.previewPlaceholder}
                 </span>
               </div>
             </div>

@@ -1,4 +1,5 @@
 'use client';
+import { HERO_CTA, HERO_PROFILE, HERO_TITLE } from '@/constants/hero';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -88,16 +89,16 @@ export default function Hero() {
       <header className="relative z-20 flex justify-between items-start hero-meta">
         <div className="flex flex-col">
           <h2 className="text-sm font-bold tracking-tight uppercase">
-            Kai Tou
+            {HERO_PROFILE.name}
           </h2>
           <span className="text-[10px] text-gray-400 tracking-widest uppercase mt-1">
-            Full Stack / Web3
+            {HERO_PROFILE.role}
           </span>
         </div>
         <div className="hidden md:flex gap-8 text-[10px] font-mono text-gray-400 tracking-widest uppercase">
-          <span>Lat: 10.8231° N</span>
-          <span>Lng: 106.6297° E</span>
-          <span>EST. 2024</span>
+          <span>Lat: {HERO_PROFILE.location.latitude}</span>
+          <span>Lng: {HERO_PROFILE.location.longitude}</span>
+          <span>{HERO_PROFILE.established}</span>
         </div>
         {/* Placeholder for Menu alignment if needed, but the global Navbar handles the button */}
         <div className="w-12 h-4 hidden md:block" />
@@ -114,7 +115,7 @@ export default function Hero() {
               <div
                 ref={imageRef}
                 className="w-full h-full bg-cover bg-center grayscale contrast-125 hover:grayscale-0 transition-all duration-700 ease-out"
-                style={{ backgroundImage: 'url(/me.jpg)' }}
+                style={{ backgroundImage: `url(${HERO_PROFILE.imagePath})` }}
               />
               {/* Inner Border/Crosshair for technical feel */}
               <div className="absolute inset-0 border border-white/10 pointer-events-none" />
@@ -131,10 +132,10 @@ export default function Hero() {
         >
           <h1 className="flex flex-col items-center justify-center">
             <span className="hero-text block text-[12vw] md:text-[11vw] leading-[0.85] font-bold tracking-tighter text-white">
-              WE ARE
+              {HERO_TITLE.line1}
             </span>
             <span className="hero-text block text-[12vw] md:text-[11vw] leading-[0.85] font-bold tracking-tighter text-white/90 italic font-serif">
-              ARCHITECTS
+              {HERO_TITLE.line2}
             </span>
           </h1>
         </div>
@@ -144,18 +145,17 @@ export default function Hero() {
       <footer className="relative z-20 flex justify-between items-end hero-meta">
         <div className="max-w-md hidden md:block">
           <p className="text-xs text-gray-400 leading-relaxed font-mono">
-            Building immutable ledgers and pixel-perfect interfaces. Focusing on
-            performance, decentralization, and precision.
+            {HERO_PROFILE.tagline}
           </p>
         </div>
 
         <button className="group flex items-center gap-4 cursor-pointer">
           <div className="text-right">
             <span className="block text-[10px] text-gray-400 uppercase tracking-widest mb-1 group-hover:text-white transition-colors">
-              Start the Journey
+              {HERO_CTA.label}
             </span>
             <span className="block text-sm font-medium tracking-tight group-hover:underline decoration-white/30 underline-offset-4">
-              Scroll Down
+              {HERO_CTA.action}
             </span>
           </div>
           <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">

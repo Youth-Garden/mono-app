@@ -1,4 +1,7 @@
 'use client';
+import SectionHeader from '@/components/common/section-header';
+import { ALL_EXPERIENCE_ITEMS, EXPERIENCE_META } from '@/constants/experience';
+import { useHorizontalScroll } from '@/hooks/use-horizontal-scroll';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,97 +11,31 @@ import { useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const experiences = [
-  {
-    id: '01',
-    role: 'frontend-developer',
-    company: 'alchemy',
-    period: 'apr 2025 - present',
-    description: 'Architecting next-generation Blockchain platforms...',
-    logo: '/experiences/alchemy/logo.png',
-    tech: ['react', 'blockchain', 'ai', 'ui/ux'],
-  },
-  {
-    id: '02',
-    role: 'fullstack-developer',
-    company: 'freelance',
-    period: '2024 - present',
-    description: 'Engineering bespoke web solutions...',
-    logo: null,
-    tech: ['next.js', 'typescript', 'tailwind'],
-  },
-];
-
-const education = [
-  {
-    school: 'university-of-transport',
-    degree: 'Major: Information Technology',
-    period: '2022 - 2026',
-    gpa: 'GPA: 3.64/4',
-    description: 'Excellent Student Certification (2023)',
-    type: 'edu',
-  },
-];
-
-const allItems = [...experiences, ...education];
-
 export default function Experience() {
   const containerRef = useRef<HTMLElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const progressBarRef = useRef<HTMLDivElement>(null);
+  const { trackRef, progressBarRef } = useHorizontalScroll({
+    containerRef,
+    itemCount: ALL_EXPERIENCE_ITEMS.length,
+  });
 
   useGSAP(
     () => {
       const track = trackRef.current;
-      const container = containerRef.current;
+      if (!track) return;
 
-      if (!track || !container || allItems.length === 0) return;
-
-      const getScrollAmount = () => {
-        const trackWidth = track.scrollWidth;
-        const viewportWidth =
-          window.innerWidth < 768
-            ? window.innerWidth
-            : window.innerWidth * 0.75;
-        return -(trackWidth - viewportWidth);
-      };
-
-      const getScrollDistance = () => {
-        const trackWidth = track.scrollWidth;
-        const viewportWidth =
-          window.innerWidth < 768
-            ? window.innerWidth
-            : window.innerWidth * 0.75;
-        return trackWidth - viewportWidth;
-      };
-
-      const scrollTween = gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
+      const scrollTween = gsap.timeline({
         scrollTrigger: {
-          trigger: container,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
+          trigger: containerRef.current,
           start: 'top top',
-          end: () => `+=${getScrollDistance()}`,
+          end: () => {
+            const trackWidth = track.scrollWidth;
+            const viewportWidth =
+              window.innerWidth < 768
+                ? window.innerWidth
+                : window.innerWidth * 0.75;
+            return `+=${trackWidth - viewportWidth}`;
+          },
           scrub: 1,
-          snap: {
-            snapTo: 1 / (allItems.length - 1),
-            duration: { min: 0.2, max: 0.6 },
-            delay: 0,
-            ease: 'power1.inOut',
-          },
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressBarRef.current) {
-              gsap.to(progressBarRef.current, {
-                width: `${self.progress * 100}%`,
-                duration: 0.1,
-                ease: 'none',
-              });
-            }
-          },
         },
       });
 
@@ -204,30 +141,19 @@ export default function Experience() {
 
       {/* LEFT COLUMN: Fixed Title */}
       <div className="w-full md:w-[25%] border-r border-white/10 p-6 md:p-12 h-full flex flex-col justify-between z-20 bg-background relative shrink-0">
-        <div>
-          <span className="text-xs text-gray-500 uppercase tracking-widest block mb-4">
-            01 / Journey
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter">
-            Experience <br /> & Edu
-          </h2>
-        </div>
-        <div className="hidden md:block">
-          <span className="text-xs text-[#888]">[ SCROLL TO NAVIGATE ]</span>
-          <div className="w-full h-[1px] bg-white/10 mt-4 relative overflow-hidden">
-            <div
-              ref={progressBarRef}
-              className="absolute top-0 left-0 h-full bg-white w-0"
-            ></div>
-          </div>
-        </div>
+        <SectionHeader
+          sectionNumber={EXPERIENCE_META.sectionNumber}
+          title={EXPERIENCE_META.title}
+          scrollHint={EXPERIENCE_META.scrollHint}
+          progressBarRef={progressBarRef}
+        />
       </div>
 
       {/* RIGHT COLUMN: Horizontal Scroll Container */}
       <div className="w-full md:w-[75%] h-full overflow-hidden relative z-10 bg-background">
         {/* Track: width max-content để chứa hết các items hàng ngang */}
         <div ref={trackRef} className="flex h-full w-max">
-          {allItems.map((item, i) => (
+          {ALL_EXPERIENCE_ITEMS.map((item, i) => (
             <div
               key={i}
               className="exp-row group h-full w-screen md:w-[75vw] flex flex-col justify-center p-6 md:p-12 border-r border-white/10 relative overflow-hidden"
@@ -241,7 +167,7 @@ export default function Experience() {
                     <div className="exp-logo relative w-14 h-14 grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110">
                       <Image
                         src={item.logo}
-                        alt={(item as any).company}
+                        alt={'company' in item ? item.company : 'Logo'}
                         fill
                         className="object-contain"
                       />
@@ -256,13 +182,13 @@ export default function Experience() {
                 </div>
 
                 <h3 className="exp-title text-5xl md:text-7xl font-bold uppercase mb-6 text-white group-hover:text-white/90 transition-colors tracking-tighter leading-none break-words">
-                  {'company' in item ? item.company : (item as any).school}
+                  {'company' in item ? item.company : item.school}
                 </h3>
 
                 <div className="exp-role relative mb-8 pl-4">
                   <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-white/40 via-white/20 to-transparent"></div>
                   <span className="text-xl font-mono text-white/70 tracking-wide">
-                    {'role' in item ? item.role : (item as any).degree}
+                    {'role' in item ? item.role : item.degree}
                   </span>
                 </div>
 
@@ -270,7 +196,7 @@ export default function Experience() {
                   {'description' in item && item.description}
                   {'gpa' in item && (
                     <div className="mt-2 inline-flex items-center gap-2 text-sm font-mono bg-white/5 px-4 py-2 rounded-full text-white/80 border border-white/10 w-fit hover:border-white/30 transition-colors">
-                      {(item as any).gpa}
+                      {'gpa' in item ? item.gpa : ''}
                     </div>
                   )}
                 </div>

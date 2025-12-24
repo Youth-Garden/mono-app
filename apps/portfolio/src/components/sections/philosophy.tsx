@@ -1,5 +1,6 @@
 'use client';
 
+import { PHILOSOPHY_META, PHILOSOPHY_PHRASE } from '@/constants/philosophy';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,9 +9,6 @@ import { useMemo, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const PHRASE =
-  'Code is not just syntax; it is architecture. I believe in pixel-perfection, type-safety, and scalable systems. Whether optimizing React render cycles or architecting robust APIs, the goal remains the same: Absolute Precision.';
-
 export default function Philosophy() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -18,7 +16,7 @@ export default function Philosophy() {
 
   // Split text logic
   const splitText = useMemo(() => {
-    return PHRASE.split(' ').map((word, wordIndex) => (
+    return PHILOSOPHY_PHRASE.split(' ').map((word, wordIndex) => (
       <span key={wordIndex} className="inline-block mr-[0.3em]">
         {word.split('').map((char, charIndex) => (
           <span
@@ -107,14 +105,14 @@ export default function Philosophy() {
             {/* Geometric Anchor */}
             <Square size={8} fill="currentColor" className="text-white/40" />
             <span className="text-xs font-mono text-gray-400 uppercase tracking-[0.2em]">
-              Philosophy
+              {PHILOSOPHY_META.sectionNumber}
             </span>
           </div>
 
           <div className="h-px w-8 bg-white/20 mb-4" />
 
           <p className="text-[10px] text-gray-500 font-mono leading-relaxed max-w-[200px] hidden md:block uppercase tracking-widest">
-            Engineering standards <br /> through rigor & clarity.
+            {PHILOSOPHY_META.subtitle}
           </p>
         </div>
 
@@ -124,7 +122,7 @@ export default function Philosophy() {
           <div ref={lineRef} className="w-full h-[1px] bg-white/20 mb-12" />
 
           {/* Accessibility Text */}
-          <span className="sr-only">{PHRASE}</span>
+          <span className="sr-only">{PHILOSOPHY_PHRASE}</span>
 
           {/* Visual Text */}
           <p
