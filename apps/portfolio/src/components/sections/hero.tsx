@@ -83,21 +83,8 @@ export default function Hero() {
     <section
       id="hero"
       ref={containerRef}
-      className="relative h-screen w-full bg-[#050505] text-white overflow-hidden flex flex-col justify-between pt-8 pb-8 px-6 md:px-12"
+      className="relative h-screen w-full text-white overflow-hidden flex flex-col justify-between pt-8 pb-8 px-6 md:px-12"
     >
-      {/* Background: Subtle Architectural Grid */}
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
-            backgroundSize: '100px 100px',
-          }}
-        />
-      </div>
-
-      {/* Top Bar: Technical/Data Look */}
       <header className="relative z-20 flex justify-between items-start hero-meta">
         <div className="flex flex-col">
           <h2 className="text-sm font-bold tracking-tight uppercase">
