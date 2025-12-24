@@ -54,13 +54,7 @@ export function useHorizontalScroll({
           anticipatePin: 1,
           start: 'top top',
           end: () => `+=${getScrollDistance()}`,
-          scrub: 1,
-          snap: {
-            snapTo: 1 / (itemCount - 1),
-            duration: { min: 0.2, max: 0.6 },
-            delay: 0,
-            ease: 'power1.inOut',
-          },
+          scrub: true,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             if (progressBarRef.current) {

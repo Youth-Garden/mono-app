@@ -1,14 +1,14 @@
 import Contact from '@/components/sections/contact';
 import Experience from '@/components/sections/experience';
 import Hero from '@/components/sections/hero';
+import Philosophy from '@/components/sections/philosophy';
+import Recognition from '@/components/sections/recognition';
 import Rewards from '@/components/sections/rewards';
 import Stack from '@/components/sections/stack';
-import Validations from '@/components/sections/validations';
-import Philosophy from '@/components/sections/philosophy';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-white selection:text-black scroll-smooth relative">
+    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-white selection:text-black relative">
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
         <div
           className="w-full h-full"
@@ -24,7 +24,7 @@ export default function Home() {
       <Experience />
       <Rewards />
       <Stack />
-      <Validations />
+      <Recognition />
       <Contact />
     </main>
   );

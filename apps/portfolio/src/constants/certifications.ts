@@ -33,5 +33,5 @@ export const CERTIFICATIONS: Certification[] = [
 ];
 
 export const CERTIFICATIONS_META = {
-  sectionNumber: '04 / Validations',
+  sectionNumber: '04 / Recognition',
 };

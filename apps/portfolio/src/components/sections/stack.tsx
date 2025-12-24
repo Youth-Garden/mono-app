@@ -1,4 +1,5 @@
 'use client';
+import Card3D from '@/components/common/card-3d';
 import { STACK_META, TECH_STACK } from '@/constants/stack';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -56,46 +57,64 @@ export default function Stack() {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {TECH_STACK.map((category) => (
-            <div
+            <Card3D
               key={category.domain}
-              className="stack-card group relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-8 hover:border-white/30 transition-all duration-500 hover:scale-[1.02]"
+              className="stack-card"
+              maxTilt={8}
+              scale={1.03}
             >
-              {/* Gradient Background */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-              />
+              <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-8 h-full group">
+                {/* Gradient Background */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
 
-              {/* Content */}
-              <div className="relative z-10">
-                {/* Domain Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-2xl font-bold uppercase tracking-tight text-white">
-                    {category.domain}
-                  </h3>
-                  <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-xs font-mono text-gray-400 group-hover:border-white/40 group-hover:text-white transition-colors">
-                    {category.technologies.length}
+                {/* Shine Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10">
+                  {/* Domain Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold uppercase tracking-tight text-white">
+                      {category.domain}
+                    </h3>
+                    <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-xs font-mono text-gray-400 group-hover:border-white/40 group-hover:text-white transition-colors group-hover:scale-110 duration-300">
+                      {category.technologies.length}
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="h-[1px] w-full bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-6" />
+
+                  {/* Tech Badges */}
+                  <div className="flex flex-wrap gap-2">
+                    {category.technologies.map((tech) => (
+                      <span
+                        key={tech.name}
+                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium tracking-wide bg-white/5 border border-white/10 rounded-full text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white transition-all duration-300 cursor-default hover:scale-105"
+                      >
+                        {tech.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
-                {/* Divider */}
-                <div className="h-[1px] w-full bg-gradient-to-r from-white/20 via-white/40 to-white/20 mb-6" />
+                {/* Corner Accent */}
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Tech Badges */}
-                <div className="flex flex-wrap gap-2">
-                  {category.technologies.map((tech) => (
-                    <span
-                      key={tech.name}
-                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium tracking-wide bg-white/5 border border-white/10 rounded-full text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white transition-all duration-300 cursor-default"
-                    >
-                      {tech.name}
-                    </span>
-                  ))}
-                </div>
+                {/* Depth Shadow */}
+                <div
+                  className="absolute inset-0 rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    boxShadow:
+                      '0 20px 60px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.2)',
+                  }}
+                />
               </div>
-
-              {/* Corner Accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </div>
+            </Card3D>
           ))}
         </div>
 

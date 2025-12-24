@@ -8,7 +8,7 @@ import { useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Validations() {
+export default function Recognition() {
   const containerRef = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -41,14 +41,14 @@ export default function Validations() {
 
   return (
     <section
-      id="validations"
+      id="recognition"
       ref={containerRef}
       className="w-full min-h-screen bg-background relative py-20 border-b border-white/10"
     >
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="mb-16">
           <span className="text-xs text-gray-500 uppercase tracking-widest block mb-4">
-            04 / Validations
+            04 / Recognition
           </span>
           <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tighter">
             Certificates <br /> & Achievements

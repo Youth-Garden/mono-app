@@ -1,34 +1,52 @@
 'use client';
+import { LenisProvider, useLenis } from '@/hooks/use-lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
 import { ReactNode, useEffect } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function SmoothScroll({ children }: { children: ReactNode }) {
+function SmoothScrollInner({ children }: { children: ReactNode }) {
+  const { lenis } = useLenis();
+
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-    });
+    if (!lenis) return;
 
-    lenis.on('scroll', ScrollTrigger.update);
+    // Handle anchor link clicks
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a[href^="#"]');
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+      if (anchor) {
+        e.preventDefault();
+        const href = anchor.getAttribute('href');
+        if (href && href !== '#') {
+          const targetElement = document.querySelector(href);
+          if (targetElement) {
+            lenis.scrollTo(targetElement as HTMLElement, {
+              offset: 0,
+              duration: 1.5,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            });
+          }
+        }
+      }
+    };
 
-    requestAnimationFrame(raf);
+    document.addEventListener('click', handleAnchorClick);
 
     return () => {
-      lenis.destroy();
+      document.removeEventListener('click', handleAnchorClick);
     };
-  }, []);
+  }, [lenis]);
 
   return <>{children}</>;
+}
+
+export default function SmoothScroll({ children }: { children: ReactNode }) {
+  return (
+    <LenisProvider>
+      <SmoothScrollInner>{children}</SmoothScrollInner>
+    </LenisProvider>
+  );
 }
