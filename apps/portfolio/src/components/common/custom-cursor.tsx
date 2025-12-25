@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import { useRef } from 'react';
 
 const NORMAL_SPEED = 0.2;
-const MAGNETIC_SPEED = 0.6;
+const MAGNETIC_SPEED = 0.2;
 const ROTATION_SPEED = 0.2;
 
 export default function CustomCursor() {
@@ -177,7 +177,7 @@ export default function CustomCursor() {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform"
+      className="fixed top-0 left-0 pointer-events-none z-9999 will-change-transform"
     >
       {/* SVG Arrow */}
       <div ref={arrowRef} className="absolute will-change-transform">
