@@ -27,5 +27,20 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "**/node_modules": true
-  }
+  },
+  "tailwindCSS.experimental.configFile": {
+    "apps/chat-widget/tailwind.config.ts": "apps/chat-widget/**/*",
+    "packages/ui/src/globals.css": "packages/ui/**/*",
+    "apps/portfolio/src/app/globals.css": "apps/portfolio/**/*"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.files.exclude": [
+    "**/.git/**",
+    "**/node_modules/**",
+    "**/.hg/**",
+    "**/.svn/**"
+  ]
 }
