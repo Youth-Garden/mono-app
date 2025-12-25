@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import CustomCursor from './common/custom-cursor';
 import Menu from './menu';
 import Navbar from './navbar';
 
@@ -13,6 +14,7 @@ export default function ClientLayout({
 
   return (
     <>
+      <CustomCursor />
       <Navbar
         isMenuOpen={isMenuOpen}
         onMenuToggle={() => setIsMenuOpen(!isMenuOpen)}
