@@ -25,3 +25,29 @@
       3px 100%;
   }
 }
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+}
+
+/* Force hide cursor on interactive elements to prevent "pointer" flicker */
+a,
+button,
+[role='button'],
+input,
+select,
+textarea,
+.cursor-pointer {
+  cursor: none !important;
+}
+
+body {
+  cursor: none; /* Hide default cursor globally */
+}

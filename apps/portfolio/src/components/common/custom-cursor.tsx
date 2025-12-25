@@ -4,14 +4,26 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
 
-// Cấu hình độ mượt (càng nhỏ càng chậm/mượt, càng lớn càng nhanh/bám sát)
-const SMOOTH_FACTOR = 0.15; // Tăng một chút để resize nhanh hơn
-const ROTATION_SMOOTHING = 0.1;
+// --- CẤU HÌNH ---
+const NORMAL_SPEED = 0.5; // Tăng lên để chuột đi theo tay nhanh hơn (giảm lag)
+const MAGNETIC_SPEED = 0.6; // Tốc độ khi "hít" vào nút (càng cao càng dính chặt)
+const ROTATION_SPEED = 0.2;
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const arrowRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+
+  // Refs for logic (tránh re-render)
+  const state = useRef({
+    mouse: { x: 0, y: 0 },
+    pos: { x: 0, y: 0 },
+    vel: { x: 0, y: 0 },
+    rot: 0,
+    ring: { w: 0, h: 0 },
+    isMagnetic: false,
+    target: null as HTMLElement | null,
+  });
 
   useGSAP(() => {
     const cursor = cursorRef.current;
@@ -20,44 +32,28 @@ export default function CustomCursor() {
 
     if (!cursor || !arrow || !ring) return;
 
-    // --- State ---
-    const mouse = { x: -100, y: -100 };
-    const pos = { x: -100, y: -100 };
-    const vel = { x: 0, y: 0 };
-    let currentRotation = 0;
+    // Tối ưu render bằng quickSetter
+    const setCursorX = gsap.quickSetter(cursor, 'x', 'px');
+    const setCursorY = gsap.quickSetter(cursor, 'y', 'px');
+    const setArrowRot = gsap.quickSetter(arrow, 'rotation', 'deg');
+    const setRingW = gsap.quickSetter(ring, 'width', 'px');
+    const setRingH = gsap.quickSetter(ring, 'height', 'px');
 
-    // Ring Size State
-    const ringSize = { w: 0, h: 0 }; // Current rendered size
-
-    // Magnetic State
-    let isMagnetic = false;
-    let magneticTarget: HTMLElement | null = null;
-
-    // Init
-    gsap.set(cursor, { x: 0, y: 0 }); // Fixed container
-    gsap.set(arrow, {
-      xPercent: -50,
-      yPercent: -50,
-      transformOrigin: 'center center',
-    });
-    gsap.set(ring, {
-      xPercent: -50,
-      yPercent: -50,
-      opacity: 0,
-      width: 0,
-      height: 0,
-    });
+    // Init ẩn cursor để tránh nháy lúc đầu
+    gsap.set(cursor, { xPercent: -50, yPercent: -50, opacity: 0 }); // Center cursor container
+    gsap.set(arrow, { xPercent: -50, yPercent: -50 });
+    gsap.set(ring, { xPercent: -50, yPercent: -50, opacity: 0 });
 
     // --- Mouse Listeners ---
     const onMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      state.current.mouse.x = e.clientX;
+      state.current.mouse.y = e.clientY;
 
-      // Reveal cursor
-      gsap.to(cursor, { opacity: 1, duration: 0.2, overwrite: 'auto' });
+      // Hiện cursor khi di chuyển lần đầu
+      gsap.to(cursor, { opacity: 1, duration: 0.3, overwrite: 'auto' });
     };
 
-    // --- Helper: Lerp ---
+    // --- Math Helpers ---
     const lerp = (start: number, end: number, factor: number) => {
       return start + (end - start) * factor;
     };
@@ -69,137 +65,103 @@ export default function CustomCursor() {
       return start + diff * amount;
     };
 
-    // --- Physics Loop (Run every frame) ---
+    // --- Physics Loop ---
     const updatePhysics = () => {
-      // 0. DT setup
+      const s = state.current;
       const dt = gsap.ticker.deltaRatio();
-      const smooth = SMOOTH_FACTOR * dt;
 
-      // 1. Calculate Target Position & Size
-      let targetX = mouse.x;
-      let targetY = mouse.y;
+      // 1. Xác định Target & Speed
+      let targetX = s.mouse.x;
+      let targetY = s.mouse.y;
+      let currentSmooth = NORMAL_SPEED;
       let targetW = 0;
       let targetH = 0;
 
-      if (isMagnetic && magneticTarget) {
-        // Real-time tracking of button position & size (fixes scroll drift & content resize)
-        const rect = magneticTarget.getBoundingClientRect();
+      if (s.isMagnetic && s.target) {
+        currentSmooth = MAGNETIC_SPEED; // Tăng tốc độ khi đang hít
+        const rect = s.target.getBoundingClientRect();
+
+        // Target là tâm của nút
         targetX = rect.left + rect.width / 2;
         targetY = rect.top + rect.height / 2;
-
-        targetW = rect.width + 12; // +Padding
+        targetW = rect.width + 12; // Padding
         targetH = rect.height + 12;
       }
 
-      // 2. Smooth Position Follow
-      const moveX = (targetX - pos.x) * smooth;
-      const moveY = (targetY - pos.y) * smooth;
+      // 2. Tính toán vị trí (Interpolation)
+      // Nhân với dt để mượt trên mọi màn hình (60hz/144hz)
+      const moveFactor = currentSmooth * dt;
 
-      pos.x += moveX;
-      pos.y += moveY;
+      const nextX = lerp(s.pos.x, targetX, moveFactor);
+      const nextY = lerp(s.pos.y, targetY, moveFactor);
 
-      // Calculate velocity for rotation
-      vel.x = moveX;
-      vel.y = moveY;
+      // Tính vận tốc để xoay mũi tên
+      s.vel.x = nextX - s.pos.x;
+      s.vel.y = nextY - s.pos.y;
+      s.pos.x = nextX;
+      s.pos.y = nextY;
 
-      // 3. Smooth Size Follow (Dynamic Resize)
-      // Only interpolate size if magnetic, otherwise it stays 0 (hidden)
-      if (isMagnetic) {
-        ringSize.w = lerp(ringSize.w, targetW, smooth);
-        ringSize.h = lerp(ringSize.h, targetH, smooth);
-      } else {
-        // Reset size when not magnetic (optional, or just let opacity hide it)
-        ringSize.w = lerp(ringSize.w, 0, smooth);
-        ringSize.h = lerp(ringSize.h, 0, smooth);
+      // 3. Render Vị trí
+      setCursorX(s.pos.x);
+      setCursorY(s.pos.y);
+
+      // 4. Xử lý Ring (Kích thước)
+      if (s.isMagnetic) {
+        s.ring.w = lerp(s.ring.w, targetW, moveFactor);
+        s.ring.h = lerp(s.ring.h, targetH, moveFactor);
+        setRingW(s.ring.w);
+        setRingH(s.ring.h);
       }
 
-      // 4. Rotation Logic (Arrow Only)
-      let targetRotation = currentRotation;
-      const velocityMag = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+      // 5. Xử lý Xoay (Chỉ xoay khi di chuyển nhanh và không hít)
+      let targetRotation = s.rot;
+      const velocity = Math.sqrt(s.vel.x ** 2 + s.vel.y ** 2);
 
-      if (!isMagnetic && velocityMag > 0.5) {
-        // +90deg because SVG arrow points up-left(-ish) or we assume standard
-        targetRotation = (Math.atan2(vel.y, vel.x) * 180) / Math.PI + 90;
-      } else if (isMagnetic) {
-        targetRotation = 0;
+      if (!s.isMagnetic && velocity > 1) {
+        // +90 độ vì mũi tên SVG mặc định hướng lên trên
+        targetRotation = (Math.atan2(s.vel.y, s.vel.x) * 180) / Math.PI + 90;
+      } else if (s.isMagnetic) {
+        targetRotation = 0; // Reset xoay khi hít
       }
 
-      currentRotation = lerpAngle(
-        currentRotation,
-        targetRotation,
-        ROTATION_SMOOTHING * dt
-      );
-
-      // 5. Render Transforms
-      cursor.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-      arrow.style.transform = `rotate(${currentRotation}deg) translate(-50%, -50%)`;
-
-      // Render Ring Size & Transform
-      // Note: Ring is centered by xPercent/yPercent: -50 in CSS/Init
-      // We just need to set width/height
-      if (isMagnetic) {
-        ring.style.width = `${ringSize.w}px`;
-        ring.style.height = `${ringSize.h}px`;
-      }
+      s.rot = lerpAngle(s.rot, targetRotation, ROTATION_SPEED * dt);
+      setArrowRot(s.rot);
     };
 
     // --- Hover Logic ---
     const handleMouseEnter = (e: Event) => {
       const target = e.currentTarget as HTMLElement;
-      const isInteractive = target.closest(
-        'a, button, [role="button"], input, select'
-      );
+      state.current.isMagnetic = true;
+      state.current.target = target;
 
-      if (isInteractive) {
-        isMagnetic = true;
-        magneticTarget = target as HTMLElement;
-
-        // 1. Hide Arrow
-        gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
-
-        // 2. Show Ring (Size is handled in updatePhysics loop)
-        gsap.to(ring, {
-          opacity: 1,
-          scale: 1,
-          borderWidth: '1px',
-          borderColor: 'rgba(255, 255, 255, 0.4)',
-          borderRadius: getComputedStyle(target).borderRadius || '4px',
-          duration: 0.2,
-        });
-
-        // Instant update size slightly to avoid 0->target jump?
-        // Or cleaner: Let the lerp handle it from 0 (expand effect).
-        // If we want it to START at current size, we could seed it:
-        // const rect = target.getBoundingClientRect();
-        // ringSize.w = rect.width + 12;
-        // ringSize.h = rect.height + 12;
-        // But allowing "growth" animation is usually nicer.
-      }
+      // Animation chuyển đổi
+      gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
+      gsap.to(ring, {
+        opacity: 1,
+        scale: 1,
+        borderColor: 'rgba(255, 255, 255, 0.5)',
+        borderRadius: getComputedStyle(target).borderRadius || '4px',
+        duration: 0.2,
+      });
     };
 
     const handleMouseLeave = () => {
-      if (isMagnetic) {
-        isMagnetic = false;
-        magneticTarget = null;
+      state.current.isMagnetic = false;
+      state.current.target = null;
 
-        // 1. Show Arrow
-        gsap.to(arrow, { scale: 1, opacity: 1, duration: 0.2 });
-
-        // 2. Hide Ring
-        gsap.to(ring, {
-          opacity: 0,
-          duration: 0.2,
-        });
-      }
+      gsap.to(arrow, { scale: 1, opacity: 1, duration: 0.2 });
+      gsap.to(ring, { opacity: 0, duration: 0.2 });
     };
 
-    // --- Listeners ---
+    // --- Setup Listeners ---
     window.addEventListener('mousemove', onMouseMove);
     gsap.ticker.add(updatePhysics);
 
+    // Tìm tất cả các element tương tác
     const interactives = document.querySelectorAll(
-      'a, button, [role="button"], input, select'
+      'a, button, [role="button"], input, select, textarea, .magnetic-target'
     );
+
     interactives.forEach((el) => {
       el.addEventListener('mouseenter', handleMouseEnter);
       el.addEventListener('mouseleave', handleMouseLeave);
@@ -218,21 +180,19 @@ export default function CustomCursor() {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform opacity-0"
+      className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform"
     >
       {/* SVG Arrow */}
-      <div
-        ref={arrowRef}
-        className="absolute top-0 left-0 will-change-transform"
-      >
+      <div ref={arrowRef} className="absolute will-change-transform">
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width={40}
           height={40}
           viewBox="0 0 50 54"
           fill="none"
-          style={{ transform: 'scale(0.6)' }}
+          // Scale nhỏ lại chút cho tinh tế
+          style={{ transform: 'scale(0.5)' }}
         >
+          {/* ... Giữ nguyên SVG path của bạn ... */}
           <g filter="url(#filter0_d_91_7928)">
             <path
               d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z"
@@ -284,16 +244,11 @@ export default function CustomCursor() {
         </svg>
       </div>
 
-      {/* Magnetic Ring (Hidden by default) */}
+      {/* Magnetic Ring */}
       <div
         ref={ringRef}
-        className="absolute top-0 left-0 border border-white/20 pointer-events-none box-border"
-        style={{
-          width: 0,
-          height: 0,
-          opacity: 0,
-          transform: 'translate(-50%, -50%)', // Ensure initial transform matches logic
-        }}
+        className="absolute top-0 left-0 border border-white/40 pointer-events-none box-border will-change-transform"
+        style={{ width: 0, height: 0, opacity: 0 }}
       />
     </div>
   );

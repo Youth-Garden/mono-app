@@ -3,16 +3,22 @@ import { GALLERY_IMAGES } from '@/constants/gallery';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { X } from 'lucide-react';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Recognition() {
   const containerRef = useRef<HTMLElement>(null);
+  const gateTopLeftRef = useRef<HTMLDivElement>(null);
+  const gateBottomRightRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const clusterLeftRef = useRef<HTMLDivElement>(null);
   const clusterRightRef = useRef<HTMLDivElement>(null);
+
+  const [selectedImage, setSelectedImage] = useState<any | null>(null);
 
   // Filter images
   const builderJamImages = GALLERY_IMAGES.filter((img) =>
@@ -36,20 +42,66 @@ export default function Recognition() {
         },
       });
 
-      // --- PHASE 1: TEXT ZOOM (The "Tunnel" Effect) ---
-      // We scale the text up massively to simulate flying through it.
-      if (textContainerRef.current) {
-        tl.to(textContainerRef.current, {
-          scale: 30, // Huge scale to go "through" the letters
-          z: 500,
-          opacity: 0,
-          filter: 'blur(20px)', // Blur as it gets too close/big
-          duration: 3,
-          ease: 'power3.in', // Accelerate into the tunnel
-        });
+      // --- PHASE 1: PROFESSIONAL GATE OPEN ---
+      if (gateTopLeftRef.current && gateBottomRightRef.current) {
+        tl.to(
+          gateTopLeftRef.current,
+          {
+            xPercent: -100, // Move Left
+            yPercent: -50,
+            opacity: 0,
+            duration: 2,
+            ease: 'power3.inOut',
+          },
+          'start'
+        ).to(
+          gateBottomRightRef.current,
+          {
+            xPercent: 100, // Move Right
+            yPercent: 50,
+            opacity: 0,
+            duration: 2,
+            ease: 'power3.inOut',
+          },
+          'start'
+        );
       }
 
-      // --- PHASE 2: CLUSTER 1 (Left - Builder Jam) ---
+      // --- PHASE 2: TEXT ZOOM (The "Tunnel" Effect) ---
+      // We scale the text up massively to simulate flying through it.
+      if (textContainerRef.current) {
+        // 1. Fade In (Appears slowly as gate opens)
+        tl.fromTo(
+          textContainerRef.current,
+          {
+            scale: 0.8,
+            opacity: 0,
+            z: 0,
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 1.5,
+            ease: 'power2.out',
+          },
+          'start+=1.5' // Delay appearance until gates are 75% open
+        )
+          // 2. Zoom Through (Slow & Smooth)
+          .to(
+            textContainerRef.current,
+            {
+              scale: 50,
+              z: 500,
+              opacity: 0,
+              filter: 'blur(20px)',
+              duration: 4,
+              ease: 'power1.in', // Tu tu thôi (Gentle acceleration)
+            },
+            '>-0.5'
+          );
+      }
+
+      // --- PHASE 3: CLUSTER 1 (Left - Builder Jam) ---
       // Enters from deep background, sharpens, floats by
       if (clusterLeftRef.current) {
         tl.fromTo(
@@ -58,17 +110,22 @@ export default function Recognition() {
             z: -1500, // Start far back
             scale: 0.5,
             opacity: 0,
-            filter: 'blur(4px)', // Reduced initial blur
+            // filter: 'blur(10px)', // Handled by onUpdate
           },
           {
             z: 200, // Move past camera
             scale: 1.2,
             opacity: 1,
-            filter: 'blur(0px)', // Focus as it gets closer
             duration: 5,
             ease: 'none',
+            onUpdate: function () {
+              const z = gsap.getProperty(clusterLeftRef.current, 'z') as number;
+              // Smart Focus: Sharp when z > -600 (Close to viewer), blurry when far
+              const blur = z > -600 ? 0 : Math.min(10, Math.abs(z + 600) / 100);
+              gsap.set(clusterLeftRef.current, { filter: `blur(${blur}px)` });
+            },
           },
-          '-=2.5' // Overlap with text fade out
+          '-=3.0' // Align with the slower zoom
         );
 
         // Subtle parallax rotation for realism
@@ -88,15 +145,18 @@ export default function Recognition() {
           clusterLeftRef.current,
           {
             opacity: 0,
-            filter: 'blur(0px)', // FORCE SHARPNESS during exit
             duration: 1,
             ease: 'power1.in',
+            onUpdate: function () {
+              // Ensure it stays sharp during exit
+              gsap.set(clusterLeftRef.current, { filter: 'blur(0px)' });
+            },
           },
           '>-1'
         );
       }
 
-      // --- PHASE 3: CLUSTER 2 (Right - Cardano) ---
+      // --- PHASE 4: CLUSTER 2 (Right - Cardano) ---
       if (clusterRightRef.current) {
         tl.fromTo(
           clusterRightRef.current,
@@ -104,17 +164,25 @@ export default function Recognition() {
             z: -2000, // Start even further back
             scale: 0.5,
             opacity: 0,
-            filter: 'blur(6px)', // Reduced blur
+            // filter: 'blur(10px)',
           },
           {
             z: 200,
             scale: 1.2,
-            opacity: 1,
-            filter: 'blur(0px)', // Focus
+            opacity: 1, // Focus
             duration: 5,
             ease: 'none',
+            onUpdate: function () {
+              const z = gsap.getProperty(
+                clusterRightRef.current,
+                'z'
+              ) as number;
+              // Smart Focus: Sharp when z > -600
+              const blur = z > -600 ? 0 : Math.min(10, Math.abs(z + 600) / 100);
+              gsap.set(clusterRightRef.current, { filter: `blur(${blur}px)` });
+            },
           },
-          '-=3' // Overlap with previous cluster
+          '-=3.5' // Overlap with previous cluster
         );
 
         // Subtle parallax rotation
@@ -134,9 +202,11 @@ export default function Recognition() {
           clusterRightRef.current,
           {
             opacity: 0,
-            filter: 'blur(0px)', // FORCE SHARPNESS
             duration: 1,
             ease: 'power1.in',
+            onUpdate: function () {
+              gsap.set(clusterRightRef.current, { filter: 'blur(0px)' });
+            },
           },
           '>-1'
         );
@@ -162,19 +232,46 @@ export default function Recognition() {
         {/* BACKGROUND ACCENTS (Optional: Adds speed reference) */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800/20 via-black to-black -z-10" />
 
+        {/* --- PHASE 1: PROFESSIONAL GATE --- */}
+        <div
+          ref={gateTopLeftRef}
+          className="absolute top-10 left-6 md:left-20 z-40 flex flex-col items-start"
+        >
+          <span className="text-xs text-gray-500 uppercase tracking-widest block mb-2">
+            04 / GALLERY
+          </span>
+          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-white mix-blend-difference">
+            RECOG
+          </h1>
+          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:2px_white] opacity-70">
+            NITIONS
+          </h1>
+        </div>
+
+        <div
+          ref={gateBottomRightRef}
+          className="absolute bottom-10 right-6 md:right-20 z-40 flex flex-col items-end text-right"
+        >
+          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:2px_white] opacity-70">
+            & AWARDS
+          </h1>
+          <span className="font-mono text-sm md:text-base text-neutral-400 mt-2 tracking-widest">
+            2023 — 2025
+          </span>
+        </div>
+
         {/* --- TEXT GROUP --- */}
         <div
           ref={textContainerRef}
-          className="absolute inset-0 flex flex-col items-center justify-center z-30 origin-center will-change-transform"
+          className="absolute inset-0 flex flex-col items-center justify-center z-30 origin-center will-change-transform opacity-0"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <h1 className="text-[12vw] font-black uppercase tracking-tighter leading-[0.85] text-center text-white mix-blend-difference">
-            Recognit
-            <span className="text-transparent [-webkit-text-stroke:2px_white] opacity-70">
-              ion
-            </span>
+          <h1 className="text-[5vw] font-black uppercase tracking-tighter leading-[0.85] text-center text-white mix-blend-difference">
+            ENTER
             <br />
-            <span className="text-[8vw] block mt-4">& Awards</span>
+            <span className="text-[4vw] block mt-4 text-transparent [-webkit-text-stroke:2px_white]">
+              GALLERY
+            </span>
           </h1>
         </div>
 
@@ -195,23 +292,43 @@ export default function Recognition() {
               </h3>
             </div>
             {builderJamImages[0] && (
-              <GlassImage src={builderJamImages[0].src} ratio="video" />
+              <GlassImage
+                src={builderJamImages[0].src}
+                ratio="video"
+                onClick={() => setSelectedImage(builderJamImages[0]!.src)}
+              />
             )}
             {builderJamImages[2] && (
-              <GlassImage src={builderJamImages[2].src} ratio="square" />
+              <GlassImage
+                src={builderJamImages[2].src}
+                ratio="square"
+                onClick={() => setSelectedImage(builderJamImages[2]!.src)}
+              />
             )}
           </div>
 
           {/* Column 2 */}
           <div className="flex flex-col gap-4 w-1/2">
             {builderJamImages[1] && (
-              <GlassImage src={builderJamImages[1].src} ratio="square" />
+              <GlassImage
+                src={builderJamImages[1].src}
+                ratio="square"
+                onClick={() => setSelectedImage(builderJamImages[1]!.src)}
+              />
             )}
             {builderJamImages[3] && (
-              <GlassImage src={builderJamImages[3].src} ratio="video" />
+              <GlassImage
+                src={builderJamImages[3].src}
+                ratio="video"
+                onClick={() => setSelectedImage(builderJamImages[3]!.src)}
+              />
             )}
             {builderJamImages[4] && (
-              <GlassImage src={builderJamImages[4].src} ratio="video" />
+              <GlassImage
+                src={builderJamImages[4].src}
+                ratio="video"
+                onClick={() => setSelectedImage(builderJamImages[4]!.src)}
+              />
             )}
           </div>
         </div>
@@ -225,10 +342,18 @@ export default function Recognition() {
           {/* Column 1 */}
           <div className="flex flex-col gap-4 w-1/2">
             {cardanoImages[0] && (
-              <GlassImage src={cardanoImages[0].src} ratio="portrait" />
+              <GlassImage
+                src={cardanoImages[0].src}
+                ratio="portrait"
+                onClick={() => setSelectedImage(cardanoImages[0]!.src)}
+              />
             )}
             {cardanoImages[2] && (
-              <GlassImage src={cardanoImages[2].src} ratio="video" />
+              <GlassImage
+                src={cardanoImages[2].src}
+                ratio="video"
+                onClick={() => setSelectedImage(cardanoImages[2]!.src)}
+              />
             )}
           </div>
 
@@ -243,14 +368,27 @@ export default function Recognition() {
               </h3>
             </div>
             {cardanoImages[1] && (
-              <GlassImage src={cardanoImages[1].src} ratio="video" />
+              <GlassImage
+                src={cardanoImages[1].src}
+                ratio="video"
+                onClick={() => setSelectedImage(cardanoImages[1]!.src)}
+              />
             )}
             {cardanoImages[3] && (
-              <GlassImage src={cardanoImages[3].src} ratio="square" />
+              <GlassImage
+                src={cardanoImages[3].src}
+                ratio="square"
+                onClick={() => setSelectedImage(cardanoImages[3]!.src)}
+              />
             )}
           </div>
         </div>
       </div>
+      <ImageModal
+        src={selectedImage}
+        isOpen={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+      />
     </section>
   );
 }
@@ -259,9 +397,11 @@ export default function Recognition() {
 function GlassImage({
   src,
   ratio,
+  onClick,
 }: {
   src: any;
   ratio: 'square' | 'video' | 'portrait';
+  onClick: () => void;
 }) {
   const aspect = {
     square: 'aspect-square',
@@ -271,7 +411,8 @@ function GlassImage({
 
   return (
     <div
-      className={`relative ${aspect} w-full overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm group`}
+      onClick={onClick}
+      className={`relative ${aspect} w-full overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm group cursor-zoom-in pointer-events-auto`}
     >
       <Image
         src={src}
@@ -282,5 +423,55 @@ function GlassImage({
       {/* Glossy overlay */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/10 pointer-events-none" />
     </div>
+  );
+}
+
+function ImageModal({
+  src,
+  isOpen,
+  onClose,
+}: {
+  src: any;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md animate-in fade-in duration-300"
+      onClick={onClose}
+    >
+      {/* Close Button */}
+      <button
+        onClick={onClose}
+        className="absolute top-8 right-8 p-2 text-white/50 hover:text-white transition-colors z-[10000] pointer-events-auto"
+      >
+        <X size={32} />
+      </button>
+
+      {/* Image Container */}
+      <div
+        className="relative w-[90vw] h-[90vh] md:w-[80vw] md:h-[80vh] pointer-events-none"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={src}
+          alt="Full Screen"
+          fill
+          className="object-contain"
+          priority
+          quality={100}
+        />
+      </div>
+    </div>,
+    document.body
   );
 }
