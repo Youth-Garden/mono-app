@@ -15,7 +15,7 @@ const MENU_LINKS = [
   { label: 'Home', href: '#hero', desc: 'Entry Point' },
   { label: 'Experience', href: '#experience', desc: 'Career Path' },
   { label: 'Rewards', href: '#rewards', desc: 'Achievements' },
-  { label: 'Stack', href: '#stack', desc: 'Technologies' },
+  { label: 'Skills', href: '#stack', desc: 'Arsenal' },
   { label: 'Recognition', href: '#recognition', desc: 'Certificates' },
   { label: 'Contact', href: '#contact', desc: 'Get in Touch' },
 ];

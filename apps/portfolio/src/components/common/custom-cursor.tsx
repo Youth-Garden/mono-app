@@ -4,9 +4,8 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
 
-// --- CẤU HÌNH ---
-const NORMAL_SPEED = 0.5; // Tăng lên để chuột đi theo tay nhanh hơn (giảm lag)
-const MAGNETIC_SPEED = 0.6; // Tốc độ khi "hít" vào nút (càng cao càng dính chặt)
+const NORMAL_SPEED = 0.2;
+const MAGNETIC_SPEED = 0.6;
 const ROTATION_SPEED = 0.2;
 
 export default function CustomCursor() {
@@ -128,13 +127,11 @@ export default function CustomCursor() {
       setArrowRot(s.rot);
     };
 
-    // --- Hover Logic ---
     const handleMouseEnter = (e: Event) => {
       const target = e.currentTarget as HTMLElement;
       state.current.isMagnetic = true;
       state.current.target = target;
 
-      // Animation chuyển đổi
       gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
       gsap.to(ring, {
         opacity: 1,
@@ -189,10 +186,8 @@ export default function CustomCursor() {
           height={40}
           viewBox="0 0 50 54"
           fill="none"
-          // Scale nhỏ lại chút cho tinh tế
-          style={{ transform: 'scale(0.5)' }}
+          style={{ transform: 'scale(0.8)' }}
         >
-          {/* ... Giữ nguyên SVG path của bạn ... */}
           <g filter="url(#filter0_d_91_7928)">
             <path
               d="M42.6817 41.1495L27.5103 6.79925C26.7269 5.02557 24.2082 5.02558 23.3927 6.79925L7.59814 41.1495C6.75833 42.9759 8.52712 44.8902 10.4125 44.1954L24.3757 39.0496C24.8829 38.8627 25.4385 38.8627 25.9422 39.0496L39.8121 44.1954C41.6849 44.8902 43.4884 42.9759 42.6817 41.1495Z"
@@ -244,7 +239,6 @@ export default function CustomCursor() {
         </svg>
       </div>
 
-      {/* Magnetic Ring */}
       <div
         ref={ringRef}
         className="absolute top-0 left-0 border border-white/40 pointer-events-none box-border will-change-transform"

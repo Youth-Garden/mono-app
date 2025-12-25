@@ -1,14 +1,13 @@
 @import '@repo/ui/globals.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer utilities {
   * {
     scrollbar-width: none;
     -ms-overflow-style: none;
-    cursor: none;
+    /* Hide system cursor to use the custom SVG cursor (see @/components/common/custom-cursor.tsx) */
+    cursor: none !important;
   }
 
   .bg-scanline {
@@ -46,8 +45,4 @@ select,
 textarea,
 .cursor-pointer {
   cursor: none !important;
-}
-
-body {
-  cursor: none; /* Hide default cursor globally */
 }

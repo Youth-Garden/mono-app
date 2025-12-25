@@ -13,7 +13,6 @@ export default function Hero() {
   const textWrapperRef = useRef(null);
   const imageRevealRef = useRef(null);
   const imageRef = useRef(null);
-
   useGSAP(
     () => {
       const tl = gsap.timeline();

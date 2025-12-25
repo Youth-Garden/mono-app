@@ -84,7 +84,7 @@ export default function Recognition() {
             duration: 1.5,
             ease: 'power2.out',
           },
-          'start+=1.5' // Delay appearance until gates are 75% open
+          'start+=0.2' // Appear earlier, just as gates start to open
         )
           // 2. Zoom Through (Slow & Smooth)
           .to(
@@ -94,10 +94,10 @@ export default function Recognition() {
               z: 500,
               opacity: 0,
               filter: 'blur(20px)',
-              duration: 4,
+              duration: 8, // Longer duration for slower zoom
               ease: 'power1.in', // Tu tu thôi (Gentle acceleration)
             },
-            '>-0.5'
+            '>-0.5' // Overlap slightly with fade in finish
           );
       }
 
