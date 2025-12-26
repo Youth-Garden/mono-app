@@ -226,7 +226,7 @@ export default function Recognition() {
             // filter and pointerEvents handled by onUpdate
           },
           {
-            z: 200,
+            z: 600,
             xPercent: 20, // Move towards center
             scale: 1.2,
             opacity: 1,
@@ -275,7 +275,7 @@ export default function Recognition() {
         style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
       >
         {/* BACKGROUND ACCENTS */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800/20 via-black to-black -z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-neutral-800/20 via-black to-black -z-10" />
 
         {/* --- PHASE 1: PROFESSIONAL GATE --- */}
         <div

@@ -124,7 +124,7 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[150] bg-[#050505] text-white flex flex-col h-[100dvh] overflow-y-auto overflow-x-hidden pointer-events-none custom-scrollbar"
+      className="fixed inset-0 z-10 bg-[#050505] text-white flex flex-col h-[100dvh] overflow-y-auto overflow-x-hidden pointer-events-none custom-scrollbar"
       style={{ clipPath: 'circle(0% at 100% 0%)' }}
     >
       {/* --- BACKGROUND --- */}
