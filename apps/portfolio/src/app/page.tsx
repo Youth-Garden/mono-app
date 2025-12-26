@@ -8,7 +8,7 @@ import Stack from '@/components/sections/stack';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-white selection:text-black relative">
+    <main className="flex min-h-screen flex-col bg-background text-foreground selection:bg-white selection:text-black relative z-1">
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
         <div
           className="w-full h-full"

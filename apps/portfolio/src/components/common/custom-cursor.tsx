@@ -127,50 +127,53 @@ export default function CustomCursor() {
       setArrowRot(s.rot);
     };
 
-    const handleMouseEnter = (e: Event) => {
-      const target = e.currentTarget as HTMLElement;
-      state.current.isMagnetic = true;
-      state.current.target = target;
-
-      gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
-      gsap.to(ring, {
-        opacity: 1,
-        scale: 1,
-        borderColor: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: getComputedStyle(target).borderRadius || '4px',
-        duration: 0.2,
-      });
-    };
-
-    const handleMouseLeave = () => {
-      state.current.isMagnetic = false;
-      state.current.target = null;
-
-      gsap.to(arrow, { scale: 1, opacity: 1, duration: 0.2 });
-      gsap.to(ring, { opacity: 0, duration: 0.2 });
-    };
-
     // --- Setup Listeners ---
     window.addEventListener('mousemove', onMouseMove);
     gsap.ticker.add(updatePhysics);
 
-    // Tìm tất cả các element tương tác
-    const interactives = document.querySelectorAll(
-      'a, button, [role="button"], input, select, textarea, .magnetic-target'
-    );
+    // Event Delegation for dynamic elements (Modals, etc.)
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest(
+        'a, button, [role="button"], input, select, textarea, .magnetic-target'
+      ) as HTMLElement;
 
-    interactives.forEach((el) => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
+      if (target) {
+        state.current.isMagnetic = true;
+        state.current.target = target;
+
+        gsap.to(arrow, { scale: 0, opacity: 0, duration: 0.2 });
+        gsap.to(ring, {
+          opacity: 1,
+          scale: 1,
+          borderColor: 'rgba(255, 255, 255, 0.5)',
+          borderRadius: getComputedStyle(target).borderRadius || '4px',
+          duration: 0.2,
+        });
+      }
+    };
+
+    const handleMouseOut = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest(
+        'a, button, [role="button"], input, select, textarea, .magnetic-target'
+      );
+
+      if (target) {
+        state.current.isMagnetic = false;
+        state.current.target = null;
+
+        gsap.to(arrow, { scale: 1, opacity: 1, duration: 0.2 });
+        gsap.to(ring, { opacity: 0, duration: 0.2 });
+      }
+    };
+
+    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mouseout', handleMouseOut);
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mouseout', handleMouseOut);
       gsap.ticker.remove(updatePhysics);
-      interactives.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
     };
   }, []);
 

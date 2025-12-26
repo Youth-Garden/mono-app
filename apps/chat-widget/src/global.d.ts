@@ -1,9 +1,8 @@
-import { SpectreAPI } from './types';
-
-declare global {
-  interface Window {
-    spectre: SpectreAPI;
-  }
+interface Window {
+  spectre: import('./types').SpectreAPI;
 }
 
-export {};
+declare module '*.css?inline' {
+  const content: string;
+  export default content;
+}

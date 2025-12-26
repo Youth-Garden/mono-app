@@ -1,9 +1,10 @@
 import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { routing } from '../../i18n/routing';
 import '../globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -31,6 +32,10 @@ export const metadata: Metadata = {
   },
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function Layout({
   children,
   params,
@@ -39,6 +44,7 @@ export default async function Layout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (

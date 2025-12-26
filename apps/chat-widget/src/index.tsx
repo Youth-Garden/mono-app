@@ -19,7 +19,7 @@ const spectreAPI: SpectreAPI = {
   onMessageSent: (cb: (data: any) => void) => eventBus.on('message:sent', cb),
 
   init: (config: any) => {
-    console.log('spectre Initialized with config', config);
+    console.info('spectre Initialized with config', config);
     eventBus.emit('config:updated', config);
     mountWidget();
   },
@@ -29,7 +29,6 @@ window.spectre = spectreAPI;
 
 function mountWidget() {
   if (document.getElementById(WIDGET_ID)) return;
-  // ... (Rest of your mount logic remains the same)
   const container = document.createElement('div');
   container.id = WIDGET_ID;
   container.style.position = 'fixed';

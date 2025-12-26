@@ -223,7 +223,7 @@ export const DialogProvider: React.FC<React.PropsWithChildren> = ({
                   isOpen={isOpen}
                   onClose={() => handleClearModal(item.id)}
                 >
-                  <div className="relative z-[20001] pointer-events-none [&>*]:pointer-events-auto flex items-center justify-center w-full h-full">
+                  <div className="relative z-101 pointer-events-none *:pointer-events-auto flex items-center justify-center w-full h-full">
                     {React.cloneElement(item.content, { isOpen })}
                   </div>
                 </OpenEffect>
