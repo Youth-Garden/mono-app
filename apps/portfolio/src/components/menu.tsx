@@ -128,7 +128,7 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
       style={{ clipPath: 'circle(0% at 100% 0%)' }}
     >
       {/* --- BACKGROUND --- */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none fixed">
+      <div className="inset-0 z-0 opacity-20 pointer-events-none fixed">
         <div
           className="w-full h-full"
           style={{
