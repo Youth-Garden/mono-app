@@ -21,7 +21,7 @@ export default function CloseButton({
         {isOpen ? 'Close' : 'Menu'}
       </span>
       <div
-        className={`h-[1px] bg-white/50 group-hover:bg-white transition-all duration-500 ${
+        className={`h-px bg-white/50 group-hover:bg-white transition-all duration-500 ${
           isOpen ? 'w-12' : 'w-8'
         }`}
       />

@@ -1,10 +1,11 @@
 'use client';
 import { ImageModal } from '@/components/common/image-modal';
 import { GALLERY_IMAGES } from '@/constants/gallery';
+import { useModal } from '@/hooks/use-modal';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { ClusterBuilderJam } from './cluster-builder-jam';
 import { ClusterCardano } from './cluster-cardano';
 import { ClusterGoogleCloud } from './cluster-google-cloud';
@@ -20,7 +21,7 @@ export default function Recognition() {
   const clusterCloudRef = useRef<HTMLDivElement>(null);
   const clusterRightRef = useRef<HTMLDivElement>(null);
 
-  const [selectedImage, setSelectedImage] = useState<any | null>(null);
+  const [presentImageModal] = useModal(ImageModal);
 
   // Filter images
   const builderJamImages = GALLERY_IMAGES.filter((img) =>
@@ -132,6 +133,7 @@ export default function Recognition() {
             z: -1500,
             scale: 0.5,
             opacity: 0,
+            willChange: 'transform, filter, opacity',
             // filter and pointerEvents handled by onUpdate
           },
           {
@@ -254,7 +256,7 @@ export default function Recognition() {
             ease: 'power1.in',
             onUpdate: () => updateClusterState(clusterCloudRef),
           },
-          '+=0.5' // Fade out after movement finishes (keeps it visible longer)
+          '>-1' // Fade out while moving (fly-through effect)
         );
       }
     },
@@ -322,28 +324,23 @@ export default function Recognition() {
         <ClusterBuilderJam
           ref={clusterLeftRef}
           images={builderJamImages}
-          onImageClick={(src) => setSelectedImage(src)}
+          onImageClick={(src) => presentImageModal({ src })}
         />
 
         {/* --- CLUSTER 3 (Center - Google Cloud) --- */}
         <ClusterGoogleCloud
           ref={clusterCloudRef}
           images={googleCloudImages}
-          onImageClick={(src) => setSelectedImage(src)}
+          onImageClick={(src) => presentImageModal({ src })}
         />
 
         {/* --- CLUSTER 2 (Right - Cardano) --- */}
         <ClusterCardano
           ref={clusterRightRef}
           images={cardanoImages}
-          onImageClick={(src) => setSelectedImage(src)}
+          onImageClick={(src) => presentImageModal({ src })}
         />
       </div>
-      <ImageModal
-        src={selectedImage}
-        isOpen={!!selectedImage}
-        onClose={() => setSelectedImage(null)}
-      />
     </section>
   );
 }

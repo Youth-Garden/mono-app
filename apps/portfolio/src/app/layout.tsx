@@ -1,5 +1,5 @@
 import ClientLayout from '@/components/client-layout';
-import SplashProvider from '@/components/providers/splash-provider';
+import { Providers } from '@/components/providers';
 import SmoothScroll from '@/components/smooth-scroll';
 import type { Metadata } from 'next';
 import { Outfit, Playfair_Display } from 'next/font/google';
@@ -55,9 +55,9 @@ export default function RootLayout({
         className={`${outfit.variable} ${playfair.variable} font-sans bg-background text-foreground antialiased selection:bg-white selection:text-black`}
       >
         <ClientLayout>
-          <SplashProvider>
+          <Providers>
             <SmoothScroll>{children}</SmoothScroll>
-          </SplashProvider>
+          </Providers>
         </ClientLayout>
       </body>
     </html>
