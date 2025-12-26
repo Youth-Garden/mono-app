@@ -1,10 +1,12 @@
-import Contact from '@/components/sections/contact';
 import Experience from '@/components/sections/experience';
 import Hero from '@/components/sections/hero';
 import Philosophy from '@/components/sections/philosophy';
-import Recognition from '@/components/sections/recognition';
-import Rewards from '@/components/sections/rewards';
-import Stack from '@/components/sections/stack';
+import Rewards from '@/components/sections/rewards'; // Keep Experience/Rewards static for scroll smoothness
+import dynamic from 'next/dynamic';
+
+const Contact = dynamic(() => import('@/components/sections/contact'));
+const Recognition = dynamic(() => import('@/components/sections/recognition'));
+const Stack = dynamic(() => import('@/components/sections/stack'));
 
 export default function Home() {
   return (

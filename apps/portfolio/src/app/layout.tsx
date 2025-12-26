@@ -1,6 +1,7 @@
 import ClientLayout from '@/components/client-layout';
 import { Providers } from '@/components/providers';
 import SmoothScroll from '@/components/smooth-scroll';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Outfit, Playfair_Display } from 'next/font/google';
 import './globals.css';
@@ -57,6 +58,7 @@ export default function RootLayout({
         <ClientLayout>
           <Providers>
             <SmoothScroll>{children}</SmoothScroll>
+            <SpeedInsights />
           </Providers>
         </ClientLayout>
       </body>

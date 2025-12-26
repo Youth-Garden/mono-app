@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDownRight } from 'lucide-react';
+import Image from 'next/image';
 import { useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -111,10 +112,13 @@ export default function Hero() {
               ref={imageRevealRef}
               className="w-full h-0 absolute bottom-0 left-0 right-0 overflow-hidden"
             >
-              <div
+              <Image
                 ref={imageRef}
-                className="w-full h-full bg-cover bg-center grayscale contrast-125 hover:grayscale-0 transition-all duration-700 ease-out"
-                style={{ backgroundImage: `url(${HERO_PROFILE.imagePath})` }}
+                src={HERO_PROFILE.imagePath}
+                alt={HERO_PROFILE.name}
+                fill
+                priority
+                className="w-full h-full object-cover object-center grayscale contrast-125 hover:grayscale-0 transition-all duration-700 ease-out"
               />
               {/* Inner Border/Crosshair for technical feel */}
               <div className="absolute inset-0 border border-white/10 pointer-events-none" />

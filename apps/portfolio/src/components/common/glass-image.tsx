@@ -25,6 +25,7 @@ export function GlassImage({ src, ratio, onClick }: GlassImageProps) {
         src={src}
         alt="Gallery Image"
         fill
+        sizes="(max-width: 768px) 50vw, 35vw"
         className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       {/* Glossy overlay */}
