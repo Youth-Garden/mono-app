@@ -313,7 +313,7 @@ function Recognition() {
           <h1 className="text-[5vw] font-black uppercase tracking-tighter leading-[0.85] text-center text-white mix-blend-difference">
             ENTER
             <br />
-            <span className="text-[4vw] block mt-4 text-transparent [-webkit-text-stroke:2px_white]">
+            <span className="text-[4vw] block mt-4 text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white]">
               GALLERY
             </span>
           </h1>

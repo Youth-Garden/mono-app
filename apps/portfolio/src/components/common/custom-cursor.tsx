@@ -180,7 +180,7 @@ export default function CustomCursor() {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 pointer-events-none z-9999 will-change-transform"
+      className="hidden lg:block fixed top-0 left-0 pointer-events-none z-9999 will-change-transform"
     >
       {/* SVG Arrow */}
       <div ref={arrowRef} className="absolute will-change-transform">

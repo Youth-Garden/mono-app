@@ -109,7 +109,7 @@ function Rewards() {
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 relative">
         {/* Pinned Left Side */}
-        <div className="lg:col-span-3 border-r border-white/10 p-6 md:p-8 lg:p-12 lg:h-screen lg:sticky top-0 flex flex-col justify-between z-20 bg-background">
+        <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-white/10 p-6 md:p-8 lg:p-12 lg:h-screen lg:sticky top-0 flex flex-col justify-between z-20 bg-background">
           <SectionHeader
             sectionNumber={REWARDS_META.sectionNumber}
             title={REWARDS_META.title}
@@ -171,14 +171,14 @@ function Rewards() {
                 </div>
 
                 {/* Right Social Actions (Vertical) */}
-                <div className="flex flex-row md:flex-col gap-3 stagger-item md:w-48 shrink-0 justify-start">
+                <div className="flex flex-col gap-3 stagger-item md:w-48 shrink-0 justify-start">
                   {/* Website Link (Primary) */}
                   {project.website && (
                     <a
                       href={project.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/btn flex items-center justify-between gap-3 px-4 py-3 bg-white text-black rounded-sm hover:bg-white/90 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] mb-4"
+                      className="group/btn flex items-center justify-between gap-3 px-4 py-3 bg-white text-black rounded-sm hover:bg-white/90 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] mb-1"
                     >
                       <span className="text-xs font-bold uppercase tracking-wider">
                         Visit Project
@@ -187,33 +187,36 @@ function Rewards() {
                     </a>
                   )}
 
-                  {/* Social Links */}
-                  {project.socials &&
-                    project.socials.map((social, idx) => {
-                      const meta = getSocialMeta(social.url);
-                      return (
-                        <a
-                          key={idx}
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 rounded-sm transition-all group/link hover:scale-[1.02] active:scale-95"
-                          style={{
-                            backgroundColor: meta.color,
-                            border: `1px solid ${meta.borderColor || meta.color}`,
-                            boxShadow: `0 0 20px ${meta.color}40`, // Colored glow
-                          }}
-                        >
-                          <span className="flex items-center justify-center text-white">
-                            {meta.icon}
-                          </span>
-                          <span className="text-[10px] font-bold text-white uppercase tracking-wider flex-1">
-                            {social.label}
-                          </span>
-                          <ArrowUpRight className="w-3 h-3 text-white/70 group-hover/link:text-white transition-colors" />
-                        </a>
-                      );
-                    })}
+                  {/* Social Links Group */}
+                  {project.socials && project.socials.length > 0 && (
+                    <div className="flex flex-row flex-wrap gap-3 md:flex-col w-full">
+                      {project.socials.map((social, idx) => {
+                        const meta = getSocialMeta(social.url);
+                        return (
+                          <a
+                            key={idx}
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 rounded-sm transition-all group/link hover:scale-[1.02] active:scale-95"
+                            style={{
+                              backgroundColor: meta.color,
+                              border: `1px solid ${meta.borderColor || meta.color}`,
+                              boxShadow: `0 0 20px ${meta.color}40`, // Colored glow
+                            }}
+                          >
+                            <span className="flex items-center justify-center text-white">
+                              {meta.icon}
+                            </span>
+                            <span className="text-[10px] font-bold text-white uppercase tracking-wider flex-1">
+                              {social.label}
+                            </span>
+                            <ArrowUpRight className="w-3 h-3 text-white/70 group-hover/link:text-white transition-colors" />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

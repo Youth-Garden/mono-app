@@ -149,7 +149,7 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
 
       {/* --- CONTENT WRAPPER --- */}
       <div className="flex flex-col flex-1 min-h-full p-6 md:p-12 relative z-20">
-        <div className="w-full grid grid-cols-3 items-start mb-8 shrink-0 pointer-events-auto">
+        <div className="w-full flex flex-col md:grid md:grid-cols-3 items-start mb-8 shrink-0 pointer-events-auto gap-y-6 md:gap-y-0">
           <div className="flex flex-col menu-header-item items-start">
             <span className="text-xs font-bold tracking-tight uppercase text-gray-400">
               Navigation
@@ -159,8 +159,8 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
             </span>
           </div>
 
-          <div className="flex flex-col items-center justify-center menu-header-item gap-2">
-            <div className="flex items-center gap-8">
+          <div className="flex flex-col items-start md:items-center justify-center menu-header-item gap-2 w-full">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
               {SOCIAL_LINKS.map((link) => {
                 if (link.platform === 'Email') {
                   return (
@@ -222,15 +222,15 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
                 }}
                 onMouseEnter={() => setHoveredLink(index)}
                 onMouseLeave={() => setHoveredLink(null)}
-                className="group flex items-center py-3 md:py-4 cursor-pointer pointer-events-auto w-full relative"
+                className="group flex items-center py-2 md:py-4 cursor-pointer pointer-events-auto w-full relative"
               >
                 <div className="flex-1 flex items-center relative">
                   <div
-                    className={`h-[2px] bg-white transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${hoveredLink === index ? 'w-12 md:w-24 mr-6 opacity-100' : 'w-0 mr-0 opacity-0'}`}
+                    className={`h-[2px] bg-white transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${hoveredLink === index ? 'w-8 md:w-24 mr-4 md:mr-6 opacity-100' : 'w-0 mr-0 opacity-0'}`}
                   />
                   <div className="relative z-10">
                     <span
-                      className={`text-7xl md:text-[9vh] font-bold tracking-tighter uppercase transition-colors duration-500 leading-none ${hoveredLink !== null && hoveredLink !== index ? 'text-white/20' : 'text-white'}`}
+                      className={`text-5xl md:text-[9vh] font-bold tracking-tighter uppercase transition-colors duration-500 leading-none ${hoveredLink !== null && hoveredLink !== index ? 'text-white/20' : 'text-white'}`}
                     >
                       {link.label}
                     </span>

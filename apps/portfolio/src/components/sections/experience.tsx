@@ -111,7 +111,7 @@ function Experience() {
       </div>
 
       {/* LEFT COLUMN: Fixed Title */}
-      <div className="w-full lg:w-[25%] border-b lg:border-r border-white/10 p-6 md:p-8 lg:p-12 min-h-[30vh] lg:h-full z-20 bg-background relative shrink-0">
+      <div className="w-full lg:w-[25%] border-b lg:border-r border-white/10 p-6 md:p-8 lg:p-12 lg:h-full z-20 bg-background relative shrink-0">
         <SectionHeader
           sectionNumber={EXPERIENCE_META.sectionNumber}
           title={EXPERIENCE_META.title}

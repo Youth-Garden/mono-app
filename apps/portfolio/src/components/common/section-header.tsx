@@ -20,14 +20,14 @@ export default function SectionHeader({
         <span className="text-xs text-gray-500 uppercase tracking-widest block mb-4">
           {sectionNumber}
         </span>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold uppercase leading-[0.9]">
+        <h2 className="text-2xl md:text-3xl font-bold uppercase leading-[0.9]">
           {title.split(' & ').map((part, i, arr) => (
-            <span key={i}>
+            <span key={i} className="inline lg:block">
               {part}
               {i < arr.length - 1 && (
                 <>
-                  {' & '}
-                  <br />{' '}
+                  <span className="lg:hidden"> & </span>
+                  <span className="hidden lg:block my-1">&</span>
                 </>
               )}
             </span>
@@ -37,7 +37,7 @@ export default function SectionHeader({
       {scrollHint && progressBarRef && (
         <div className="hidden md:block mt-8">
           <span className="text-xs text-[#888]">{scrollHint}</span>
-          <div className="w-full h-[1px] bg-white/10 mt-4 relative overflow-hidden">
+          <div className="w-full h-px bg-white/10 mt-4 relative overflow-hidden">
             <div
               ref={progressBarRef}
               className="absolute top-0 left-0 h-full bg-white w-0"
