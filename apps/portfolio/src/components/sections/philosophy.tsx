@@ -5,11 +5,11 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Square } from 'lucide-react'; // Added for geometric accent
-import { useMemo, useRef } from 'react';
+import { memo, useMemo, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Philosophy() {
+function Philosophy() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
@@ -74,21 +74,9 @@ export default function Philosophy() {
     <section
       id="philosophy"
       ref={containerRef}
-      className="relative min-h-screen flex items-center bg-[#050505] py-32 px-6 md:px-12 snap-start overflow-hidden"
+      className="relative min-h-screen flex items-center py-32 px-6 md:px-12 snap-start overflow-hidden"
     >
-      {/* --- BACKGROUND TEXTURE (Matches Menu) --- */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-        {/* Grid Pattern */}
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage:
-              'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
-            backgroundSize: '100px 100px',
-            opacity: 0.3,
-          }}
-        />
-        {/* Noise Overlay */}
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
         <div
           className="absolute inset-0 opacity-40 mix-blend-overlay"
           style={{
@@ -128,7 +116,7 @@ export default function Philosophy() {
           <p
             ref={textRef}
             aria-hidden="true"
-            className="text-4xl md:text-6xl lg:text-7xl leading-[1.1] font-medium font-sans tracking-tight text-white select-none"
+            className="text-3xl md:text-6xl lg:text-7xl leading-[1.2] md:leading-[1.1] font-medium font-sans tracking-tight text-white select-none"
           >
             {splitText}
           </p>
@@ -137,3 +125,5 @@ export default function Philosophy() {
     </section>
   );
 }
+
+export default memo(Philosophy);

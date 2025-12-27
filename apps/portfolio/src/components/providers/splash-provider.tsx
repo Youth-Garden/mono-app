@@ -2,7 +2,14 @@
 
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { createContext, ReactNode, useContext, useRef, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 const SplashContext = createContext<{ isLoading: boolean }>({
   isLoading: true,
@@ -12,10 +19,18 @@ export const useSplash = () => useContext(SplashContext);
 
 export default function SplashProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const brandRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
 
   useGSAP(
     () => {
@@ -23,58 +38,70 @@ export default function SplashProvider({ children }: { children: ReactNode }) {
         onComplete: () => setIsLoading(false),
       });
 
-      // Initial state
+      // Initial States
       gsap.set(progressRef.current, { scaleX: 0, transformOrigin: 'left' });
-      gsap.set(brandRef.current, { y: 20, opacity: 0 });
+      gsap.set(counterRef.current, { opacity: 0, y: 20 });
+      gsap.set(contentRef.current, { y: 100 });
 
-      // 1. Loading Sequence
-      tl.to(
-        {},
-        {
-          duration: 1.5,
-          ease: 'power2.inOut',
-          onUpdate: function () {
-            if (counterRef.current) {
-              const progress = Math.round(this.progress() * 100);
-              counterRef.current.innerText = `${String(progress).padStart(3, '0')}%`;
-            }
-          },
-        }
-      )
+      // 1. Loading Animation
+      tl.to(counterRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      })
         .to(
           progressRef.current,
           {
             scaleX: 1,
-            duration: 1.5,
-            ease: 'power2.inOut',
+            duration: 2.0,
+            ease: 'expo.inOut',
           },
           '<'
         )
-        // Reveal Brand Name "KAITOU" midway
+        // Counter Number Update
         .to(
-          brandRef.current,
+          {},
           {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power3.out',
+            duration: 2.0,
+            onUpdate: function () {
+              if (counterRef.current) {
+                const progress = Math.round(this.progress() * 100);
+                counterRef.current.innerText = `${String(progress).padStart(3, '0')}%`;
+              }
+            },
           },
-          '-=1.0'
+          '<'
         )
-        // 2. Short pause
-        .to({}, { duration: 0.4 })
-        // 3. Fade out content
-        .to([counterRef.current, progressRef.current, brandRef.current], {
+
+        // 2. Short Pause
+        .to({}, { duration: 0.2 })
+
+        // 3. Exit Sequence
+        .to([counterRef.current, progressRef.current], {
           opacity: 0,
-          duration: 0.4,
+          duration: 0.5,
           ease: 'power2.in',
         })
-        // 4. Shutter Exit
-        .to(containerRef.current, {
-          yPercent: -100,
-          duration: 1.0,
-          ease: 'expo.inOut',
-        });
+        .to(
+          containerRef.current,
+          {
+            yPercent: -100,
+            duration: 1.0,
+            ease: 'power4.inOut',
+          },
+          '-=0.2'
+        )
+        .to(
+          contentRef.current,
+          {
+            y: 0,
+            duration: 1.5,
+            ease: 'power4.out',
+            clearProps: 'transform', // CRITICAL: Reset transform to restore stacking context
+          },
+          '<'
+        );
     },
     { scope: containerRef }
   );
@@ -83,38 +110,30 @@ export default function SplashProvider({ children }: { children: ReactNode }) {
     <SplashContext.Provider value={{ isLoading }}>
       <div
         ref={containerRef}
-        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center select-none"
+        className="fixed inset-0 z-9999 bg-black flex flex-col items-center justify-center select-none overflow-hidden"
         style={{ display: isLoading ? 'flex' : 'none' }}
       >
-        <div className="flex flex-col items-center gap-6 relative">
-          {/* Percentage Counter - Technical/Mono */}
+        {/* Bottom Progress Bar & Counter */}
+        <div className="absolute bottom-0 left-0 w-full">
+          {/* Large Counter Number */}
           <div
             ref={counterRef}
-            className="font-mono text-xs md:text-sm text-white/50 tracking-widest absolute -top-12"
+            className="absolute bottom-6 right-6 md:bottom-10 md:right-10 text-8xl md:text-[12rem] font-black text-white/90 leading-none tracking-tighter mix-blend-exclusion opacity-0 translate-y-5"
           >
             000%
           </div>
 
-          {/* Progress Line */}
-          <div className="w-48 h-px bg-white/10 relative overflow-hidden mb-2">
+          {/* Full Width Bar */}
+          <div className="w-full h-1.5 bg-white/5 relative overflow-hidden">
             <div
               ref={progressRef}
-              className="absolute inset-0 bg-white/80 w-full h-full origin-left"
+              className="absolute inset-0 bg-white w-full h-full origin-left shadow-[0_0_20px_white] scale-x-0"
             />
-          </div>
-
-          {/* Brand Name - Clean, Professional, Bold */}
-          <div
-            ref={brandRef}
-            className="text-4xl md:text-6xl font-bold text-white tracking-[0.2em] font-sans uppercase"
-            style={{ textShadow: '0 0 20px rgba(255,255,255,0.1)' }}
-          >
-            Kaitou
           </div>
         </div>
       </div>
 
-      {children}
+      <div ref={contentRef}>{isMounted && children}</div>
     </SplashContext.Provider>
   );
 }

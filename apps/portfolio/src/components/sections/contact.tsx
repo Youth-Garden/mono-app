@@ -1,12 +1,14 @@
 import { CONTACT_INFO, CONTACT_META } from '@/constants/contact';
 import { ArrowUpRight } from 'lucide-react';
+import BackgroundGrid from '../common/background-grid';
 
 export default function Contact() {
   return (
     <section
       id="contact"
-      className="min-h-screen flex flex-col justify-between px-6 py-10 md:px-12 md:py-16 relative bg-transparent"
+      className="min-h-screen flex flex-col justify-between px-6 py-10 md:px-12 md:py-16 relative overflow-hidden"
     >
+      <BackgroundGrid />
       {/* Top meta bar */}
       <header className="flex justify-between items-start w-full relative z-10">
         <span className="text-xs text-neutral-500 uppercase tracking-[0.25em]">
@@ -25,7 +27,7 @@ export default function Contact() {
           href={`mailto:${CONTACT_INFO.email}`}
           className="group relative inline-block"
         >
-          <h2 className="text-[11vw] md:text-[7vw] font-black tracking-tight uppercase leading-[0.8] text-center text-white">
+          <h2 className="text-[12vw] md:text-[7vw] font-black tracking-tight uppercase leading-[0.8] text-center text-white">
             {CONTACT_META.ctaTitle.line1}
             <br />
             <span className="text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white] group-hover:text-white group-hover:[-webkit-text-stroke:0px] transition-all duration-300">
@@ -35,11 +37,6 @@ export default function Contact() {
 
           <ArrowUpRight className="w-7 h-7 md:w-10 md:h-10 absolute -top-4 -right-4 md:-top-8 md:-right-10 text-white/70 group-hover:text-white group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300" />
         </a>
-
-        {/* Optional subtitle / helper text */}
-        {/* <p className="mt-6 text-xs md:text-sm text-neutral-400 font-mono text-center">
-          I typically respond within 24 hours.
-        </p> */}
       </div>
 
       {/* Bottom meta */}

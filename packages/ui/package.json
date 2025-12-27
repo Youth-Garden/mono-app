@@ -6,7 +6,8 @@
     "./globals.css": "./src/globals.css",
     "./tailwind.config": "./tailwind.config.ts",
     "./lib/utils": "./src/lib/utils.ts",
-    "./components/ui/*": "./src/components/ui/*.tsx"
+    "./components/ui/*": "./src/components/ui/*.tsx",
+    "./constants/breakpoints": "./src/constants/breakpoints.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

@@ -41,22 +41,16 @@ export function Modal({ onDismiss, children, isOpen }: ModalProps) {
   return (
     <div
       ref={containerRef}
-      className="relative flex items-center justify-center w-full h-full opacity-0 scale-90 pointer-events-none [&>*]:pointer-events-auto"
+      className="relative flex items-center justify-center w-full h-full opacity-0 scale-90 pointer-events-none *:pointer-events-auto"
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Close Button - Absolutely positioned relative to the content area or viewport? 
-          Since this Modal is inside a full-screen flex container (from DialogProvider), 
-          absolute positioning here works relative to this div. 
-          But this div is `w-full h-full flex items-center`. 
-          So `absolute top-10 right-10` puts it in the screen corner. Perfect.
-      */}
       <button
         type="button"
         onClick={onDismiss}
-        className="absolute top-6 right-6 md:top-10 md:right-10 p-4 group cursor-pointer pointer-events-auto"
+        className="absolute top-6 right-6 md:top-10 md:right-10 p-1 rounded-full group cursor-pointer pointer-events-auto"
       >
-        <div className="relative flex items-center justify-center p-3 rounded-full border border-white/20 bg-black/50 hover:bg-white hover:text-black hover:border-white transition-all duration-300">
-          <X className="w-8 h-8 transition-transform duration-300 group-hover:rotate-90" />
+        <div className="relative flex items-center justify-center w-12 h-12 rounded-full border border-white/20 bg-black/50 group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-300 backdrop-blur-sm">
+          <X className="w-5 h-5 transition-transform duration-300 group-hover:rotate-90" />
         </div>
       </button>
 

@@ -17,7 +17,7 @@ export const REWARDS: Reward[] = [
     category: 'Reward: $3000 / Creator Platform',
     role: 'InquireA',
     description:
-      'Built a Q&A platform aimed at valuing user contributions to the community through blockchain rewards. The platform ensures that every contribution has meaning and value.',
+      'Built a blockchain-based Q&A platform where user contributions are rewarded, ensuring every contribution adds value to the community.',
     tech: ['Blockchain', 'Q&A Platform', 'Web3'],
     website: 'https://www.inquirea.tech/',
     socials: [
@@ -38,7 +38,7 @@ export const REWARDS: Reward[] = [
     category: 'Reward: $500 / Consumer App',
     role: 'Heartgive',
     description:
-      'HeartGive is a blockchain-based fundraising platform that helps charity organizations receive and manage donations transparently. Integrated with Cardano, it ensures traceability, safety, and verification. Smart contracts written in Aiken automate fund management, eliminating intermediaries and increasing trust.',
+      'HeartGive is a blockchain-based fundraising platform enabling transparent donation management. Integrated with Cardano for traceability and verification. Smart contracts via Aiken automate fund allocation, eliminating intermediaries.',
     tech: ['Cardano', 'Aiken', 'Smart Contracts', 'Consumer App'],
     socials: [
       {
@@ -58,7 +58,7 @@ export const REWARDS: Reward[] = [
     category: 'Reward: $500 / Best UI/UX',
     role: 'Transocean',
     description:
-      'Transocean creates a decentralized platform for identifying and tracking ships and their port visits. Utilizing blockchain technology ensures data transparency and immutability, providing reliable and verifiable journey records with unique ship identifiers.',
+      "This project aims to create a decentralized platform for identifying and tracking the ports visited by ships during their journeys. By utilizing blockchain technology, the platform ensures transparency and immutability of data, providing a reliable and verifiable record of the ship's journey.",
     tech: ['Polkadot', 'Blockchain', 'UI/UX', 'Tracking'],
     socials: [
       {

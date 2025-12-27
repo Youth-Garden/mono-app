@@ -12,25 +12,28 @@ export default function SectionHeader({
   title,
   scrollHint,
   progressBarRef,
-}: SectionHeaderProps) {
+  className,
+}: SectionHeaderProps & { className?: string }) {
   return (
-    <div>
-      <span className="text-xs text-gray-500 uppercase tracking-widest block mb-4">
-        {sectionNumber}
-      </span>
-      <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter">
-        {title.split(' & ').map((part, i, arr) => (
-          <span key={i}>
-            {part}
-            {i < arr.length - 1 && (
-              <>
-                {' & '}
-                <br />{' '}
-              </>
-            )}
-          </span>
-        ))}
-      </h2>
+    <div className={`flex flex-col justify-between h-full ${className || ''}`}>
+      <div>
+        <span className="text-xs text-gray-500 uppercase tracking-widest block mb-4">
+          {sectionNumber}
+        </span>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold uppercase leading-[0.9]">
+          {title.split(' & ').map((part, i, arr) => (
+            <span key={i}>
+              {part}
+              {i < arr.length - 1 && (
+                <>
+                  {' & '}
+                  <br />{' '}
+                </>
+              )}
+            </span>
+          ))}
+        </h2>
+      </div>
       {scrollHint && progressBarRef && (
         <div className="hidden md:block mt-8">
           <span className="text-xs text-[#888]">{scrollHint}</span>

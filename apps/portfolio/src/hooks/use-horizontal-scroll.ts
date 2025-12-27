@@ -1,4 +1,5 @@
 import { useGSAP } from '@gsap/react';
+import { BREAKPOINTS } from '@repo/ui/constants/breakpoints';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { RefObject, useRef } from 'react';
@@ -29,7 +30,7 @@ export function useHorizontalScroll({
       const getScrollAmount = () => {
         const trackWidth = track.scrollWidth;
         const viewportWidth =
-          window.innerWidth < 768
+          window.innerWidth < BREAKPOINTS.tablet
             ? window.innerWidth
             : window.innerWidth * viewportWidthMultiplier;
         return -(trackWidth - viewportWidth);
@@ -38,33 +39,37 @@ export function useHorizontalScroll({
       const getScrollDistance = () => {
         const trackWidth = track.scrollWidth;
         const viewportWidth =
-          window.innerWidth < 768
+          window.innerWidth < BREAKPOINTS.tablet
             ? window.innerWidth
             : window.innerWidth * viewportWidthMultiplier;
         return trackWidth - viewportWidth;
       };
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: container,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-          start: 'top top',
-          end: () => `+=${getScrollDistance()}`,
-          scrub: true,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressBarRef.current) {
-              gsap.to(progressBarRef.current, {
-                width: `${self.progress * 100}%`,
-                duration: 0.1,
-                ease: 'none',
-              });
-            }
-          },
+      ScrollTrigger.matchMedia({
+        [`(min-width: ${BREAKPOINTS.tablet}px)`]: function () {
+          gsap.to(track, {
+            x: getScrollAmount,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: container,
+              pin: true,
+              pinSpacing: true,
+              anticipatePin: 1,
+              start: 'top top',
+              end: () => `+=${getScrollDistance()}`,
+              scrub: true,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                if (progressBarRef.current) {
+                  gsap.to(progressBarRef.current, {
+                    width: `${self.progress * 100}%`,
+                    duration: 0.1,
+                    ease: 'none',
+                  });
+                }
+              },
+            },
+          });
         },
       });
     },

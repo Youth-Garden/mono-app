@@ -1,24 +1,23 @@
 'use client';
-import SectionHeader from '@/components/common/section-header';
 import { ALL_EXPERIENCE_ITEMS, EXPERIENCE_META } from '@/constants/experience';
 import { useHorizontalScroll } from '@/hooks/use-horizontal-scroll';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Code2 } from 'lucide-react';
+import { CalendarDays, Trophy } from 'lucide-react'; // Added icons
 import Image from 'next/image';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
+import { getTechIcon } from '../common/icons';
+import SectionHeader from '../common/section-header';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Experience() {
+function Experience() {
   const containerRef = useRef<HTMLElement>(null);
   const { trackRef, progressBarRef } = useHorizontalScroll({
     containerRef,
     itemCount: ALL_EXPERIENCE_ITEMS.length,
   });
-
-  // Removed velocity-based distortion hooks to fix "wavy" effect as requested
 
   useGSAP(
     () => {
@@ -75,19 +74,6 @@ export default function Experience() {
           });
         }
       });
-
-      // 3. Momentum Feel (Drift based on velocity)
-      ScrollTrigger.create({
-        onUpdate: (self) => {
-          const velocity = self.getVelocity();
-          gsap.to('.exp-item-inner', {
-            x: velocity * 0.015, // Reduced slightly for better stability
-            duration: 0.6,
-            ease: 'power3.out',
-            overwrite: 'auto',
-          });
-        },
-      });
     },
     { scope: containerRef }
   );
@@ -96,7 +82,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={containerRef}
-      className="w-full bg-background relative h-screen flex flex-col md:flex-row overflow-hidden"
+      className="w-full bg-background relative min-h-screen lg:h-screen flex flex-col lg:flex-row overflow-hidden"
     >
       <div className="absolute inset-0 pointer-events-none z-0">
         <div
@@ -125,42 +111,58 @@ export default function Experience() {
       </div>
 
       {/* LEFT COLUMN: Fixed Title */}
-      <div className="w-full md:w-[25%] border-r border-white/10 p-6 md:p-12 h-full flex flex-col justify-between z-20 bg-background relative shrink-0">
+      <div className="w-full lg:w-[25%] border-b lg:border-r border-white/10 p-6 md:p-8 lg:p-12 min-h-[30vh] lg:h-full z-20 bg-background relative shrink-0">
         <SectionHeader
           sectionNumber={EXPERIENCE_META.sectionNumber}
           title={EXPERIENCE_META.title}
           scrollHint={EXPERIENCE_META.scrollHint}
           progressBarRef={progressBarRef}
+          className="h-full"
         />
       </div>
 
       {/* RIGHT COLUMN: Horizontal Scroll Container */}
-      <div className="w-full md:w-[75%] h-full overflow-hidden relative z-10 bg-background">
+      <div className="w-full lg:w-[75%] h-full overflow-hidden relative z-10 bg-background">
         {/* Track: width max-content để chứa hết các items hàng ngang */}
-        <div ref={trackRef} className="flex h-full w-max">
+        <div
+          ref={trackRef}
+          className="flex flex-col lg:flex-row h-full w-full lg:w-max"
+        >
           {ALL_EXPERIENCE_ITEMS.map((item, i) => (
             <div
               key={i}
-              className="exp-row group h-full w-screen md:w-[75vw] flex flex-col justify-center p-6 md:p-12 border-r border-white/10 relative overflow-hidden"
+              className="exp-row group h-auto min-h-[50vh] lg:h-full w-full lg:w-[75vw] flex flex-col justify-center p-6 md:p-8 lg:p-12 border-b lg:border-r border-white/10 relative overflow-hidden"
             >
-              <div className="ghost-text absolute top-1/2 left-0 -translate-y-1/2 text-[25vw] font-black uppercase text-white/[0.02] select-none pointer-events-none whitespace-nowrap z-0 italic w-full text-center tracking-tighter">
+              <div className="ghost-text absolute top-1/2 left-0 -translate-y-1/2 text-[10vw] lg:text-[15vw] font-black uppercase text-white/[0.02] select-none pointer-events-none whitespace-nowrap z-0 italic w-full text-center tracking-tighter">
                 {'company' in item ? item.company : item.school}
               </div>
 
               <div className="exp-item-inner max-w-4xl relative z-10 w-full">
                 <div className="exp-content-wrapper stagger-container">
                   {/* Header Section */}
-                  <div className="flex items-start justify-between mb-10">
+                  <div className="flex items-start justify-between mb-8">
                     <div className="flex-1">
-                      <span className="exp-period inline-block text-xs font-mono text-gray-500 tracking-widest uppercase mb-4 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
-                        {item.period}
-                      </span>
-                      <h3 className="exp-title text-5xl md:text-7xl font-bold uppercase text-white group-hover:text-white/90 transition-colors tracking-tighter leading-none break-words">
+                      <div className="flex items-center gap-3 mb-4 flex-wrap">
+                        {/* Period Badge - Standard/Outline */}
+                        <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-medium text-white/70 tracking-wider uppercase bg-white/5 px-3 py-1.5 rounded-full border border-white/10 group-hover:border-white/20 transition-colors">
+                          <CalendarDays className="w-3 h-3 text-white/50" />
+                          {item.period}
+                        </div>
+
+                        {/* GPA Badge - Unique/Highlight */}
+                        {'gpa' in item && (
+                          <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-black bg-white px-3 py-1.5 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.4)] animate-pulse">
+                            <Trophy className="w-3 h-3 text-black" />
+                            <span>GPA: {item.gpa}</span>
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="exp-title text-3xl md:text-3xl lg:text-5xl font-bold uppercase text-white group-hover:text-white/90 transition-colors tracking-tighter leading-none break-words">
                         {'company' in item ? item.company : item.school}
                       </h3>
                     </div>
-                    {'logo' in item && item.logo ? (
-                      <div className="exp-logo relative w-20 h-20 md:w-24 md:h-24 grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110 shrink-0 ml-6">
+                    {'logo' in item && item.logo && (
+                      <div className="exp-logo relative w-16 h-16 md:w-20 md:h-20 grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110 shrink-0 ml-6">
                         <Image
                           src={item.logo}
                           alt={'company' in item ? item.company : 'Logo'}
@@ -169,30 +171,19 @@ export default function Experience() {
                           className="object-contain"
                         />
                       </div>
-                    ) : (
-                      <div
-                        className={`exp-logo w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-white/10 flex items-center justify-center group-hover:border-white/30 group-hover:bg-white/5 transition-all duration-500 shrink-0 ml-6 ${'type' in item ? 'group-hover:rotate-12' : ''}`}
-                      >
-                        <Code2 className="w-10 h-10 md:w-12 md:h-12 text-white/30 group-hover:text-white/60 transition-colors" />
-                      </div>
                     )}
                   </div>
 
                   {/* Role/Degree Section */}
-                  <div className="exp-role relative mb-8 pl-6">
+                  <div className="exp-role relative mb-6 pl-6">
                     <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-white/40 via-white/20 to-transparent rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)]"></div>
-                    <span className="text-2xl md:text-5xl font-mono text-white/95 tracking-tight uppercase leading-none block">
+                    <span className="text-xl md:text-2xl font-mono text-white/95 tracking-tight uppercase leading-none block">
                       {'role' in item ? item.role : item.degree}
                     </span>
-                    {'gpa' in item && (
-                      <div className="mt-3 inline-flex items-center gap-2 text-sm font-mono bg-white/5 px-4 py-2 rounded-full text-white/80 border border-white/10 hover:border-white/30 transition-colors">
-                        {item.gpa}
-                      </div>
-                    )}
                   </div>
 
                   {/* Description Section */}
-                  <div className="exp-description text-base md:text-xl text-gray-400 leading-relaxed mb-8 font-light max-w-3xl">
+                  <div className="exp-description text-sm md:text-base text-gray-400 leading-relaxed mb-6 font-light max-w-3xl">
                     {'description' in item && item.description}
                   </div>
 
@@ -200,20 +191,20 @@ export default function Experience() {
                   {'achievements' in item &&
                     item.achievements &&
                     item.achievements.length > 0 && (
-                      <div className="exp-achievements mb-10">
-                        <div className="flex items-center gap-4 mb-6">
-                          <h4 className="text-xs font-mono text-gray-500 uppercase tracking-widest whitespace-nowrap">
+                      <div className="exp-achievements mb-8">
+                        <div className="flex items-center gap-4 mb-4">
+                          <h4 className="text-[10px] font-mono text-gray-500 uppercase tracking-widest whitespace-nowrap">
                             Key Highlights
                           </h4>
                           <div className="h-[1px] w-12 bg-white/20"></div>
                         </div>
-                        <ul className="space-y-4">
+                        <ul className="space-y-3">
                           {item.achievements.map((achievement, idx) => (
                             <li
                               key={idx}
-                              className="exp-achievement flex items-start gap-4 text-sm md:text-lg text-gray-400 group/item hover:text-white/90 transition-colors"
+                              className="exp-achievement flex items-start gap-4 text-xs md:text-sm text-gray-400 group/item hover:text-white/90 transition-colors"
                             >
-                              <span className="text-white/30 mt-2 shrink-0 group-hover/item:text-white/70 transition-colors text-xs">
+                              <span className="text-white/30 mt-1 shrink-0 group-hover/item:text-white/70 transition-colors text-[10px]">
                                 {'//'}
                               </span>
                               <span className="leading-relaxed font-light">
@@ -228,21 +219,25 @@ export default function Experience() {
                   {/* Tech Stack Section */}
                   {'tech' in item && (
                     <div className="exp-tech-section">
-                      <div className="flex items-center gap-4 mb-6">
-                        <h4 className="text-xs font-mono text-gray-500 uppercase tracking-widest whitespace-nowrap">
+                      <div className="flex items-center gap-4 mb-4">
+                        <h4 className="text-[10px] font-mono text-gray-500 uppercase tracking-widest whitespace-nowrap">
                           Stack
                         </h4>
                         <div className="h-[1px] w-12 bg-white/20"></div>
                       </div>
-                      <div className="flex flex-wrap gap-2 md:gap-3">
-                        {item.tech.map((t, j) => (
-                          <span
-                            key={j}
-                            className="exp-tech-tag text-[10px] md:text-xs uppercase tracking-[0.2em] px-5 py-3 border border-white/5 rounded-sm text-gray-400 hover:border-white/40 hover:text-white hover:bg-white/5 transition-all duration-300 cursor-default font-mono bg-white/[0.02]"
-                          >
-                            {t}
-                          </span>
-                        ))}
+
+                      <div className="flex flex-wrap gap-2">
+                        {item.tech.map((t, j) => {
+                          return (
+                            <div
+                              key={j}
+                              className="exp-tech-tag text-[10px] uppercase tracking-[0.05em] px-3 py-2 border border-white/10 rounded-sm bg-white/5 text-gray-300 font-mono flex items-center gap-2 transition-all duration-300 hover:bg-white hover:text-black hover:border-white hover:scale-105"
+                            >
+                              {getTechIcon(t)}
+                              <span className="transition-colors">{t}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -255,3 +250,5 @@ export default function Experience() {
     </section>
   );
 }
+
+export default memo(Experience);

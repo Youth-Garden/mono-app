@@ -28,21 +28,14 @@ export const EXPERIENCES: Experience[] = [
     company: 'Alchemy',
     period: 'Apr 2024 - Present',
     description:
-      'Constructing interfaces, integrating APIs, and implementing blockchain features including token integration. Building creative, high-impact UIs for short-term campaigns (15-30 days) to attract users. Optimizing state management, writing unit tests, and improving layout and UI. Also involved in building AI chatbots and UI for AI interaction to support customer service across multiple platforms (Instagram, X, Zalo, Facebook, Telegram).',
+      'Constructed interfaces, integrated APIs, and implemented blockchain features (token integration). Built creative UIs for short-term campaigns (15-30 days) to maximize user acquisition. Optimized state management, wrote unit tests, and enhanced UI/UX layouts. Developed AI chatbot interfaces to support customer service across multiple platforms (Instagram, X, Zalo, Facebook, Telegram).',
     logo: '/experiences/alchemy/logo.png',
-    tech: [
-      'React',
-      'Blockchain',
-      'Web3',
-      'TypeScript',
-      'AI Integration',
-      'Unit Testing',
-    ],
+    tech: ['Next.js', 'Blockchain', 'TypeScript', 'AI Integration'],
     achievements: [
-      'Built creative UIs for 15-30 day campaigns to maximize user acquisition',
-      'Integrated blockchain tokens and optimized API interactions',
-      'Developed AI chatbot interfaces for multi-platform customer support',
-      'Improved state management and overall UI/UX architecture',
+      'Built creative UIs for 15-30 day campaigns to drive user growth',
+      'Integrated blockchain tokens and optimized API performance',
+      'Developed AI chatbot interfaces for multi-platform support',
+      'Refined State Management and overall UI architecture',
     ],
   },
   {
@@ -51,22 +44,22 @@ export const EXPERIENCES: Experience[] = [
     company: 'Freelance',
     period: '2024 - Present',
     description:
-      'Participating in the development of personal finance management platforms and other custom web solutions. Delivering tailored applications that meet specific client needs focusing on functionality and user experience.',
+      'Specialized in architecting and delivering high-performance web solutions for diverse business needs. Key projects include a comprehensive personal finance ecosystem with real-time tracking and analytics, as well as various custom enterprise dashboards. Focused on building scalable, type-safe applications using modern stacks (Next.js, NestJS) while ensuring pixel-perfect implementation and seamless user experiences across all devices.',
     logo: null,
-    tech: ['Next.js', 'TypeScript', 'Tailwind', 'Finance Tech'],
+    tech: ['Next.js', 'NestJS', 'TypeScript', 'Tailwind'],
     achievements: [
       'Developed personal finance management platforms',
-      'Built custom web solutions for various client requirements',
+      'Built custom web solutions for diverse client requirements',
     ],
   },
 ];
 
 export const EDUCATION: Education[] = [
   {
-    school: 'university-of-transport',
-    degree: 'Major: Information Technology',
+    school: 'UNIVERSITY OF TRANSPORT',
+    degree: 'Information Technology',
     period: '2022 - 2026',
-    gpa: 'GPA: 3.64/4',
+    gpa: '3.64/4',
     description:
       'Pursuing comprehensive education in Information Technology with focus on software engineering, algorithms, and modern web technologies. Maintaining excellent academic standing while actively participating in coding competitions and tech communities.',
     type: 'edu',

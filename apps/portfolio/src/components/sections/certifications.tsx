@@ -33,13 +33,13 @@ export default function Certifications() {
   return (
     <section
       ref={container}
-      className="min-h-screen py-24 px-6 md:px-12 bg-background border-b border-white/10 snap-start flex flex-col justify-center"
+      className="min-h-screen py-16 md:py-24 px-6 md:px-12 bg-background border-b border-white/10 snap-start flex flex-col justify-center"
     >
-      <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-12">
+      <h2 className="text-xs text-gray-500 uppercase tracking-widest mb-8 md:mb-12">
         {CERTIFICATIONS_META.sectionNumber}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {CERTIFICATIONS.map((cert, i) => (
           <div
             key={i}

@@ -35,11 +35,11 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
   const getIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
       case 'github':
-        return <Github size={14} />;
+        return <Github size={12} />;
       case 'linkedin':
-        return <Linkedin size={14} />;
+        return <Linkedin size={12} />;
       case 'email':
-        return <Mail size={14} />;
+        return <Mail size={12} />;
       default:
         return null;
     }
@@ -167,12 +167,12 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
                     <button
                       key={link.platform}
                       onClick={handleCopyEmail}
-                      className="group flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-neutral-500 hover:text-white transition-all duration-300"
+                      className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-white transition-all duration-300"
                     >
                       <span className="opacity-70 group-hover:opacity-100 transition-opacity">
                         {getIcon(link.platform)}
                       </span>
-                      <span className="relative font-mono">
+                      <span className="relative">
                         {copied ? 'Copied!' : CONTACT_INFO.email}
                         <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
                       </span>
@@ -186,12 +186,12 @@ export default function Menu({ isOpen, onClose }: MenuProps) {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-neutral-500 hover:text-white transition-all duration-300"
+                    className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-gray-400 hover:text-white transition-all duration-300"
                   >
                     <span className="opacity-70 group-hover:opacity-100 transition-opacity">
                       {getIcon(link.platform)}
                     </span>
-                    <span className="relative font-mono">
+                    <span className="relative">
                       {link.label}
                       <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
                     </span>

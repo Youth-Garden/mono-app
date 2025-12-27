@@ -29,7 +29,7 @@ export function GlassImage({ src, ratio, onClick }: GlassImageProps) {
         className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       {/* Glossy overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-tr from-white/0 via-white/5 to-white/10 pointer-events-none" />
     </button>
   );
 }

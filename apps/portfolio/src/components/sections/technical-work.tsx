@@ -55,8 +55,8 @@ export default function TechnicalWork() {
             </div>
 
             {/* Title */}
-            <div className="md:col-span-7 p-6 py-12 relative overflow-hidden">
-              <h3 className="text-6xl md:text-8xl font-bold uppercase tracking-tighter z-10 relative group-hover:translate-x-4 transition-transform duration-500">
+            <div className="md:col-span-7 p-6 py-8 md:py-12 relative overflow-hidden">
+              <h3 className="text-4xl md:text-6xl lg:text-8xl font-bold uppercase tracking-tighter z-10 relative group-hover:translate-x-4 transition-transform duration-500">
                 {project.name}
               </h3>
               <p className="text-sm text-gray-400 mt-2 font-mono uppercase">

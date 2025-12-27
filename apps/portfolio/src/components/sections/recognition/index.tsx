@@ -5,14 +5,14 @@ import { useModal } from '@/hooks/use-modal';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { ClusterBuilderJam } from './cluster-builder-jam';
 import { ClusterCardano } from './cluster-cardano';
 import { ClusterGoogleCloud } from './cluster-google-cloud';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Recognition() {
+function Recognition() {
   const containerRef = useRef<HTMLElement>(null);
   const gateTopLeftRef = useRef<HTMLDivElement>(null);
   const gateBottomRightRef = useRef<HTMLDivElement>(null);
@@ -80,6 +80,7 @@ export default function Recognition() {
             opacity: 0,
             duration: 2,
             ease: 'power3.inOut',
+            force3D: true,
           },
           'start'
         ).to(
@@ -90,6 +91,7 @@ export default function Recognition() {
             opacity: 0,
             duration: 2,
             ease: 'power3.inOut',
+            force3D: true,
           },
           'start'
         );
@@ -280,7 +282,7 @@ export default function Recognition() {
         {/* --- PHASE 1: PROFESSIONAL GATE --- */}
         <div
           ref={gateTopLeftRef}
-          className="absolute top-10 left-6 md:left-20 z-40 flex flex-col items-start"
+          className="absolute top-10 left-6 md:left-20 z-40 flex flex-col items-start will-change-transform transform-gpu"
         >
           <span className="text-xs text-gray-500 uppercase tracking-widest block mb-2">
             04 / GALLERY
@@ -295,14 +297,11 @@ export default function Recognition() {
 
         <div
           ref={gateBottomRightRef}
-          className="absolute bottom-10 right-6 md:right-20 z-40 flex flex-col items-end text-right"
+          className="absolute bottom-10 right-6 md:right-20 z-40 flex flex-col items-end text-right will-change-transform transform-gpu"
         >
           <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:2px_white] opacity-70">
             & AWARDS
           </h1>
-          <span className="font-mono text-sm md:text-base text-neutral-400 mt-2 tracking-widest">
-            2023 — 2025
-          </span>
         </div>
 
         {/* --- TEXT GROUP --- */}
@@ -344,3 +343,5 @@ export default function Recognition() {
     </section>
   );
 }
+
+export default memo(Recognition);

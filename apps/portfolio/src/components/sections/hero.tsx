@@ -24,10 +24,11 @@ export default function Hero() {
         duration: 1.5,
         ease: 'power3.inOut',
       })
-        .from(
+        .fromTo(
           imageRef.current,
+          { scale: 1.5 },
           {
-            scale: 1.5,
+            scale: 1,
             duration: 1.5,
             ease: 'power3.inOut',
           },
@@ -110,7 +111,7 @@ export default function Hero() {
             {/* The "Curtain" that reveals the image */}
             <div
               ref={imageRevealRef}
-              className="w-full h-0 absolute bottom-0 left-0 right-0 overflow-hidden"
+              className="w-full h-0 absolute bottom-0 left-0 right-0 overflow-hidden group"
             >
               <Image
                 ref={imageRef}
@@ -120,6 +121,8 @@ export default function Hero() {
                 priority
                 className="w-full h-full object-cover object-center grayscale contrast-125 hover:grayscale-0 transition-all duration-700 ease-out"
               />
+              {/* Scan Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out z-10 skew-x-12 pointer-events-none" />
               {/* Inner Border/Crosshair for technical feel */}
               <div className="absolute inset-0 border border-white/10 pointer-events-none" />
               <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/40" />
