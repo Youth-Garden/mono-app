@@ -162,7 +162,7 @@ function Experience() {
                       </h3>
                     </div>
                     {'logo' in item && item.logo && (
-                      <div className="exp-logo relative w-16 h-16 md:w-20 md:h-20 grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110 shrink-0 ml-6">
+                      <div className="exp-logo relative w-16 h-16 md:w-20 md:h-20 transition-all duration-500 group-hover:scale-110 shrink-0 ml-6">
                         <Image
                           src={item.logo}
                           alt={'company' in item ? item.company : 'Logo'}

@@ -1,11 +1,12 @@
 'use client';
+import { useSplash } from '@/components/providers/splash-provider';
 import { HERO_CTA, HERO_PROFILE, HERO_TITLE } from '@/constants/hero';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDownRight } from 'lucide-react';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,9 +15,14 @@ export default function Hero() {
   const textWrapperRef = useRef(null);
   const imageRevealRef = useRef(null);
   const imageRef = useRef(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const { isLoading } = useSplash();
+
   useGSAP(
     () => {
-      const tl = gsap.timeline();
+      // Create timeline paused initially so .from() sets initial state immediately
+      const tl = gsap.timeline({ paused: true });
+      tlRef.current = tl;
 
       // 1. Initial Reveal
       tl.to(imageRevealRef.current, {
@@ -80,6 +86,12 @@ export default function Hero() {
     },
     { scope: containerRef }
   );
+
+  useEffect(() => {
+    if (!isLoading && tlRef.current) {
+      tlRef.current.play();
+    }
+  }, [isLoading]);
 
   return (
     <section

@@ -84,8 +84,6 @@ function Rewards() {
         const staggerElements = element.querySelectorAll('.stagger-item');
         if (staggerElements.length > 0) {
           gsap.from(staggerElements, {
-            y: 30,
-            opacity: 0,
             duration: 1,
             stagger: 0.1,
             ease: 'power3.out',

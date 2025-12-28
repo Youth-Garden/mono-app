@@ -56,10 +56,10 @@ export default function RootLayout({
         className={`${outfit.variable} ${playfair.variable} font-sans bg-background text-foreground antialiased selection:bg-white selection:text-black`}
       >
         <ClientLayout>
-          <Providers>
-            <SmoothScroll>{children}</SmoothScroll>
-            <SpeedInsights />
-          </Providers>
+          <SmoothScroll>
+            <Providers>{children}</Providers>
+          </SmoothScroll>
+          <SpeedInsights />
         </ClientLayout>
       </body>
     </html>

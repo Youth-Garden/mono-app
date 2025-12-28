@@ -1,5 +1,6 @@
 'use client';
 import { ImageModal } from '@/components/common/image-modal';
+import StarsBackground from '@/components/common/stars-background';
 import { GALLERY_IMAGES } from '@/constants/gallery';
 import { useModal } from '@/hooks/use-modal';
 import { useGSAP } from '@gsap/react';
@@ -67,6 +68,7 @@ function Recognition() {
           end: 'bottom bottom',
           scrub: 1,
           pin: true,
+          anticipatePin: 1,
         },
       });
 
@@ -278,6 +280,7 @@ function Recognition() {
       >
         {/* BACKGROUND ACCENTS */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-neutral-800/20 via-black to-black -z-10" />
+        <StarsBackground />
 
         {/* --- PHASE 1: PROFESSIONAL GATE --- */}
         <div
@@ -290,7 +293,7 @@ function Recognition() {
           <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-white mix-blend-difference">
             RECOG
           </h1>
-          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:2px_white] opacity-70">
+          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white]">
             NITIONS
           </h1>
         </div>
@@ -299,7 +302,7 @@ function Recognition() {
           ref={gateBottomRightRef}
           className="absolute bottom-10 right-6 md:right-20 z-40 flex flex-col items-end text-right will-change-transform transform-gpu"
         >
-          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:2px_white] opacity-70">
+          <h1 className="text-[10vw] font-black uppercase tracking-tighter leading-[0.8] text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white]">
             & AWARDS
           </h1>
         </div>

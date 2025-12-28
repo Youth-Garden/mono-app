@@ -1,0 +1,99 @@
+---
+title: Installation
+description: How to install and integrate Spectre components.
+---
+
+## Chat Widget
+
+### CDN Installation
+
+The quickest way to get started is to use our CDN:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Website</title>
+  </head>
+  <body>
+    <!-- Your content -->
+
+    <!-- Add Spectre Chat Widget -->
+    <script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+  </body>
+</html>
+```
+
+The widget will automatically initialize and appear in the bottom-right corner.
+
+### NPM Installation
+
+For advanced use cases, you can install from npm:
+
+```bash
+npm install @repo/chat-widget
+# or
+pnpm add @repo/chat-widget
+```
+
+Then import and initialize:
+
+```javascript
+import { initSpectre } from '@repo/chat-widget';
+
+initSpectre({
+  theme: 'dark',
+  userEmail: 'user@example.com',
+});
+```
+
+## Configuration
+
+### Basic Configuration
+
+Initialize the widget with custom options:
+
+```javascript
+window.spectre.init({
+  theme: 'dark', // 'light' or 'dark'
+  userEmail: 'user@example.com',
+  // Add any custom properties
+});
+```
+
+### Advanced Configuration
+
+```javascript
+window.spectre.init({
+  theme: 'dark',
+  userEmail: currentUser.email,
+  userId: currentUser.id,
+  metadata: {
+    plan: 'premium',
+    signupDate: '2024-01-01',
+    customField: 'value',
+  },
+});
+```
+
+## Verification
+
+After installation, verify the widget is loaded:
+
+```javascript
+// Check if API is available
+if (typeof window.spectre !== 'undefined') {
+  console.log('Spectre Chat Widget loaded successfully!');
+
+  // Test the API
+  window.spectre.onOpen(() => {
+    console.log('Chat opened!');
+  });
+}
+```
+
+## Next Steps
+
+- [Chat Widget Documentation](./chat-widget) - Complete API reference
+- [Examples](./examples) - Integration examples
+- [Customization](./customization) - Theme and styling options

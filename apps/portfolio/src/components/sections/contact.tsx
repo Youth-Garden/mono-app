@@ -6,16 +6,16 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="min-h-screen flex flex-col justify-between px-6 py-10 md:px-12 md:py-16 relative overflow-hidden"
+      className="h-dvh flex flex-col justify-between px-6 py-10 md:px-12 md:py-16 relative overflow-hidden"
     >
       <BackgroundGrid />
       {/* Top meta bar */}
       <header className="flex justify-between items-start w-full relative z-10">
-        <span className="text-xs text-neutral-500 uppercase tracking-[0.25em]">
+        <span className="text-[10px] md:text-xs text-neutral-500 uppercase tracking-widest md:tracking-[0.25em]">
           {CONTACT_META.sectionNumber}
         </span>
 
-        <span className="text-xs text-emerald-400 uppercase tracking-[0.25em] flex items-center gap-2">
+        <span className="text-[10px] md:text-xs text-emerald-400 uppercase tracking-widest md:tracking-[0.25em] flex items-center gap-2 text-right">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           {CONTACT_META.availabilityStatus}
         </span>
@@ -27,7 +27,7 @@ export default function Contact() {
           href={`mailto:${CONTACT_INFO.email}`}
           className="group relative inline-block"
         >
-          <h2 className="text-[12vw] md:text-[7vw] font-black tracking-tight uppercase leading-[0.8] text-center text-white">
+          <h2 className="text-[10vw] md:text-[7vw] font-black tracking-tight uppercase leading-[0.8] text-center text-white">
             {CONTACT_META.ctaTitle.line1}
             <br />
             <span className="text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white] group-hover:text-white group-hover:[-webkit-text-stroke:0px] transition-all duration-300">
@@ -42,20 +42,20 @@ export default function Contact() {
       {/* Bottom meta */}
       <footer className="w-full relative z-10 flex justify-between items-end">
         <div className="flex flex-col gap-1">
-          <p className="text-[10px] md:text-xs text-neutral-500 font-mono tracking-[0.2em] uppercase">
+          <p className="text-xs md:text-sm text-neutral-500 font-mono tracking-[0.2em] uppercase">
             {CONTACT_INFO.location.city}, {CONTACT_INFO.location.country}
           </p>
-          <p className="text-[10px] md:text-xs text-neutral-600 font-mono">
+          <p className="text-xs md:text-sm text-neutral-600 font-mono">
             {CONTACT_INFO.location.coordinates.latitude},{' '}
             {CONTACT_INFO.location.coordinates.longitude}
           </p>
         </div>
 
         <div className="text-right">
-          <p className="text-[10px] md:text-xs text-neutral-500 font-mono tracking-[0.2em] uppercase">
+          <p className="text-xs md:text-sm text-neutral-500 font-mono tracking-[0.2em] uppercase">
             © {CONTACT_INFO.copyright.year} {CONTACT_INFO.copyright.name}
           </p>
-          <p className="text-[10px] md:text-xs text-neutral-600 font-mono mt-0.5">
+          <p className="text-xs md:text-sm text-neutral-600 font-mono mt-0.5">
             All rights reserved
           </p>
         </div>

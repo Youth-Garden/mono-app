@@ -3,6 +3,7 @@ export interface TechItem {
   category?: string;
   slug?: string; // For simpleicons.org (e.g. "cplusplus" for "C++")
   hex?: string; // Brand color for hover effect
+  forceHighContrast?: boolean; // Use white/black style instead of brand color
 }
 
 export interface StackCategory {
@@ -24,9 +25,19 @@ export const TECH_STACK: StackCategory[] = [
     domain: 'FRONTEND',
     color: 'from-purple-500/20 to-pink-500/20',
     technologies: [
-      { name: 'Next.js 15', slug: 'nextdotjs', hex: '#000000' },
+      {
+        name: 'Next.js',
+        slug: 'nextdotjs',
+        hex: '#000000',
+        forceHighContrast: true,
+      },
       { name: 'React', slug: 'react', hex: '#61DAFB' },
-      { name: 'Shadcn UI', slug: 'shadcnui', hex: '#000000' },
+      {
+        name: 'Shadcn UI',
+        slug: 'shadcnui',
+        hex: '#000000',
+        forceHighContrast: true,
+      },
       { name: 'GSAP', slug: 'greensock', hex: '#88CE02' },
       { name: 'Tailwind CSS', slug: 'tailwindcss', hex: '#06B6D4' },
     ],

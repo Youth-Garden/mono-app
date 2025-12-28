@@ -1,5 +1,6 @@
 'use client';
 
+import { useLenis } from '@/hooks/use-lenis';
 import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
@@ -95,6 +96,8 @@ export const DialogProvider: React.FC<React.PropsWithChildren> = ({
   const [reload, setReload] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
 
+  const { lenis } = useLenis();
+
   React.useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
@@ -172,8 +175,15 @@ export const DialogProvider: React.FC<React.PropsWithChildren> = ({
   );
 
   React.useEffect(() => {
+    const isLocked = contentsRef.current.length > 0;
     toggleHtmlScrollable(contentsRef.current.length === 0);
-  }, [contentId, reload]);
+
+    if (isLocked) {
+      lenis?.stop();
+    } else {
+      lenis?.start();
+    }
+  }, [contentId, reload, lenis]);
 
   const value = React.useMemo(
     () => ({

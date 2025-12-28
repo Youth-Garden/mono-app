@@ -2,14 +2,8 @@
 
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { createContext, ReactNode, useContext, useRef, useState } from 'react';
 
 const SplashContext = createContext<{ isLoading: boolean }>({
   isLoading: true,
@@ -19,29 +13,25 @@ export const useSplash = () => useContext(SplashContext);
 
 export default function SplashProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsMounted(true);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, []);
 
   useGSAP(
     () => {
       const tl = gsap.timeline({
-        onComplete: () => setIsLoading(false),
+        onComplete: () => {
+          setIsLoading(false);
+          // Force recalculation of ScrollTriggers after splash is gone/hidden
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+          }, 100);
+        },
       });
 
       // Initial States
       gsap.set(progressRef.current, { scaleX: 0, transformOrigin: 'left' });
       gsap.set(counterRef.current, { opacity: 0, y: 20 });
-      gsap.set(contentRef.current, { y: 100 });
 
       // 1. Loading Animation
       tl.to(counterRef.current, {
@@ -91,16 +81,6 @@ export default function SplashProvider({ children }: { children: ReactNode }) {
             ease: 'power4.inOut',
           },
           '-=0.2'
-        )
-        .to(
-          contentRef.current,
-          {
-            y: 0,
-            duration: 1.5,
-            ease: 'power4.out',
-            clearProps: 'transform', // CRITICAL: Reset transform to restore stacking context
-          },
-          '<'
         );
     },
     { scope: containerRef }
@@ -133,7 +113,7 @@ export default function SplashProvider({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <div ref={contentRef}>{isMounted && children}</div>
+      {children}
     </SplashContext.Provider>
   );
 }

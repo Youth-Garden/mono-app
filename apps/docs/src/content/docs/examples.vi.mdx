@@ -1,0 +1,360 @@
+---
+title: Examples
+description: Real-world examples of integrating the Spectre Chat Widget
+---
+
+## Basic Examples
+
+### Simple Integration
+
+The most basic integration - just add the script tag:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Website</title>
+  </head>
+  <body>
+    <h1>Welcome to my site</h1>
+
+    <!-- Chat widget -->
+    <script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+  </body>
+</html>
+```
+
+### With Custom Theme
+
+Initialize with a dark theme:
+
+```html
+<script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+<script>
+  window.spectre.init({
+    theme: 'dark',
+  });
+</script>
+```
+
+## Advanced Examples
+
+### User Authentication
+
+Pass user information to the widget:
+
+```javascript
+// After user logs in
+function onUserLogin(user) {
+  window.spectre.init({
+    theme: 'dark',
+    userEmail: user.email,
+    userId: user.id,
+    userName: user.name,
+    metadata: {
+      plan: user.subscription.plan,
+      signupDate: user.createdAt,
+    },
+  });
+}
+```
+
+### Analytics Integration
+
+Track chat interactions with your analytics:
+
+```javascript
+// Google Analytics
+window.spectre.onOpen(() => {
+  gtag('event', 'chat_opened', {
+    event_category: 'engagement',
+    event_label: 'chat_widget',
+  });
+});
+
+window.spectre.onMessageSent((data) => {
+  gtag('event', 'message_sent', {
+    event_category: 'engagement',
+    event_label: 'chat_widget',
+    value: data.text.length,
+  });
+});
+
+// Mixpanel
+window.spectre.onOpen(() => {
+  mixpanel.track('Chat Opened');
+});
+
+window.spectre.onMessageSent((data) => {
+  mixpanel.track('Message Sent', {
+    messageId: data.id,
+    messageLength: data.text.length,
+    timestamp: data.timestamp,
+  });
+});
+```
+
+### Programmatic Control
+
+Control the widget from your application:
+
+```javascript
+// Open chat from a help button
+document.getElementById('help-button').addEventListener('click', () => {
+  window.spectre.open();
+});
+
+// Close chat when user navigates away
+window.addEventListener('beforeunload', () => {
+  window.spectre.close();
+});
+
+// Toggle chat with keyboard shortcut
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'k') {
+    e.preventDefault();
+    window.spectre.toggle();
+  }
+});
+```
+
+### Auto-Open on Page Load
+
+Open the chat automatically after a delay:
+
+```javascript
+// Open chat after 5 seconds
+setTimeout(() => {
+  window.spectre.open();
+}, 5000);
+
+// Or open on first visit only
+if (!localStorage.getItem('chat_opened')) {
+  setTimeout(() => {
+    window.spectre.open();
+    localStorage.setItem('chat_opened', 'true');
+  }, 3000);
+}
+```
+
+### Conditional Display
+
+Show chat only for specific users or pages:
+
+```javascript
+// Show only for logged-in users
+if (currentUser.isAuthenticated) {
+  window.spectre.init({
+    userEmail: currentUser.email,
+  });
+} else {
+  // Hide the widget for anonymous users
+  document.getElementById('spectre-chat-host').style.display = 'none';
+}
+
+// Show only on specific pages
+const chatPages = ['/support', '/contact', '/help'];
+if (chatPages.includes(window.location.pathname)) {
+  window.spectre.init({ theme: 'light' });
+}
+```
+
+## Framework Integration
+
+### React
+
+```jsx
+import { useEffect } from 'react';
+
+function App() {
+  useEffect(() => {
+    // Initialize widget
+    if (window.spectre) {
+      window.spectre.init({
+        theme: 'dark',
+        userEmail: user?.email,
+      });
+
+      // Set up event listeners
+      window.spectre.onOpen(() => {
+        console.log('Chat opened');
+      });
+
+      window.spectre.onMessageSent((data) => {
+        console.log('Message sent:', data);
+      });
+    }
+  }, [user]);
+
+  const handleOpenChat = () => {
+    window.spectre?.open();
+  };
+
+  return (
+    <div>
+      <button onClick={handleOpenChat}>Open Chat</button>
+    </div>
+  );
+}
+```
+
+### Vue
+
+```vue
+<template>
+  <div>
+    <button @click="openChat">Open Chat</button>
+  </div>
+</template>
+
+<script setup>
+import { onMounted } from 'vue';
+
+const user = ref(null);
+
+onMounted(() => {
+  if (window.spectre) {
+    window.spectre.init({
+      theme: 'dark',
+      userEmail: user.value?.email,
+    });
+
+    window.spectre.onOpen(() => {
+      console.log('Chat opened');
+    });
+  }
+});
+
+const openChat = () => {
+  window.spectre?.open();
+};
+</script>
+```
+
+### Next.js
+
+```tsx
+// app/layout.tsx
+'use client';
+
+import { useEffect } from 'react';
+import Script from 'next/script';
+
+export default function RootLayout({ children }) {
+  useEffect(() => {
+    // Initialize after script loads
+    const initChat = () => {
+      if (window.spectre) {
+        window.spectre.init({
+          theme: 'dark',
+        });
+      }
+    };
+
+    // Wait for script to load
+    if (document.readyState === 'complete') {
+      initChat();
+    } else {
+      window.addEventListener('load', initChat);
+      return () => window.removeEventListener('load', initChat);
+    }
+  }, []);
+
+  return (
+    <html>
+      <body>
+        {children}
+        <Script
+          src="https://cdn.yourdomain.com/spectre-chat.js"
+          strategy="lazyOnload"
+        />
+      </body>
+    </html>
+  );
+}
+```
+
+## E-commerce Examples
+
+### Shopify Integration
+
+```html
+<!-- In your theme.liquid -->
+<script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+<script>
+  window.spectre.init({
+    theme: 'light',
+    {% if customer %}
+    userEmail: '{{ customer.email }}',
+    userId: '{{ customer.id }}',
+    metadata: {
+      orderCount: {{ customer.orders_count }},
+      totalSpent: {{ customer.total_spent }}
+    }
+    {% endif %}
+  });
+</script>
+```
+
+### WooCommerce Integration
+
+```php
+// In functions.php
+function add_spectre_chat() {
+    $user = wp_get_current_user();
+    ?>
+    <script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+    <script>
+      window.spectre.init({
+        theme: 'light',
+        <?php if ($user->ID): ?>
+        userEmail: '<?php echo $user->user_email; ?>',
+        userId: '<?php echo $user->ID; ?>',
+        userName: '<?php echo $user->display_name; ?>'
+        <?php endif; ?>
+      });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'add_spectre_chat');
+```
+
+## Troubleshooting Examples
+
+### Handling Load Errors
+
+```javascript
+// Graceful fallback if script fails to load
+window.addEventListener(
+  'error',
+  (e) => {
+    if (e.target.src && e.target.src.includes('spectre-chat.js')) {
+      console.error('Chat widget failed to load');
+      // Show alternative contact method
+      document.getElementById('fallback-contact').style.display = 'block';
+    }
+  },
+  true
+);
+```
+
+### Debug Mode
+
+```javascript
+// Enable verbose logging
+window.spectre.init({
+  theme: 'dark',
+  debug: true, // Log all events to console
+});
+
+// Monitor all events
+window.spectre.onOpen(() => console.log('[DEBUG] Chat opened'));
+window.spectre.onClose(() => console.log('[DEBUG] Chat closed'));
+window.spectre.onMessageSent((data) => console.log('[DEBUG] Message:', data));
+```
+
+## Next Steps
+
+- [API Reference](./chat-widget) - Complete API documentation
+- [Customization](./customization) - Advanced theming options
+- [Best Practices](./best-practices) - Performance and UX tips

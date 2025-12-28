@@ -97,19 +97,39 @@ function CategoryCard({ category }: { category: (typeof TECH_STACK)[0] }) {
   const activeItem = activeTech
     ? category.technologies.find((t) => t.name === activeTech)
     : null;
-  const activeColor = activeItem?.hex;
+
+  // Use white if high contrast is forced, otherwise use brand color
+  const activeColor = activeItem?.forceHighContrast
+    ? '#ffffff'
+    : activeItem?.hex === '#000000'
+      ? '#ffffff'
+      : activeItem?.hex;
 
   const handleMouseEnter = (techName: string) => {
     setActiveTech(techName);
     setImgError(false); // Reset error state for new item
   };
 
-  const getIconUrl = (tech: { name: string; slug?: string; hex?: string }) => {
+  const getIconUrl = (tech: {
+    name: string;
+    slug?: string;
+    hex?: string;
+    forceHighContrast?: boolean;
+  }) => {
     const slug =
       tech.slug ||
       tech.name.toLowerCase().replace(/\./g, '').replace(/\s+/g, '');
+
+    // Use white for high contrast items, otherwise use brand color logic
     const color =
-      activeTech === tech.name && tech.hex ? tech.hex.replace('#', '') : 'gray';
+      activeTech === tech.name
+        ? tech.forceHighContrast
+          ? 'white'
+          : tech.hex
+            ? tech.hex.replace('#', '')
+            : 'gray'
+        : 'gray';
+
     return `https://cdn.simpleicons.org/${slug}/${color}`;
   };
 
@@ -165,18 +185,27 @@ function CategoryCard({ category }: { category: (typeof TECH_STACK)[0] }) {
               <span
                 key={tech.name}
                 onMouseEnter={() => handleMouseEnter(tech.name)}
-                className="inline-flex items-center px-3 py-1.5 text-xs font-medium tracking-wide bg-white/5 border border-white/10 rounded-full text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white transition-all duration-300 cursor-default hover:scale-105"
-                style={{
-                  borderColor:
-                    activeTech === tech.name && tech.hex ? tech.hex : '',
-                  backgroundColor:
-                    activeTech === tech.name && tech.hex ? `${tech.hex}15` : '',
-                  color: activeTech === tech.name && tech.hex ? tech.hex : '',
-                  boxShadow:
-                    activeTech === tech.name && tech.hex
-                      ? `0 0 15px ${tech.hex}30`
-                      : '',
-                }}
+                className={`inline-flex items-center px-3 py-1.5 text-xs font-medium tracking-wide border rounded-full transition-all duration-300 cursor-default hover:scale-105 ${
+                  activeTech === tech.name
+                    ? tech.forceHighContrast
+                      ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.4)]'
+                      : 'bg-white/10 text-white' // Fallback for standard active state (colors handled by style)
+                    : tech.forceHighContrast
+                      ? 'bg-white/5 border-white/10 text-gray-300 hover:bg-white hover:text-black hover:border-white'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/30 hover:text-white'
+                }`}
+                style={
+                  !tech.forceHighContrast &&
+                  activeTech === tech.name &&
+                  tech.hex
+                    ? {
+                        borderColor: tech.hex,
+                        backgroundColor: `${tech.hex}15`,
+                        color: tech.hex,
+                        boxShadow: `0 0 15px ${tech.hex}30`,
+                      }
+                    : {}
+                }
               >
                 {tech.name}
               </span>

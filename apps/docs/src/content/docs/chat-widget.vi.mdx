@@ -1,0 +1,346 @@
+---
+title: Chat Widget
+description: Embeddable, lightweight chat widget built with Preact
+---
+
+## Overview
+
+The Spectre Chat Widget is a lightweight, embeddable chat interface designed for seamless integration into any website. Built with Preact for minimal bundle size and maximum performance.
+
+## Key Features
+
+- **Lightweight** - Only ~3KB gzipped (Preact vs React)
+- **Shadow DOM** - Isolated styles prevent conflicts with host site
+- **Event-Driven API** - Subscribe to widget events from your application
+- **Customizable** - Theme support and configuration options
+- **Responsive** - Works on desktop and mobile devices
+- **TypeScript** - Full type safety and IntelliSense support
+
+## Tech Stack
+
+- **Framework**: [Preact](https://preactjs.com/) - 3KB React alternative
+- **Bundler**: [Vite](https://vitejs.dev/) - Fast builds and HMR
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom prefix
+- **State**: [@preact/signals](https://preactjs.com/guide/v10/signals/) - Fine-grained reactivity
+- **Icons**: [Lucide Preact](https://lucide.dev/)
+
+## Quick Start
+
+### Installation
+
+Add the widget script to your HTML:
+
+```html
+<script src="https://cdn.yourdomain.com/spectre-chat.js"></script>
+```
+
+The widget will automatically mount and appear in the bottom-right corner of your page.
+
+### Basic Usage
+
+The widget provides a global `window.spectre` API:
+
+```javascript
+// Open the chat window
+window.spectre.open();
+
+// Close the chat window
+window.spectre.close();
+
+// Toggle the chat window
+window.spectre.toggle();
+```
+
+## Configuration
+
+### Initialize with Config
+
+You can customize the widget by passing a configuration object:
+
+```javascript
+window.spectre.init({
+  theme: 'dark',
+  userEmail: 'user@example.com',
+  // Add custom properties as needed
+});
+```
+
+### Configuration Options
+
+| Option      | Type     | Default     | Description                          |
+| ----------- | -------- | ----------- | ------------------------------------ |
+| `theme`     | `string` | `'light'`   | Widget theme (`'light'` or `'dark'`) |
+| `userEmail` | `string` | `undefined` | Pre-fill user email                  |
+
+## API Reference
+
+### Methods
+
+#### `open()`
+
+Opens the chat window.
+
+```javascript
+window.spectre.open();
+```
+
+#### `close()`
+
+Closes the chat window.
+
+```javascript
+window.spectre.close();
+```
+
+#### `toggle()`
+
+Toggles the chat window open/closed state.
+
+```javascript
+window.spectre.toggle();
+```
+
+#### `init(config)`
+
+Initializes the widget with custom configuration.
+
+```javascript
+window.spectre.init({
+  theme: 'dark',
+  userEmail: 'user@example.com',
+});
+```
+
+**Parameters:**
+
+- `config` (object) - Configuration options
+
+### Event Listeners
+
+Subscribe to widget events to integrate with your application:
+
+#### `onOpen(callback)`
+
+Triggered when the chat window opens.
+
+```javascript
+window.spectre.onOpen(() => {
+  console.log('Chat opened');
+  // Track analytics, update UI, etc.
+});
+```
+
+#### `onClose(callback)`
+
+Triggered when the chat window closes.
+
+```javascript
+window.spectre.onClose(() => {
+  console.log('Chat closed');
+});
+```
+
+#### `onMessageSent(callback)`
+
+Triggered when a user sends a message.
+
+```javascript
+window.spectre.onMessageSent((data) => {
+  console.log('Message sent:', data);
+  // data: { id, text, timestamp }
+});
+```
+
+**Callback Parameters:**
+
+- `data.id` (string) - Unique message ID
+- `data.text` (string) - Message content
+- `data.timestamp` (Date) - Message timestamp
+
+## Examples
+
+### Track Chat Interactions
+
+```javascript
+// Track when users open the chat
+window.spectre.onOpen(() => {
+  analytics.track('Chat Opened');
+});
+
+// Track messages
+window.spectre.onMessageSent((data) => {
+  analytics.track('Message Sent', {
+    messageId: data.id,
+    timestamp: data.timestamp,
+  });
+});
+```
+
+### Programmatic Control
+
+```javascript
+// Open chat when user clicks a button
+document.getElementById('help-btn').addEventListener('click', () => {
+  window.spectre.open();
+});
+
+// Close chat after 30 seconds of inactivity
+let inactivityTimer;
+window.spectre.onOpen(() => {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    window.spectre.close();
+  }, 30000);
+});
+```
+
+### Custom Integration
+
+```javascript
+// Initialize with user data
+window.spectre.init({
+  theme: 'dark',
+  userEmail: currentUser.email,
+  userId: currentUser.id,
+  metadata: {
+    plan: currentUser.subscription,
+    signupDate: currentUser.createdAt,
+  },
+});
+
+// Listen for all events
+window.spectre.onOpen(() => console.log('Opened'));
+window.spectre.onClose(() => console.log('Closed'));
+window.spectre.onMessageSent((msg) => console.log('Sent:', msg));
+```
+
+## TypeScript Support
+
+The widget includes full TypeScript definitions:
+
+```typescript
+interface SpectreAPI {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  onOpen: (callback: () => void) => void;
+  onClose: (callback: () => void) => void;
+  onMessageSent: (callback: (data: MessageEventData) => void) => void;
+  init: (config: SpectreConfig) => void;
+}
+
+interface MessageEventData {
+  id: string;
+  text: string;
+  timestamp: Date;
+}
+
+interface SpectreConfig {
+  theme?: string;
+  userEmail?: string;
+  [key: string]: any;
+}
+
+declare global {
+  interface Window {
+    spectre: SpectreAPI;
+  }
+}
+```
+
+## Styling
+
+The widget uses Shadow DOM to encapsulate styles and prevent conflicts with your site's CSS. All Tailwind classes are prefixed with `cw-` to avoid collisions.
+
+### Custom Themes
+
+The widget supports theme customization through the `theme` config option:
+
+```javascript
+window.spectre.init({
+  theme: 'dark', // or 'light'
+});
+```
+
+## Browser Support
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## Performance
+
+- **Bundle Size**: ~15KB gzipped (including Preact runtime)
+- **Initial Load**: < 50ms on 3G
+- **Shadow DOM**: Isolated rendering, no style conflicts
+- **Lazy Loading**: Widget loads asynchronously
+
+## Troubleshooting
+
+### Widget Not Appearing
+
+1. Check browser console for errors
+2. Verify script is loaded: `typeof window.spectre !== 'undefined'`
+3. Ensure no Content Security Policy (CSP) blocking
+
+### Style Conflicts
+
+The widget uses Shadow DOM to prevent style conflicts. If you experience issues:
+
+1. Check for global CSS affecting `position: fixed` elements
+2. Verify `z-index` values don't conflict (widget uses `9999`)
+
+### Events Not Firing
+
+Ensure event listeners are registered after the script loads:
+
+```javascript
+// Wait for script to load
+if (window.spectre) {
+  window.spectre.onOpen(() => console.log('Ready!'));
+} else {
+  window.addEventListener('load', () => {
+    window.spectre.onOpen(() => console.log('Ready!'));
+  });
+}
+```
+
+## Development
+
+### Local Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server
+pnpm dev --filter=chat-widget
+
+# Build for production
+pnpm build --filter=chat-widget
+```
+
+### Project Structure
+
+```
+chat-widget/
+├── src/
+│   ├── components/
+│   │   ├── chat-bubble.tsx    # Floating chat button
+│   │   └── chat-window.tsx    # Chat interface
+│   ├── utils/
+│   │   └── event-bus.ts       # Event system
+│   ├── App.tsx                # Main component
+│   ├── main.tsx               # Entry point & API
+│   ├── store.ts               # State management
+│   └── types.ts               # TypeScript types
+├── dist/                      # Build output
+│   └── package.json
+```
+
+## Next Steps
+
+- [API Reference](/docs/api) - Detailed API documentation
+- [Examples](/docs/examples) - More integration examples
+- [Customization](/docs/customization) - Advanced theming

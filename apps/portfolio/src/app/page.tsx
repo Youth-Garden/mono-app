@@ -1,13 +1,13 @@
 import BackgroundGrid from '@/components/common/background-grid';
+import Experience from '@/components/sections/experience';
 import Hero from '@/components/sections/hero';
 import Philosophy from '@/components/sections/philosophy';
+import Rewards from '@/components/sections/rewards';
 import dynamic from 'next/dynamic';
 
 const Contact = dynamic(() => import('@/components/sections/contact'));
 const Recognition = dynamic(() => import('@/components/sections/recognition'));
 const Stack = dynamic(() => import('@/components/sections/stack'));
-const Rewards = dynamic(() => import('@/components/sections/rewards'));
-const Experience = dynamic(() => import('@/components/sections/experience'));
 
 export default function Home() {
   return (
