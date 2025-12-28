@@ -3,10 +3,10 @@ import { notFound } from 'next/navigation';
 import { source } from '../../../../source';
 
 export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug?: string[]; locale: string }>;
 }) {
   const params = await props.params;
-  const page = source.getPage(params.slug);
+  const page = source.getPage(params.slug, params.locale);
 
   if (!page) notFound();
 
@@ -23,14 +23,17 @@ export default async function Page(props: {
 }
 
 export async function generateStaticParams() {
-  return source.generateParams();
+  return source.generateParams().map((param) => ({
+    ...param,
+    locale: param.lang,
+  }));
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug?: string[]; locale: string }>;
 }) {
   const params = await props.params;
-  const page = source.getPage(params.slug);
+  const page = source.getPage(params.slug, params.locale);
   if (!page) notFound();
 
   return {
