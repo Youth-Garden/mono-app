@@ -14,6 +14,15 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-gt-america)', 'Arial', 'sans-serif'],
+        mono: [
+          'var(--font-mono)',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace',
+        ],
       },
       borderRadius: {
         lg: '0px',
