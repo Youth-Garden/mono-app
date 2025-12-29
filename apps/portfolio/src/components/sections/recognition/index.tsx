@@ -307,7 +307,7 @@ function Recognition() {
           className="absolute inset-0 flex flex-col items-center justify-center z-30 origin-center will-change-transform opacity-0 pointer-events-none"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <h1 className="text-[5vw] font-black uppercase tracking-tighter leading-[0.85] text-center text-white mix-blend-difference">
+          <h1 className="text-[5vw] font-black uppercase tracking-tighter leading-[0.85] text-center text-white">
             ENTER
             <br />
             <span className="text-[4vw] block mt-4 text-transparent [-webkit-text-stroke:1px_white] md:[-webkit-text-stroke:2px_white]">
