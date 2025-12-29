@@ -95,6 +95,22 @@ function Rewards() {
           });
         }
       });
+      // "Curtain Effect" - Pin Rewards so Stack slides over it
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: 'bottom bottom',
+        end: '+=100%',
+        pin: true,
+        pinSpacing: false,
+        scrub: true,
+        onUpdate: (self) => {
+          // Optional: Add a slight "dim" effect as it gets covered
+          const progress = self.progress;
+          gsap.set(containerRef.current, {
+            filter: `brightness(${1 - progress * 0.5})`,
+          });
+        },
+      });
     },
     { scope: containerRef }
   );

@@ -112,21 +112,22 @@ function Recognition() {
         const label = 'clusterLeft';
         tl.addLabel(label, '-=3.0');
 
-        // 1. Movement & Rotation (Full duration)
+        // 1. Movement & Rotation & Visibility (Composite Only Properties)
         tl.fromTo(
           clusterLeftRef.current,
           {
             z: -1500,
             scale: 0.5,
-            opacity: 0,
+            autoAlpha: 0, // replaces opacity: 0 + visibility: hidden
             rotationY: 0,
             rotationX: 0,
-            pointerEvents: 'none', // Start disabled
+            pointerEvents: 'none',
+            willChange: 'transform, opacity', // Hint to browser
           },
           {
             z: 1200,
             scale: 1.2,
-            opacity: 1,
+            autoAlpha: 1,
             rotationY: 15,
             rotationX: 5,
             duration: 5,
@@ -136,19 +137,7 @@ function Recognition() {
           label
         );
 
-        // 2. Blur (Clears fast as it approaches)
-        tl.fromTo(
-          clusterLeftRef.current,
-          { filter: 'blur(10px)' },
-          {
-            filter: 'blur(0px)',
-            duration: 2.5, // Clears by the time it reaches ~ -200z
-            ease: 'power1.out',
-          },
-          label
-        );
-
-        // 3. Interaction Window (Only active in the middle ~z -300 to 300)
+        // 2. Interaction Window (Strict control)
         tl.set(
           clusterLeftRef.current,
           { pointerEvents: 'auto' },
@@ -160,10 +149,10 @@ function Recognition() {
           `${label}+=3.8`
         );
 
-        // 4. Exit Fade (Safety)
+        // 3. Exit Fade
         tl.to(
           clusterLeftRef.current,
-          { opacity: 0, duration: 0.5, ease: 'none' },
+          { autoAlpha: 0, duration: 0.5, ease: 'none' },
           `${label}+=4.5`
         );
       }
@@ -178,31 +167,21 @@ function Recognition() {
           {
             z: -2000,
             scale: 0.5,
-            opacity: 0,
+            autoAlpha: 0,
             rotationY: 0,
             rotationX: 0,
             pointerEvents: 'none',
+            willChange: 'transform, opacity',
           },
           {
             z: 1200,
             scale: 1.2,
-            opacity: 1,
+            autoAlpha: 1,
             rotationY: -15,
             rotationX: 5,
             duration: 5,
             ease: 'none',
             force3D: true,
-          },
-          label
-        );
-
-        tl.fromTo(
-          clusterRightRef.current,
-          { filter: 'blur(10px)' },
-          {
-            filter: 'blur(0px)',
-            duration: 2.5,
-            ease: 'power1.out',
           },
           label
         );
@@ -220,7 +199,7 @@ function Recognition() {
 
         tl.to(
           clusterRightRef.current,
-          { opacity: 0, duration: 0.5, ease: 'none' },
+          { autoAlpha: 0, duration: 0.5, ease: 'none' },
           `${label}+=4.5`
         );
       }
@@ -236,32 +215,22 @@ function Recognition() {
             z: -2500,
             xPercent: 50,
             scale: 0.5,
-            opacity: 0,
+            autoAlpha: 0,
             rotationY: 0,
             rotationX: 0,
             pointerEvents: 'none',
+            willChange: 'transform, opacity',
           },
           {
             z: 1200,
             xPercent: 20,
             scale: 1.2,
-            opacity: 1,
+            autoAlpha: 1,
             rotationY: -10,
             rotationX: 10,
             duration: 5.5,
             ease: 'none',
             force3D: true,
-          },
-          label
-        );
-
-        tl.fromTo(
-          clusterCloudRef.current,
-          { filter: 'blur(10px)' },
-          {
-            filter: 'blur(0px)',
-            duration: 3.0, // Longer duration for cloud as it starts further
-            ease: 'power1.out',
           },
           label
         );
@@ -279,7 +248,7 @@ function Recognition() {
 
         tl.to(
           clusterCloudRef.current,
-          { opacity: 0, duration: 0.5, ease: 'none' },
+          { autoAlpha: 0, duration: 0.5, ease: 'none' },
           `${label}+=5.0`
         );
       }
@@ -292,11 +261,16 @@ function Recognition() {
       id="recognition"
       ref={containerRef}
       className="w-full h-[400vh] bg-black relative overflow-hidden"
+      style={{ contain: 'paint layout' }}
     >
       {/* Perspective Container */}
       <div
-        className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center"
-        style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
+        className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center will-change-transform"
+        style={{
+          perspective: '1000px',
+          transformStyle: 'preserve-3d',
+          backfaceVisibility: 'hidden',
+        }}
       >
         {/* BACKGROUND ACCENTS */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-neutral-800/20 via-black to-black -z-10" />

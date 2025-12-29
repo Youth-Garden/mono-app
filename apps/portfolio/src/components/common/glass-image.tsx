@@ -19,13 +19,14 @@ export function GlassImage({ src, ratio, onClick }: GlassImageProps) {
     <button
       type="button"
       onClick={onClick}
-      className={`relative ${aspect} w-full overflow-hidden border border-white/10 bg-white/10 group cursor-zoom-in pointer-events-[inherit] transition-transform duration-300 hover:scale-[1.02] focus:outline-none`}
+      className={`relative ${aspect} w-full overflow-hidden border border-white/10 bg-white/10 group cursor-zoom-in pointer-events-[inherit] transition-transform duration-300 hover:scale-[1.02] active:scale-95 focus:outline-none will-change-transform`}
     >
       <Image
         src={src}
         alt="Gallery Image"
         fill
         sizes="(max-width: 768px) 50vw, 35vw"
+        priority
         className="object-cover transition-transform duration-700 group-hover:scale-110"
       />
       {/* Glossy overlay */}

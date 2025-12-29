@@ -23,7 +23,7 @@ const StarsBackground = () => {
         alpha: number;
         speed: number;
       }[] = [];
-      const numStars = 100;
+      const numStars = 30; // Reduced for performance
 
       for (let i = 0; i < numStars; i++) {
         stars.push({

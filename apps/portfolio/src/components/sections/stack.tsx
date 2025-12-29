@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import BackgroundGrid from '../common/background-grid';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,8 +50,9 @@ export default function Stack() {
     <section
       id="stack"
       ref={containerRef}
-      className="min-h-screen border-b border-white/10 bg-background snap-start py-20 px-6 md:px-12"
+      className="min-h-screen border-b border-white/10 bg-background snap-start py-20 px-6 md:px-12 relative z-30 shadow-[0_-50px_100px_rgba(0,0,0,0.8)]"
     >
+      <BackgroundGrid />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-16">
