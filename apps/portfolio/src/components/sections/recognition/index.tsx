@@ -39,34 +39,12 @@ function Recognition() {
     () => {
       if (!containerRef.current) return;
 
-      // --- HELPER: updateClusterState ---
-      // This ensures a cluster is ONLY interactive when it is focused and visible.
-      // It runs on every frame of the animation to prevent "ghost clicks" on faded items.
-      const updateClusterState = (ref: React.RefObject<HTMLDivElement>) => {
-        if (!ref.current) return;
-        const z = gsap.getProperty(ref.current, 'z') as number;
-        const opacity = gsap.getProperty(ref.current, 'opacity') as number;
-
-        // Calculate blur based on depth (starts blurring at z < -600)
-        const blur = z > -600 ? 0 : Math.min(10, Math.abs(z + 600) / 100);
-
-        // Strict Active Check:
-        // 1. Must be close enough to camera (z > -300)
-        // 2. Must be visible enough (opacity > 0.5)
-        const isActive = z > -300 && opacity > 0.5;
-
-        gsap.set(ref.current, {
-          filter: `blur(${blur}px)`,
-          pointerEvents: isActive ? 'auto' : 'none',
-        });
-      };
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1,
+          scrub: 1, // Unified scrub for smoother sync
           pin: true,
           anticipatePin: 1,
         },
@@ -121,7 +99,7 @@ function Recognition() {
             scale: 50,
             z: 500,
             opacity: 0,
-            filter: 'blur(20px)',
+            filter: 'blur(20px)', // Keep this single transition as it's part of the exit effect
             duration: 8,
             ease: 'power1.in',
           },
@@ -131,136 +109,178 @@ function Recognition() {
 
       // --- PHASE 3: CLUSTER 1 (Left - Builder Jam) ---
       if (clusterLeftRef.current) {
+        const label = 'clusterLeft';
+        tl.addLabel(label, '-=3.0');
+
+        // 1. Movement & Rotation (Full duration)
         tl.fromTo(
           clusterLeftRef.current,
           {
             z: -1500,
             scale: 0.5,
             opacity: 0,
-            willChange: 'transform, filter, opacity',
-            // filter and pointerEvents handled by onUpdate
+            rotationY: 0,
+            rotationX: 0,
+            pointerEvents: 'none', // Start disabled
           },
           {
-            z: 200,
+            z: 1200,
             scale: 1.2,
             opacity: 1,
+            rotationY: 15,
+            rotationX: 5,
             duration: 5,
             ease: 'none',
-            onUpdate: () => updateClusterState(clusterLeftRef),
+            force3D: true,
           },
-          '-=3.0'
+          label
         );
 
-        gsap.to(clusterLeftRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 2,
+        // 2. Blur (Clears fast as it approaches)
+        tl.fromTo(
+          clusterLeftRef.current,
+          { filter: 'blur(10px)' },
+          {
+            filter: 'blur(0px)',
+            duration: 2.5, // Clears by the time it reaches ~ -200z
+            ease: 'power1.out',
           },
-          rotationY: 15,
-          rotationX: 5,
-        });
+          label
+        );
 
+        // 3. Interaction Window (Only active in the middle ~z -300 to 300)
+        tl.set(
+          clusterLeftRef.current,
+          { pointerEvents: 'auto' },
+          `${label}+=2.0`
+        );
+        tl.set(
+          clusterLeftRef.current,
+          { pointerEvents: 'none' },
+          `${label}+=3.8`
+        );
+
+        // 4. Exit Fade (Safety)
         tl.to(
           clusterLeftRef.current,
-          {
-            opacity: 0,
-            duration: 1,
-            ease: 'power1.in',
-            onUpdate: () => updateClusterState(clusterLeftRef),
-          },
-          '>-1'
+          { opacity: 0, duration: 0.5, ease: 'none' },
+          `${label}+=4.5`
         );
       }
 
       // --- PHASE 4: CLUSTER 2 (Right - Cardano) ---
       if (clusterRightRef.current) {
+        const label = 'clusterRight';
+        tl.addLabel(label, '-=3.5'); // Relative to previous insertion point
+
         tl.fromTo(
           clusterRightRef.current,
           {
             z: -2000,
             scale: 0.5,
             opacity: 0,
-            // pointerEvents handled by onUpdate
+            rotationY: 0,
+            rotationX: 0,
+            pointerEvents: 'none',
           },
           {
-            z: 200,
+            z: 1200,
             scale: 1.2,
             opacity: 1,
+            rotationY: -15,
+            rotationX: 5,
             duration: 5,
             ease: 'none',
-            onUpdate: () => updateClusterState(clusterRightRef),
+            force3D: true,
           },
-          '-=3.5'
+          label
         );
 
-        gsap.to(clusterRightRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 2,
+        tl.fromTo(
+          clusterRightRef.current,
+          { filter: 'blur(10px)' },
+          {
+            filter: 'blur(0px)',
+            duration: 2.5,
+            ease: 'power1.out',
           },
-          rotationY: -15,
-          rotationX: 5,
-        });
+          label
+        );
+
+        tl.set(
+          clusterRightRef.current,
+          { pointerEvents: 'auto' },
+          `${label}+=2.0`
+        );
+        tl.set(
+          clusterRightRef.current,
+          { pointerEvents: 'none' },
+          `${label}+=3.8`
+        );
 
         tl.to(
           clusterRightRef.current,
-          {
-            opacity: 0,
-            duration: 1,
-            ease: 'power1.in',
-            onUpdate: () => updateClusterState(clusterRightRef),
-          },
-          '>-1'
+          { opacity: 0, duration: 0.5, ease: 'none' },
+          `${label}+=4.5`
         );
       }
 
       // --- PHASE 5: CLUSTER CLOUD (Center/Right - Google Cloud) ---
       if (clusterCloudRef.current) {
+        const label = 'clusterCloud';
+        tl.addLabel(label, '-=4.0');
+
         tl.fromTo(
           clusterCloudRef.current,
           {
-            z: -2500, // Start very far back
-            xPercent: 50, // Slightly to the right
+            z: -2500,
+            xPercent: 50,
             scale: 0.5,
             opacity: 0,
-            // filter and pointerEvents handled by onUpdate
+            rotationY: 0,
+            rotationX: 0,
+            pointerEvents: 'none',
           },
           {
-            z: 600,
-            xPercent: 20, // Move towards center
+            z: 1200,
+            xPercent: 20,
             scale: 1.2,
             opacity: 1,
+            rotationY: -10,
+            rotationX: 10,
             duration: 5.5,
             ease: 'none',
-            onUpdate: () => updateClusterState(clusterCloudRef),
+            force3D: true,
           },
-          '-=4.0' // Overlap with Cardano
+          label
         );
 
-        gsap.to(clusterCloudRef.current, {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 2,
+        tl.fromTo(
+          clusterCloudRef.current,
+          { filter: 'blur(10px)' },
+          {
+            filter: 'blur(0px)',
+            duration: 3.0, // Longer duration for cloud as it starts further
+            ease: 'power1.out',
           },
-          rotationY: -10,
-          rotationX: 10,
-        });
+          label
+        );
+
+        tl.set(
+          clusterCloudRef.current,
+          { pointerEvents: 'auto' },
+          `${label}+=2.2`
+        );
+        tl.set(
+          clusterCloudRef.current,
+          { pointerEvents: 'none' },
+          `${label}+=4.2`
+        );
 
         tl.to(
           clusterCloudRef.current,
-          {
-            opacity: 0,
-            duration: 1,
-            ease: 'power1.in',
-            onUpdate: () => updateClusterState(clusterCloudRef),
-          },
-          '>-1' // Fade out while moving (fly-through effect)
+          { opacity: 0, duration: 0.5, ease: 'none' },
+          `${label}+=5.0`
         );
       }
     },

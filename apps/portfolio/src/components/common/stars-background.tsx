@@ -35,6 +35,8 @@ const StarsBackground = () => {
         });
       }
 
+      let animationFrameId: number;
+
       const draw = () => {
         ctx.clearRect(0, 0, width, height);
 
@@ -52,7 +54,7 @@ const StarsBackground = () => {
           }
         });
 
-        requestAnimationFrame(draw);
+        animationFrameId = requestAnimationFrame(draw);
       };
 
       draw();
@@ -66,6 +68,7 @@ const StarsBackground = () => {
 
       return () => {
         window.removeEventListener('resize', handleResize);
+        cancelAnimationFrame(animationFrameId);
       };
     },
     { scope: canvasRef }
