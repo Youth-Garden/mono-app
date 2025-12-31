@@ -1,5 +1,6 @@
 import axios, {
   AxiosError,
+  AxiosInstance,
   AxiosResponse,
   AxiosRequestConfig as IDefaultAxiosRequestConfig,
 } from 'axios';
@@ -15,16 +16,14 @@ type IFallbackFn = (
 ) => void;
 
 export abstract class BaseRequest {
-  public static axiosInstance = axios.create({
-    timeout: 30000,
-  });
-  public static baseURL: string;
-  public static mapper: IMapper;
-  public static errorMapper: IErrorMapper;
-  public static headers: () => AxiosRequestConfig['headers'];
-  public static fallbackError: IFallbackFn;
+  public axiosInstance: AxiosInstance;
+  public baseURL: string;
+  public mapper: IMapper;
+  public errorMapper: IErrorMapper;
+  public headers: () => AxiosRequestConfig['headers'];
+  public fallbackError: IFallbackFn;
 
-  static initialize({
+  constructor({
     baseURL,
     mapper,
     error,
@@ -42,13 +41,18 @@ export abstract class BaseRequest {
     this.errorMapper = error;
     this.headers = headers;
     this.fallbackError = fallbackError;
+
+    this.axiosInstance = axios.create({
+      timeout: 30000,
+      baseURL,
+    });
   }
 
-  private static get AxiosCancelToken() {
+  private get AxiosCancelToken() {
     return axios.CancelToken.source();
   }
 
-  static async _get<T = any>(
+  public async get<T = any>(
     url: string,
     payload: Record<string, any> = {},
     config: AxiosRequestConfig = {}
@@ -56,7 +60,7 @@ export abstract class BaseRequest {
     return this.request(url, BaseRequestMethod.GET, payload, config);
   }
 
-  static _post<T = any>(
+  public post<T = any>(
     url: string,
     payload: Record<string, any> = {},
     config: AxiosRequestConfig = {}
@@ -64,7 +68,7 @@ export abstract class BaseRequest {
     return this.request(url, BaseRequestMethod.POST, payload, config);
   }
 
-  static _delete<T = any>(
+  public delete<T = any>(
     url: string,
     payload: Record<string, any> = {},
     config: AxiosRequestConfig = {}
@@ -72,7 +76,7 @@ export abstract class BaseRequest {
     return this.request(url, BaseRequestMethod.DELETE, payload, config);
   }
 
-  static _patch<T = any>(
+  public patch<T = any>(
     url: string,
     payload: Record<string, any> = {},
     config: AxiosRequestConfig = {}
@@ -80,7 +84,7 @@ export abstract class BaseRequest {
     return this.request(url, BaseRequestMethod.PATCH, payload, config);
   }
 
-  static async _put<T = any>(
+  public async put<T = any>(
     url: string,
     payload: Record<string, any> = {},
     config: AxiosRequestConfig = {}
@@ -88,7 +92,7 @@ export abstract class BaseRequest {
     return this.request(url, BaseRequestMethod.PUT, payload, config);
   }
 
-  static async request<T = any>(
+  public async request<T = any>(
     url: string,
     method: BaseRequestMethod,
     payload: Record<string, any> = {},
@@ -133,7 +137,7 @@ export abstract class BaseRequest {
     }
   }
 
-  private static async callRequest(
+  private async callRequest(
     url: string,
     method: BaseRequestMethod = BaseRequestMethod.GET,
     config: AxiosRequestConfig,
@@ -156,7 +160,7 @@ export abstract class BaseRequest {
     return result;
   }
 
-  private static buildConfig(
+  private buildConfig(
     _url: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mapper: any | undefined,
@@ -180,13 +184,13 @@ export abstract class BaseRequest {
 
     return _config;
   }
-  private static isRefreshing = false;
-  private static failedQueue: Array<{
+  private isRefreshing = false;
+  private failedQueue: Array<{
     resolve: (token: string) => void;
     reject: (err: any) => void;
   }> = [];
 
-  private static processQueue(error: any, token: string | null = null) {
+  private processQueue(error: any, token: string | null = null) {
     this.failedQueue.forEach((prom) => {
       if (error) {
         prom.reject(error);
@@ -198,7 +202,7 @@ export abstract class BaseRequest {
     this.failedQueue = [];
   }
 
-  static configureAuth(options: {
+  public configureAuth(options: {
     refreshToken: () => Promise<string>;
     addToHeader?: (
       config: AxiosRequestConfig,
