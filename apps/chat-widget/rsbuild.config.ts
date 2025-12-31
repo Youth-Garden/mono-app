@@ -6,4 +6,10 @@ export default defineConfig({
   html: {
     template: './index.html',
   },
+  resolve: {
+    alias: {
+      react: 'preact/compat',
+      'react-dom': 'preact/compat',
+    },
+  },
 });

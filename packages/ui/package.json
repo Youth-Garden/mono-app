@@ -8,7 +8,8 @@
     "./lib/utils": "./src/lib/utils.ts",
     "./components/ui/*": "./src/components/ui/*.tsx",
     "./constants/breakpoints": "./src/constants/breakpoints.ts",
-    "./hooks/use-media-query": "./src/hooks/use-media-query.ts"
+    "./hooks/use-media-query": "./src/hooks/use-media-query.ts",
+    ".": "./src/index.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

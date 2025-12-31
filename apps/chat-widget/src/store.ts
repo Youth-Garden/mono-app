@@ -1,5 +1,5 @@
 import { signal } from '@preact/signals';
-import { eventBus } from './utils/event-bus'; // Import the bus
+import { eventBus } from './configs/event-bus'; // Import the bus
 
 export interface Message {
   id: string;
