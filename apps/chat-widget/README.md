@@ -1,50 +1,98 @@
-# Chat Widget
+# 💬 Spectre Chat Widget
 
-An embeddable, lightweight chat widget built with Preact and Vite. Designed for high performance and easy integration into any website.
+Embeddable chat widget for websites. Lightweight, customizable, and easy to integrate.
+
+## Features
+
+- 🎨 Modern UI with smooth animations
+- ⚡ Lightweight (~50KB gzipped)
+- 🔧 Runtime configuration via data attributes
+- 📱 Mobile responsive
+- 🌙 Dark mode ready
+
+## Quick Start
+
+### 1. Embed in your website
+
+```html
+<script
+  src="https://your-cdn.com/spectre-widget.js"
+  data-project-id="YOUR_PROJECT_ID"
+  data-api-url="https://your-api.com/api/v1"
+></script>
+```
+
+### 2. Or initialize programmatically
+
+```html
+<script src="https://your-cdn.com/spectre-widget.js"></script>
+<script>
+  SpectreChat.init({
+    projectId: 'YOUR_PROJECT_ID',
+    apiUrl: 'https://your-api.com/api/v1',
+  });
+</script>
+```
+
+## Configuration Options
+
+| Attribute         | Type   | Required | Description                        |
+| ----------------- | ------ | -------- | ---------------------------------- |
+| `data-project-id` | string | ✅       | Your project ID from dashboard     |
+| `data-api-url`    | string | ❌       | API base URL (default: production) |
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev server
+pnpm dev
+
+# Build for production
+pnpm build
+```
 
 ## Tech Stack
 
-- **Framework**: [Preact](https://preactjs.com/) (Chosen for its 3kb size alternative to React)
-- **Bundler**: [Vite](https://vitejs.dev/) (Fast HMR and optimized builds)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (Configured with a custom prefix to prevent style conflicts when embedded)
-- **Icons**: [Lucide Preact](https://lucide.dev/guide/packages/lucide-preact)
-- **State Management**: [@preact/signals](https://preactjs.com/guide/v10/signals/) (Fine-grained reactivity)
+- **Framework**: Preact (lightweight React alternative)
+- **Styling**: Tailwind CSS
+- **State**: Preact Signals
+- **Build**: Rsbuild
 
-## Getting Started
+## Project Structure
 
-### Prerequisites
-
-- Node.js (v18 or higher)
-- pnpm package manager
-
-### Installation
-
-Navigate to the project root and install dependencies:
-
-```bash
-pnpm install
+```
+src/
+├── components/       # UI components
+│   ├── ChatWidget.tsx
+│   ├── ChatWindow.tsx
+│   └── MessageBubble.tsx
+├── configs/          # Configuration
+│   ├── app-config.ts # Runtime config singleton
+│   └── event-bus.ts  # Event emitter
+├── store.ts          # State management
+└── index.tsx         # Entry point + auto-init
 ```
 
-### Development
+## Build Output
 
-To start the development server specifically for the chat widget:
+Single-file UMD bundle for CDN deployment:
 
-```bash
-pnpm dev --filter=chat-widget
+- `dist/spectre-widget.js` - Main bundle
+- `dist/spectre-widget.css` - Styles (inlined)
+
+## API Integration
+
+Widget communicates with chat-server via REST:
+
+```
+POST /api/v1/messages
+Headers: { "x-project-id": "YOUR_PROJECT_ID" }
+Body: { "content": "Hello!", "visitorId": "abc123" }
 ```
 
-This will start the Vite dev server, typically at `http://localhost:5173`.
+## License
 
-### Build
-
-To build the widget for production distribution:
-
-```bash
-pnpm build --filter=chat-widget
-```
-
-The output will be in the `dist` folder.
-
-## Integration
-
-To embed this widget in another application, include the generated script file from the build output. The widget is designed to mount itself to a specific root element or append directly to the body depending on configuration.
+MIT

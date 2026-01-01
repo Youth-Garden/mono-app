@@ -1,6 +1,7 @@
 import { render } from 'preact';
 import { App } from './App';
-import { eventBus } from './configs/event-bus'; // Import Bus
+import { appConfig } from './configs/app-config';
+import eventBus from './configs/event-bus';
 import styles from './style.css?inline';
 import { SpectreAPI } from './types';
 
@@ -19,7 +20,10 @@ const spectreAPI: SpectreAPI = {
   onMessageSent: (cb: (data: any) => void) => eventBus.on('message:sent', cb),
 
   init: (config: any) => {
-    console.info('spectre Initialized with config', config);
+    appConfig.init({
+      projectId: config.projectId,
+      apiUrl: config.apiUrl,
+    });
     eventBus.emit('config:updated', config);
     mountWidget();
   },
@@ -45,4 +49,27 @@ function mountWidget() {
   render(<App />, shadow);
 }
 
-mountWidget();
+// Auto-initialize if script tag has data attributes (CDN/Embed usage)
+function autoInit() {
+  // Attempt to find the script tag that loaded this code
+  // document.currentScript works in standard scripts, but might fail in modules.
+  // We strictly look for the attribute to be safe.
+  const script =
+    document.currentScript || document.querySelector('script[data-project-id]');
+
+  if (script instanceof HTMLElement) {
+    const projectId = script.getAttribute('data-project-id');
+    const apiUrl = script.getAttribute('data-api-url');
+
+    if (projectId) {
+      console.info('[Spectre] Found embed configuration. Initializing...');
+      spectreAPI.init({
+        projectId,
+        apiUrl: apiUrl || undefined,
+      });
+    }
+  }
+}
+
+// Run auto-init logic
+autoInit();

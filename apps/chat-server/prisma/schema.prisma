@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER & AUTHENTICATION
+// ============================================
+
+/// User account (for dashboard access)
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  email         String   @unique
+  name          String?
+  avatarUrl     String?
+  
+  // Auth - null if using Supabase Auth / OAuth
+  passwordHash  String?
+  emailVerified Boolean  @default(false)
+  
+  createdAt     DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(0)
+
+  // Relations
+  ownedTeams    Team[]         @relation("TeamOwner")
+  teamMembers   TeamMember[]
+  refreshTokens RefreshToken[]
+
+  @@index([email])
+}
+
+/// Refresh token for JWT auth
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  token     String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime @db.Timestamptz(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ============================================
+// TEAM & ORGANIZATION
+// ============================================
+
+/// Team/Organization that owns projects
+model Team {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String   @unique  // URL-friendly name
+  ownerId   String   @db.Uuid
+  
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+
+  owner     User         @relation("TeamOwner", fields: [ownerId], references: [id])
+  members   TeamMember[]
+  projects  Project[]
+
+  @@index([ownerId])
+}
+
+/// Team membership with role
+model TeamMember {
+  id       String   @id @default(uuid()) @db.Uuid
+  teamId   String   @db.Uuid
+  userId   String   @db.Uuid
+  role     TeamRole @default(MEMBER)
+  
+  joinedAt DateTime @default(now()) @db.Timestamptz(0)
+
+  team     Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+  @@index([userId])
+}
+
+enum TeamRole {
+  OWNER   // Full access, can delete team
+  ADMIN   // Can manage members and projects
+  MEMBER  // Can view and respond to conversations
+}
+
+// ============================================
+// PROJECTS (Widget Instances)
+// ============================================
+
+/// Project: Each widget instance belongs to a team
+model Project {
+  id        String   @id @default(uuid()) @db.Uuid
+  teamId    String   @db.Uuid
+  name      String
+  
+  // Widget authentication
+  apiKey    String   @unique @default(uuid())
+  
+  // Domain whitelist for security (empty = allow all)
+  allowedDomains String[] @default([])
+  
+  // Widget customization
+  settings  Json?    // Theme, welcome message, etc.
+  
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+
+  team          Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+
+  @@index([teamId])
+  @@index([apiKey])
+}
+
+// ============================================
+// CONVERSATIONS & MESSAGES
+// ============================================
+
+/// Conversation: A chat session from a website visitor
+model Conversation {
+  id        String   @id @default(uuid()) @db.Uuid
+  projectId String   @db.Uuid
+  
+  // Visitor identification
+  visitorId String?  // Browser fingerprint or custom ID
+  metadata  Json?    // Custom visitor data (name, email, page URL, etc.)
+  
+  status    ConversationStatus @default(Open)
+  createdAt DateTime @default(now()) @db.Timestamptz(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(0)
+
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@index([projectId])
+  @@index([visitorId])
+  @@index([status])
+}
+
+/// Message: Individual chat message
+model Message {
+  id             String        @id @default(uuid()) @db.Uuid
+  conversationId String        @db.Uuid
+  
+  content        String
+  sender         MessageSender
+  
+  // Optional: track which agent responded
+  agentId        String?       @db.Uuid
+  
+  createdAt      DateTime @default(now()) @db.Timestamptz(0)
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum ConversationStatus {
+  Open
+  Closed
+  Pending
+}
+
+enum MessageSender {
+  user   // Website visitor
+  agent  // Dashboard user / support agent
+  system // Automated messages
+}
