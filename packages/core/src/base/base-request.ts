@@ -1,269 +1,193 @@
 import axios, {
-  AxiosError,
   AxiosInstance,
   AxiosResponse,
   AxiosRequestConfig as IDefaultAxiosRequestConfig,
 } from 'axios';
 import { BaseRequestMethod } from './constants';
-import { IErrorMapper } from './error';
 import { IMapper } from './mapper';
+import type { ApiPlugin, RequestContext } from './plugins';
 import { AxiosRequestConfig, BaseResponse, responseDefault } from './types';
 
-type IFallbackFn = (
-  r: AxiosResponse<BaseResponse<null>>,
-  error: Error,
-  opts: Pick<AxiosRequestConfig, 'disabledToast' | 'disabledAuthRequired'>
-) => void;
+export interface BaseRequestConfig {
+  baseURL: string;
+  mapper?: IMapper;
+  timeout?: number;
+}
 
 export abstract class BaseRequest {
   public axiosInstance: AxiosInstance;
   public baseURL: string;
-  public mapper: IMapper;
-  public errorMapper: IErrorMapper;
-  public headers: () => AxiosRequestConfig['headers'];
-  public fallbackError: IFallbackFn;
+  public mapper?: IMapper;
 
-  constructor({
-    baseURL,
-    mapper,
-    error,
-    headers,
-    fallbackError,
-  }: {
-    baseURL: string;
-    mapper: IMapper;
-    error: IErrorMapper;
-    headers: () => AxiosRequestConfig['headers'];
-    fallbackError: IFallbackFn;
-  }) {
+  private plugins: ApiPlugin[] = [];
+
+  constructor({ baseURL, mapper, timeout = 30000 }: BaseRequestConfig) {
     this.baseURL = baseURL;
     this.mapper = mapper;
-    this.errorMapper = error;
-    this.headers = headers;
-    this.fallbackError = fallbackError;
 
     this.axiosInstance = axios.create({
-      timeout: 30000,
       baseURL,
+      timeout,
     });
   }
 
-  private get AxiosCancelToken() {
-    return axios.CancelToken.source();
+  // ─────────────────────────────────────────────────────────────
+  // Plugin System
+  // ─────────────────────────────────────────────────────────────
+
+  /**
+   * Register a plugin to extend API client functionality
+   * Plugins are sorted by priority (higher runs first)
+   *
+   * @example
+   * ```typescript
+   * api.use(authPlugin({ ... }));           // priority: 0 (default)
+   * api.use(loggingPlugin(), { priority: 100 }); // runs first
+   * ```
+   */
+  public use(plugin: ApiPlugin, options?: { priority?: number }): this {
+    const pluginWithPriority = {
+      ...plugin,
+      priority: options?.priority ?? plugin.priority ?? 0,
+    };
+    this.plugins.push(pluginWithPriority);
+    // Sort by priority descending (higher priority runs first)
+    this.plugins.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+    plugin.install?.(this.axiosInstance);
+    return this;
   }
 
-  public async get<T = any>(
+  /**
+   * Check if a plugin is registered
+   */
+  public hasPlugin(name: string): boolean {
+    return this.plugins.some((p) => p.name === name);
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // HTTP Methods
+  // ─────────────────────────────────────────────────────────────
+
+  public get = <T>(
     url: string,
-    payload: Record<string, any> = {},
-    config: AxiosRequestConfig = {}
-  ): Promise<BaseResponse<T>> {
-    return this.request(url, BaseRequestMethod.GET, payload, config);
-  }
+    params?: Record<string, unknown>,
+    config?: AxiosRequestConfig
+  ) => this.request<T>(url, BaseRequestMethod.GET, params, config);
 
-  public post<T = any>(
+  public post = <T>(
     url: string,
-    payload: Record<string, any> = {},
-    config: AxiosRequestConfig = {}
-  ): Promise<BaseResponse<T>> {
-    return this.request(url, BaseRequestMethod.POST, payload, config);
-  }
+    data?: Record<string, unknown>,
+    config?: AxiosRequestConfig
+  ) => this.request<T>(url, BaseRequestMethod.POST, data, config);
 
-  public delete<T = any>(
+  public put = <T>(
     url: string,
-    payload: Record<string, any> = {},
-    config: AxiosRequestConfig = {}
-  ): Promise<BaseResponse<T>> {
-    return this.request(url, BaseRequestMethod.DELETE, payload, config);
-  }
+    data?: Record<string, unknown>,
+    config?: AxiosRequestConfig
+  ) => this.request<T>(url, BaseRequestMethod.PUT, data, config);
 
-  public patch<T = any>(
+  public patch = <T>(
     url: string,
-    payload: Record<string, any> = {},
-    config: AxiosRequestConfig = {}
-  ): Promise<BaseResponse<T>> {
-    return this.request(url, BaseRequestMethod.PATCH, payload, config);
-  }
+    data?: Record<string, unknown>,
+    config?: AxiosRequestConfig
+  ) => this.request<T>(url, BaseRequestMethod.PATCH, data, config);
 
-  public async put<T = any>(
+  public delete = <T>(
     url: string,
-    payload: Record<string, any> = {},
-    config: AxiosRequestConfig = {}
-  ): Promise<BaseResponse<T>> {
-    return this.request(url, BaseRequestMethod.PUT, payload, config);
-  }
+    data?: Record<string, unknown>,
+    config?: AxiosRequestConfig
+  ) => this.request<T>(url, BaseRequestMethod.DELETE, data, config);
 
-  public async request<T = any>(
+  // ─────────────────────────────────────────────────────────────
+  // Core Request Logic
+  // ─────────────────────────────────────────────────────────────
+
+  public async request<T = unknown>(
     url: string,
     method: BaseRequestMethod,
-    payload: Record<string, any> = {},
+    payload: Record<string, unknown> = {},
     config: AxiosRequestConfig = {}
   ): Promise<BaseResponse<T>> {
     try {
       if (!this.baseURL) throw new Error("The API URL doesn't set up.");
 
       const {
-        errorMapper,
         mapperKey = '',
         headers: headersProps = {},
         ...axiosConfig
       } = config;
 
-      // Ensure headers is a function before calling
-      const headers = this.headers ? this.headers() : {};
-
-      // Get the mapper function if available
-      const mapper = this.mapper.getMapper
-        ? this.mapper.getMapper(mapperKey || url)
-        : undefined;
-
-      const _config = this.buildConfig(url, mapper, {
-        cancelToken: this.AxiosCancelToken.token,
-        headers: { ...headers, ...headersProps },
-        ...axiosConfig,
-      });
-      const result: AxiosResponse<BaseResponse<T>> = await this.callRequest(
+      // Build request context
+      let ctx: RequestContext = {
         url,
         method,
-        _config,
-        payload
-      );
+        payload,
+        config: {
+          ...axiosConfig,
+          headers: { ...headersProps },
+        },
+      };
 
-      return result.data;
-    } catch (error: Error | any) {
+      // Run onRequest plugins
+      for (const plugin of this.plugins) {
+        if (plugin.onRequest) {
+          ctx = await plugin.onRequest(ctx);
+        }
+      }
+
+      // Build final config
+      const finalConfig = this.buildConfig(url, mapperKey, ctx.config);
+
+      // Execute request
+      const body: IDefaultAxiosRequestConfig =
+        method === BaseRequestMethod.GET
+          ? { params: payload }
+          : { data: payload };
+
+      const result: AxiosResponse<BaseResponse<T>> = await this.axiosInstance({
+        url,
+        method,
+        ...body,
+        ...finalConfig,
+      });
+
+      // Run onResponse plugins
+      let response = result;
+      for (const plugin of this.plugins) {
+        if (plugin.onResponse) {
+          response = await plugin.onResponse(response, ctx);
+        }
+      }
+
+      return response.data;
+    } catch (error: Error | unknown) {
       return {
         ...responseDefault,
-        message: error?.message,
+        message: error instanceof Error ? error.message : 'Unknown error',
       } as BaseResponse<T>;
     }
   }
 
-  private async callRequest(
-    url: string,
-    method: BaseRequestMethod = BaseRequestMethod.GET,
-    config: AxiosRequestConfig,
-    payload: Record<string, any>
-  ) {
-    let body: IDefaultAxiosRequestConfig = {}; // use IDefault expecting standard axios props
-
-    if (method === BaseRequestMethod.GET) {
-      body = { params: payload };
-    } else {
-      body = { data: payload };
-    }
-
-    const result = await this.axiosInstance({
-      url,
-      method,
-      ...body,
-      ...config,
-    });
-    return result;
-  }
-
   private buildConfig(
     _url: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mapper: any | undefined,
+    mapperKey: string,
     config: AxiosRequestConfig
   ): AxiosRequestConfig {
-    let _config: AxiosRequestConfig = {
-      baseURL: this.baseURL,
+    const mapper = this.mapper?.getMapper?.(mapperKey || _url);
+
+    const _config: AxiosRequestConfig = {
+      baseURL: config.baseURL ?? this.baseURL, // Per-request baseURL takes precedence
       ...config,
       validateStatus: () => true,
     };
 
     if (mapper) {
-      _config = {
-        ..._config,
-        transformResponse: [
-          ...(axios.defaults.transformResponse as any[]),
-          mapper,
-        ],
-      };
+      _config.transformResponse = [
+        ...(axios.defaults.transformResponse as unknown[]),
+        mapper,
+      ] as IDefaultAxiosRequestConfig['transformResponse'];
     }
 
     return _config;
-  }
-  private isRefreshing = false;
-  private failedQueue: Array<{
-    resolve: (token: string) => void;
-    reject: (err: any) => void;
-  }> = [];
-
-  private processQueue(error: any, token: string | null = null) {
-    this.failedQueue.forEach((prom) => {
-      if (error) {
-        prom.reject(error);
-      } else {
-        prom.resolve(token!);
-      }
-    });
-
-    this.failedQueue = [];
-  }
-
-  public configureAuth(options: {
-    refreshToken: () => Promise<string>;
-    addToHeader?: (
-      config: AxiosRequestConfig,
-      token: string
-    ) => AxiosRequestConfig;
-    shouldRetry: (error: AxiosError) => boolean;
-  }) {
-    this.axiosInstance.interceptors.response.use(
-      (response) => response,
-      async (error: AxiosError) => {
-        const originalRequest = error.config as IDefaultAxiosRequestConfig & {
-          _retry?: boolean;
-        };
-
-        if (options.shouldRetry(error) && !originalRequest._retry) {
-          if (this.isRefreshing) {
-            return new Promise<string>((resolve, reject) => {
-              this.failedQueue.push({ resolve, reject });
-            })
-              .then((token) => {
-                if (options.addToHeader) {
-                  return this.axiosInstance(
-                    options.addToHeader(originalRequest, token)
-                  );
-                }
-                originalRequest.headers = originalRequest.headers || {};
-                originalRequest.headers['Authorization'] = 'Bearer ' + token;
-                return this.axiosInstance(originalRequest);
-              })
-              .catch((err) => {
-                return Promise.reject(err);
-              });
-          }
-
-          originalRequest._retry = true;
-          this.isRefreshing = true;
-
-          try {
-            const newToken = await options.refreshToken();
-            this.processQueue(null, newToken);
-
-            if (options.addToHeader) {
-              return this.axiosInstance(
-                options.addToHeader(originalRequest, newToken)
-              );
-            }
-
-            originalRequest.headers = originalRequest.headers || {};
-            originalRequest.headers['Authorization'] = 'Bearer ' + newToken;
-
-            return this.axiosInstance(originalRequest);
-          } catch (err) {
-            this.processQueue(err, null);
-            return Promise.reject(err);
-          } finally {
-            this.isRefreshing = false;
-          }
-        }
-
-        return Promise.reject(error);
-      }
-    );
   }
 }
