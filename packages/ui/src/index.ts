@@ -5,6 +5,7 @@ export { cn } from './lib/utils';
 
 // Providers
 export { DialogProvider } from './components/providers/dialog-provider';
+export * from './components/providers/splash';
 export { UIProvider } from './components/providers/ui-provider';
 
 // Components

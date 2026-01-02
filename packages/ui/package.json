@@ -46,6 +46,8 @@
     "vitest": "^4.0.16"
   },
   "dependencies": {
+    "@repo/hooks": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
