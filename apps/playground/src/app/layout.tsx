@@ -1,6 +1,6 @@
-import { ReactQueryProvider } from '@/components/providers/query-provider';
+import { Providers } from '@/components/providers';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google'; // Using Inter as professional default
+import { Inter } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.className} antialiased bg-black text-white`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

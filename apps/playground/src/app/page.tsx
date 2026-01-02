@@ -5,18 +5,74 @@ import TerminalOutput from '@/features/editor/components/terminal-output';
 import { SUPPORTED_LANGUAGES } from '@/features/editor/constants/languages';
 import { useCodeRunner } from '@/features/editor/hooks/use-code-runner';
 import { Language } from '@/features/editor/types';
-import { ChevronDown, Code2, Play } from 'lucide-react';
-import { useState } from 'react';
+import {
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@repo/ui';
+import { Code2, Play } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+
+const STORAGE_KEY = 'devstudio_code';
+const STORAGE_LANG_KEY = 'devstudio_language';
 
 export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     SUPPORTED_LANGUAGES[0]! // JavaScript default
   );
   const [code, setCode] = useState<string>(selectedLanguage.defaultCode);
-  const { output, isLoading, isError, runCode } = useCodeRunner();
+  const [isHydrated, setIsHydrated] = useState(false);
+  const { output, isLoading, isError, runCode, executionTime } =
+    useCodeRunner();
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLang = SUPPORTED_LANGUAGES.find((l) => l.id === e.target.value);
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    const savedLang = localStorage.getItem(STORAGE_LANG_KEY);
+    const savedCode = localStorage.getItem(STORAGE_KEY);
+
+    if (savedLang) {
+      const lang = SUPPORTED_LANGUAGES.find((l) => l.id === savedLang);
+      if (lang) {
+        setSelectedLanguage(lang);
+        setCode(savedCode ?? lang.defaultCode);
+      }
+    } else if (savedCode) {
+      setCode(savedCode);
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Save to localStorage whenever code or language changes
+  useEffect(() => {
+    if (!isHydrated) return;
+    localStorage.setItem(STORAGE_KEY, code);
+    localStorage.setItem(STORAGE_LANG_KEY, selectedLanguage.id);
+  }, [code, selectedLanguage, isHydrated]);
+
+  const handleRun = useCallback(() => {
+    runCode({ language: selectedLanguage, code });
+  }, [runCode, selectedLanguage, code]);
+
+  // Global keyboard shortcut: Ctrl+Enter to run
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (!isLoading) {
+          handleRun();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleRun, isLoading]);
+
+  const handleLanguageChange = (value: string) => {
+    const newLang = SUPPORTED_LANGUAGES.find((l) => l.id === value);
     if (newLang) {
       setSelectedLanguage(newLang);
       setCode(newLang.defaultCode);
@@ -39,31 +95,33 @@ export default function Home() {
 
         <div className="flex items-center gap-4">
           {/* Language Selector */}
-          <div className="relative">
-            <select
-              value={selectedLanguage.id}
-              onChange={handleLanguageChange}
-              className="h-10 appearance-none rounded-lg border border-white/10 bg-black/40 pl-4 pr-10 text-sm font-medium text-white transition-colors hover:border-white/20 focus:border-blue-500 focus:outline-none"
-            >
+          <Select
+            value={selectedLanguage.id}
+            onValueChange={handleLanguageChange}
+          >
+            <SelectTrigger className="w-[160px] h-10 border-white/10 bg-black/40 text-white hover:border-white/20 focus:ring-blue-500">
+              <SelectValue placeholder="Select language" />
+            </SelectTrigger>
+            <SelectContent className="bg-neutral-900 border-white/10">
               {SUPPORTED_LANGUAGES.map((lang) => (
-                <option
+                <SelectItem
                   key={lang.id}
                   value={lang.id}
-                  className="bg-neutral-900"
+                  className="text-white focus:bg-white/10 focus:text-white"
                 >
                   {lang.name}
-                </option>
+                </SelectItem>
               ))}
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          </div>
+            </SelectContent>
+          </Select>
 
           <div className="h-8 w-px bg-white/10" />
 
-          <button
-            onClick={() => runCode({ language: selectedLanguage, code })}
+          <Button
+            onClick={handleRun}
             disabled={isLoading}
-            className="flex h-10 items-center gap-2 rounded-lg bg-blue-600 px-6 text-sm font-bold text-white transition-all hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] disabled:opacity-50 disabled:hover:shadow-none"
+            className="h-10 px-6 bg-blue-600 hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] font-bold"
+            title="Ctrl+Enter"
           >
             {isLoading ? (
               <>Running...</>
@@ -73,7 +131,7 @@ export default function Home() {
                 RUN CODE
               </>
             )}
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -94,6 +152,7 @@ export default function Home() {
             output={output}
             isLoading={isLoading}
             isError={isError}
+            executionTime={executionTime}
           />
         </div>
       </div>

@@ -1,15 +1,23 @@
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { codeRunnerService } from '../services/code-runner.service';
 import { RunCodeRequest } from '../types';
 
 export function useCodeRunner() {
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+
   const mutation = useMutation({
-    mutationFn: (variables: RunCodeRequest) =>
-      codeRunnerService.execute({
+    mutationFn: async (variables: RunCodeRequest) => {
+      const startTime = performance.now();
+      const result = await codeRunnerService.execute({
         languageId: variables.language.id,
         version: variables.language.version,
         code: variables.code,
-      }),
+      });
+      const endTime = performance.now();
+      setExecutionTime(endTime - startTime);
+      return result;
+    },
   });
 
   const output = mutation.data ? mutation.data.run.output.split('\n') : null;
@@ -22,5 +30,6 @@ export function useCodeRunner() {
     output,
     error: mutation.error,
     reset: mutation.reset,
+    executionTime,
   };
 }
