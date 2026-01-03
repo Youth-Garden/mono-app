@@ -11,7 +11,16 @@
       <p>The widget should appear in the bottom right.</p>
       <button onclick="window.spectre.open()">Open via API</button>
       <button onclick="window.spectre.close()">Close via API</button>
+      <script>
+        window.addEventListener('load', () => {
+          if (window.spectre) {
+            window.spectre.init({
+              projectId: 'demo-project',
+              apiUrl: 'http://localhost:3000',
+            });
+          }
+        });
+      </script>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

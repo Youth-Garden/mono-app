@@ -1,5 +1,5 @@
 {
-  "name": "@repo/chat-widget",
+  "name": "chat-widget",
   "private": true,
   "version": "0.0.0",
   "type": "module",
