@@ -75,7 +75,7 @@ export function ChatWindow() {
             className="chat-text-indigo-100 hover:chat-text-white chat-transition-colors chat-p-2 hover:chat-bg-white/10 chat-rounded-lg"
             title="Toggle theme"
           >
-            {theme.value === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+            {theme.value === 'dark' ? <Moon size={24} /> : <Sun size={24} />}
           </button>
           <button
             onClick={() => chatService.toggleChat(true)}

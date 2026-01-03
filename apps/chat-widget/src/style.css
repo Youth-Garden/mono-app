@@ -4,8 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables for Theming */
-:root {
+/* CSS Variables for Theming - Base class approach for Shadow DOM compatibility */
+.spectre-theme {
   --chat-bg: 255 255 255;
   --chat-card: 244 244 245; /* zinc-100 */
   --chat-border: 228 228 231; /* zinc-200 */
@@ -16,7 +16,7 @@
   --chat-primary-foreground: 255 255 255;
 }
 
-.dark {
+.spectre-theme.dark {
   --chat-bg: 9 9 11; /* zinc-950 */
   --chat-card: 24 24 27; /* zinc-900 */
   --chat-border: 63 63 70; /* zinc-700 */
@@ -29,7 +29,7 @@
 
 /* Glass effect override */
 .chat-glass-effect {
-  background: rgba(var(--chat-bg), 0.8);
+  background: rgb(var(--chat-bg) / 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }

@@ -1,19 +1,14 @@
-import clsx from 'clsx';
 import { ChatBubble } from './components/chat-bubble';
 import { ChatWindow } from './components/chat-window';
+import { ThemeProvider } from './providers/theme-provider';
 import './service'; // Init service listeners
-import { isOpen, theme } from './store';
+import { isOpen } from './store';
 
 export function App() {
   return (
-    <div
-      className={clsx(
-        'chat-font-sans chat-antialiased',
-        theme.value === 'dark' && 'dark'
-      )}
-    >
+    <ThemeProvider>
       {isOpen.value && <ChatWindow />}
       <ChatBubble />
-    </div>
+    </ThemeProvider>
   );
 }
