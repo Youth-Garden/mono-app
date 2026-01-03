@@ -6,24 +6,48 @@ import { chatService } from '../service';
 import { isTyping, messages, theme, toggleTheme } from '../store';
 import { Message } from '../types';
 import { EmojiPicker } from './emoji-picker';
+import { ChatBubbleIcon } from './icons';
 import { OpenEffect } from './open-effect';
+import { Button } from './ui';
 
 export function ChatWindow() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputValue = useSignal('');
   const showEmojiPicker = useSignal(false);
+  const attachments = useSignal<{ file: File; preview: string }[]>([]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages.value, isTyping.value]);
 
   const handleSend = () => {
-    if (!inputValue.value.trim()) return;
+    if (!inputValue.value.trim() && attachments.value.length === 0) return;
     chatService.sendMessage(inputValue.value);
-    inputValue.value = ''; // Clear input
+    inputValue.value = '';
+    attachments.value = [];
     inputRef.current?.focus();
-    showEmojiPicker.value = false; // Close picker on send
+    showEmojiPicker.value = false;
+  };
+
+  const handleFileChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    const files = target.files;
+    if (!files) return;
+
+    const newAttachments = Array.from(files).map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    attachments.value = [...attachments.value, ...newAttachments];
+    target.value = '';
+  };
+
+  const removeAttachment = (index: number) => {
+    const current = attachments.value;
+    URL.revokeObjectURL(current[index].preview);
+    attachments.value = current.filter((_, i) => i !== index);
   };
 
   const handleKeyPress = (e: KeyboardEvent) => {
@@ -32,31 +56,19 @@ export function ChatWindow() {
 
   const onEmojiSelect = (emojiData: any) => {
     inputValue.value += emojiData.native;
-    // Optional: Keep picker open or close it
   };
 
   return (
-    <OpenEffect className="chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-origin-bottom-right chat-z-50 chat-border chat-border-widget-border">
-      {/* Header - Solid Brand Color */}
+    <OpenEffect className="chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border">
+      {/* Header */}
       <div className="chat-bg-widget-primary chat-p-6 chat-flex chat-items-center chat-justify-between chat-shadow-md">
         <div className="chat-flex chat-items-center chat-gap-3">
-          {/* Avatar Area */}
+          {/* Avatar */}
           <div className="chat-relative">
             <div className="chat-w-12 chat-h-12 chat-bg-white chat-rounded-full chat-flex chat-items-center chat-justify-center chat-text-widget-primary chat-shadow-sm">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="chat-w-7 chat-h-7"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.848 2.771A49.144 49.144 0 0112 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 01-3.476.383.39.39 0 00-.297.17l-2.755 4.133a.75.75 0 01-1.248 0l-2.755-4.133a.39.39 0 00-.297-.17 48.9 48.9 0 01-3.476-.384c-1.978-.29-3.348-2.024-3.348-3.97V6.741c0-1.946 1.37-3.678 3.348-3.97zM6.75 8.25a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5H12a.75.75 0 000-1.5H7.5z"
-                  clipRule="evenodd"
-                />
-              </svg>
+              <ChatBubbleIcon size={28} />
             </div>
-            <span className="chat-absolute chat-bottom-0 chat-right-0 chat-w-3.5 chat-h-3.5 chat-bg-emerald-500 chat-border-2 chat-border-widget-primary chat-rounded-full"></span>
+            <span className="chat-absolute chat-bottom-0 chat-right-0 chat-w-3.5 chat-h-3.5 chat-bg-emerald-500 chat-border-2 chat-border-widget-primary chat-rounded-full" />
           </div>
 
           <div>
@@ -70,25 +82,28 @@ export function ChatWindow() {
         </div>
 
         <div className="chat-flex chat-items-center chat-gap-1">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={toggleTheme}
-            className="chat-text-indigo-100 hover:chat-text-white chat-transition-colors chat-p-2 hover:chat-bg-white/10 chat-rounded-lg"
             title="Toggle theme"
+            className="chat-text-white/80 hover:chat-text-white hover:chat-bg-white/10"
           >
-            {theme.value === 'dark' ? <Moon size={24} /> : <Sun size={24} />}
-          </button>
-          <button
+            {theme.value === 'dark' ? <Moon size={22} /> : <Sun size={22} />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => chatService.toggleChat(true)}
-            className="chat-text-indigo-100 hover:chat-text-white chat-transition-colors chat-p-2 hover:chat-bg-white/10 chat-rounded-lg"
+            className="chat-text-white/80 hover:chat-text-white hover:chat-bg-white/10"
           >
-            <X size={28} />
-          </button>
+            <X size={24} />
+          </Button>
         </div>
       </div>
 
       {/* Messages Area */}
       <div className="chat-flex-1 chat-overflow-y-auto chat-p-6 chat-space-y-6 chat-bg-widget-bg chat-custom-scrollbar">
-        {/* Intro Message */}
         <div className="chat-flex chat-justify-center chat-mb-6">
           <span className="chat-text-xs chat-font-medium chat-text-widget-muted chat-bg-widget-card chat-px-3 chat-py-1 chat-rounded-full chat-border chat-border-widget-border">
             Today
@@ -115,13 +130,13 @@ export function ChatWindow() {
             </div>
           </div>
         ))}
-        {/* Typing Indicator */}
+
         {isTyping.value && (
           <div className="chat-flex chat-justify-start chat-animate-fade-in">
             <div className="chat-bg-widget-card chat-border chat-border-widget-border chat-rounded-[20px] chat-p-4 chat-flex chat-items-center chat-gap-1.5 chat-shadow-sm">
-              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce [animation-delay:-0.3s]"></span>
-              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce [animation-delay:-0.15s]"></span>
-              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce"></span>
+              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce [animation-delay:-0.3s]" />
+              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce [animation-delay:-0.15s]" />
+              <span className="chat-w-1.5 chat-h-1.5 chat-bg-widget-primary chat-rounded-full chat-animate-bounce" />
             </div>
           </div>
         )}
@@ -130,11 +145,46 @@ export function ChatWindow() {
 
       {/* Input Area */}
       <div className="chat-p-4 chat-bg-widget-card chat-border-t chat-border-widget-border">
-        <div className="chat-flex chat-gap-2 chat-items-end">
+        {/* Attachment Preview */}
+        {attachments.value.length > 0 && (
+          <div className="chat-flex chat-gap-2 chat-mb-3 chat-flex-wrap">
+            {attachments.value.map((att, i) => (
+              <div key={i} className="chat-relative chat-group">
+                <img
+                  src={att.preview}
+                  alt="Preview"
+                  className="chat-w-16 chat-h-16 chat-object-cover chat-rounded-lg chat-border chat-border-widget-border"
+                />
+                <button
+                  onClick={() => removeAttachment(i)}
+                  className="chat-absolute -chat-top-1 -chat-right-1 chat-bg-widget-bg chat-text-widget-text chat-rounded-full chat-w-4 chat-h-4 chat-flex chat-items-center chat-justify-center chat-opacity-0 group-hover:chat-opacity-100 chat-transition-all chat-shadow-md hover:chat-opacity-80 chat-border chat-border-widget-border"
+                >
+                  <X size={10} strokeWidth={3} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="chat-flex chat-gap-2 chat-items-center">
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="chat-hidden"
+            onChange={handleFileChange}
+          />
+
           {/* Attachment Button */}
-          <button className="chat-p-2 chat-text-widget-muted hover:chat-text-widget-primary chat-transition-colors chat-mb-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <Paperclip size={20} />
-          </button>
+          </Button>
 
           <div className="chat-relative chat-flex-1 chat-bg-widget-bg chat-rounded-[20px] chat-p-1 chat-pl-4 chat-flex chat-items-center chat-gap-2 chat-border chat-border-transparent focus-within:chat-border-widget-primary/50 focus-within:chat-ring-2 focus-within:chat-ring-widget-primary/20 chat-transition-all">
             {showEmojiPicker.value && (
@@ -154,25 +204,30 @@ export function ChatWindow() {
               placeholder="Type your message..."
               className="chat-flex-1 chat-bg-transparent chat-text-base chat-font-medium chat-text-widget-text focus:chat-outline-none chat-py-2 placeholder:chat-text-widget-muted"
             />
-            {/* Emoji Button inside Input */}
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => (showEmojiPicker.value = !showEmojiPicker.value)}
-              className="chat-p-2 chat-text-widget-muted hover:chat-text-yellow-500 chat-transition-colors"
+              className="hover:chat-text-yellow-500"
             >
               <Smile size={20} />
-            </button>
+            </Button>
           </div>
 
-          <button
+          <Button
             onClick={handleSend}
-            disabled={!inputValue.value.trim()}
-            className="chat-bg-widget-primary chat-text-white chat-p-3 chat-rounded-[16px] hover:chat-opacity-90 chat-transition-all disabled:chat-opacity-50 disabled:chat-cursor-not-allowed chat-shadow-lg chat-shadow-blue-500/20 chat-mb-0.5"
+            disabled={
+              !inputValue.value.trim() && attachments.value.length === 0
+            }
+            size="icon"
+            className="!chat-rounded-full chat-w-11 chat-h-11"
           >
             <Send size={18} />
-          </button>
+          </Button>
         </div>
+
         <div className="chat-text-center chat-mt-3">
-          <span className="chat-text-xs chat-font-semibold chat-text-widget-muted hover:chat-text-widget-primary chat-transition-colors">
+          <span className="chat-text-xs chat-font-semibold chat-text-widget-muted hover:chat-text-widget-primary chat-transition-colors chat-cursor-pointer">
             Powered by Spectre
           </span>
         </div>

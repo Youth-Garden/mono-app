@@ -13,7 +13,7 @@ export function OpenEffect({
   effect = 'grow',
 }: OpenEffectProps) {
   const animationClass = clsx(
-    effect === 'grow' && 'chat-animate-grow',
+    effect === 'grow' && 'chat-animate-grow chat-origin-bottom-right',
     effect === 'fade' && 'chat-animate-fade-in',
     effect === 'slide' && 'chat-animate-slide-up'
   );
