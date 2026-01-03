@@ -7,14 +7,12 @@ import { SpectreAPI } from './types';
 
 const WIDGET_ID = 'spectre-chat-host';
 
-// 1. Define Global API using the Event Bus
 const spectreAPI: SpectreAPI = {
-  // Commands
   open: () => eventBus.emit('chat:open'),
   close: () => eventBus.emit('chat:close'),
   toggle: () => eventBus.emit('chat:toggle'),
+  toggleTheme: () => eventBus.emit('chat:toggleTheme'),
 
-  // Listeners (Allow host site to subscribe to widget events!)
   onOpen: (cb: () => void) => eventBus.on('chat:open', cb),
   onClose: (cb: () => void) => eventBus.on('chat:close', cb),
   onMessageSent: (cb: (data: any) => void) => eventBus.on('message:sent', cb),
@@ -49,11 +47,7 @@ function mountWidget() {
   render(<App />, shadow);
 }
 
-// Auto-initialize if script tag has data attributes (CDN/Embed usage)
 function autoInit() {
-  // Attempt to find the script tag that loaded this code
-  // document.currentScript works in standard scripts, but might fail in modules.
-  // We strictly look for the attribute to be safe.
   const script =
     document.currentScript || document.querySelector('script[data-project-id]');
 
@@ -71,5 +65,4 @@ function autoInit() {
   }
 }
 
-// Run auto-init logic
 autoInit();

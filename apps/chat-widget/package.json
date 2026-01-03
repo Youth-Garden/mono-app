@@ -9,6 +9,8 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@preact/signals": "^1.2.2",
     "@repo/core": "workspace:*",
     "clsx": "^2.1.0",

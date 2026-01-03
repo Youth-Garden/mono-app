@@ -1,33 +1,67 @@
-import type { Config } from 'tailwindcss';
-
+/** @type {import('tailwindcss').Config} */
 export default {
   prefix: 'chat-',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
+  safelist: [
+    'chat-animate-grow',
+    'chat-animate-fade-in',
+    'chat-animate-slide-up',
+    'dark',
+  ],
   theme: {
     extend: {
       borderRadius: {
-        // Force sharp corners for the modern/technical look
-        none: '0px',
-        sm: '0px',
-        DEFAULT: '0px',
-        md: '0px',
-        lg: '0px',
-        xl: '0px',
-        '2xl': '0px',
-        full: '9999px', // Keep 'full' for the circular chat bubble button
+        none: '0',
+        sm: '0.125rem',
+        DEFAULT: '0.25rem',
+        md: '0.375rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        full: '9999px',
       },
       colors: {
-        // A technical dark theme palette
         widget: {
-          bg: '#09090b', // Almost black
-          card: '#18181b', // Dark grey
-          border: '#27272a', // Subtle border
-          text: '#fafafa', // White text
-          muted: '#a1a1aa', // Muted text
-          primary: '#fff', // Accent color (white for high contrast)
+          bg: 'rgb(var(--chat-bg) / <alpha-value>)',
+          card: 'rgb(var(--chat-card) / <alpha-value>)',
+          border: 'rgb(var(--chat-border) / <alpha-value>)',
+          text: 'rgb(var(--chat-text) / <alpha-value>)',
+          muted: 'rgb(var(--chat-text-muted) / <alpha-value>)',
+          primary: 'rgb(var(--chat-primary) / <alpha-value>)',
+          'primary-foreground':
+            'rgb(var(--chat-primary-foreground) / <alpha-value>)',
         },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out forwards',
+        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'scale-in': 'scaleIn 0.2s ease-out forwards',
+        grow: 'grow 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        grow: {
+          '0%': { opacity: '0', transform: 'scale(0.5)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
     },
   },
   plugins: [],
-} satisfies Config;
+};

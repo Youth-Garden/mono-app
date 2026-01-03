@@ -1,10 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Optional: Add a subtle blur to the chat window background */
+/* CSS Variables for Theming */
+:root {
+  --chat-bg: 255 255 255;
+  --chat-card: 244 244 245; /* zinc-100 */
+  --chat-border: 228 228 231; /* zinc-200 */
+  --chat-text: 24 24 27; /* zinc-950 */
+  --chat-text-muted: 113 113 122; /* zinc-500 */
+
+  --chat-primary: 37 99 235; /* blue-600 */
+  --chat-primary-foreground: 255 255 255;
+}
+
+.dark {
+  --chat-bg: 9 9 11; /* zinc-950 */
+  --chat-card: 24 24 27; /* zinc-900 */
+  --chat-border: 63 63 70; /* zinc-700 */
+  --chat-text: 250 250 250; /* zinc-50 */
+  --chat-text-muted: 161 161 170; /* zinc-400 */
+
+  --chat-primary: 37 99 235; /* blue-600 */
+  --chat-primary-foreground: 255 255 255;
+}
+
+/* Glass effect override */
 .chat-glass-effect {
-  background: rgba(9, 9, 11, 0.8);
+  background: rgba(var(--chat-bg), 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+@layer utilities {
+  @keyframes grow {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .chat-animate-grow {
+    animation: grow 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .chat-animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .chat-animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Custom Scrollbar */
+.chat-custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(161, 161, 170, 0.3);
+  border-radius: 20px;
+}
+.chat-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(161, 161, 170, 0.5);
 }
