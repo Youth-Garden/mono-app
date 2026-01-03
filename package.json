@@ -19,7 +19,7 @@
     "turbo": "^2.7.0",
     "typescript": "5.9.2"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.11.1",
   "engines": {
     "node": ">=18"
   },
@@ -27,6 +27,19 @@
     "overrides": {
       "@types/react": "^18",
       "@types/react-dom": "^18"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "@scarf/scarf",
+      "@swc/core",
+      "core-js",
+      "esbuild",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
