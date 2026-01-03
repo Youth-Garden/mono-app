@@ -15,7 +15,6 @@ export function EmojiPicker({
 }: EmojiPickerProps) {
   if (!isOpen.value) return null;
 
-  // Stop propagation to prevent closing when clicking inside
   const handlePickerClick = (e: MouseEvent) => {
     e.stopPropagation();
   };
