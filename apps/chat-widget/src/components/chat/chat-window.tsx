@@ -15,6 +15,7 @@ import {
 import { Message } from '../../types';
 import { EmojiPicker } from '../emoji-picker';
 import { ChatBubbleIcon } from '../icons';
+import { MessageImageGallery } from '../message-image-gallery';
 import { OpenEffect } from '../open-effect';
 import { Button, openImageModal } from '../ui';
 
@@ -162,34 +163,9 @@ export function ChatWindow() {
               )}
             >
               {msg.attachments && msg.attachments.length > 0 && (
-                <div
-                  className={clsx(
-                    'chat-grid chat-gap-1 chat-mb-2',
-                    msg.attachments.length === 1 && 'chat-grid-cols-1',
-                    msg.attachments.length === 2 && 'chat-grid-cols-2',
-                    msg.attachments.length >= 3 && 'chat-grid-cols-3'
-                  )}
-                >
-                  {msg.attachments.map((att, i) => (
-                    <img
-                      key={i}
-                      src={att.preview}
-                      alt="Attachment"
-                      onClick={() =>
-                        openImageModal(
-                          msg.attachments!.map((a) => a.preview),
-                          i
-                        )
-                      }
-                      className={clsx(
-                        'chat-object-cover chat-rounded-lg chat-cursor-pointer hover:chat-opacity-90 chat-transition-opacity',
-                        msg.attachments!.length === 1
-                          ? 'chat-w-full chat-max-h-60'
-                          : 'chat-w-full chat-h-20'
-                      )}
-                    />
-                  ))}
-                </div>
+                <MessageImageGallery
+                  images={msg.attachments.map((a) => a.preview)}
+                />
               )}
               {msg.text && <span>{msg.text}</span>}
             </div>
