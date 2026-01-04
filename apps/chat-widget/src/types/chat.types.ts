@@ -1,7 +1,11 @@
-// Chat domain types
 export type MessageKey = string;
 
 export type SenderType = 'user' | 'bot' | 'system';
+
+export interface MessageAttachment {
+  file: File;
+  preview: string;
+}
 
 export interface Message {
   id: MessageKey;
@@ -9,6 +13,7 @@ export interface Message {
   sender: SenderType;
   timestamp: Date;
   status: 'sending' | 'sent' | 'error';
+  attachments?: MessageAttachment[];
 }
 
 export interface ChatState {

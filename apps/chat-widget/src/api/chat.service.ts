@@ -36,8 +36,11 @@ class ChatService {
     setOpen(!isOpen.value);
   }
 
-  public async sendMessage(text: string) {
-    if (!text.trim()) return;
+  public async sendMessage(
+    text: string,
+    attachments?: { file: File; preview: string }[]
+  ) {
+    if (!text.trim() && (!attachments || attachments.length === 0)) return;
 
     const config = widgetConfig.value;
     if (!config.projectId) {
@@ -52,6 +55,7 @@ class ChatService {
       sender: 'user',
       timestamp: new Date(),
       status: 'sending',
+      attachments,
     };
 
     addMessage(userMsg);

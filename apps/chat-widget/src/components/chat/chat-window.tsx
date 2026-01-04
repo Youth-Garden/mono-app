@@ -34,7 +34,7 @@ export function ChatWindow() {
 
   const handleSend = () => {
     if (!inputValue.value.trim() && attachments.value.length === 0) return;
-    chatService.sendMessage(inputValue.value);
+    chatService.sendMessage(inputValue.value, attachments.value);
     inputValue.value = '';
     attachments.value = [];
     inputRef.current?.focus();
@@ -161,7 +161,19 @@ export function ChatWindow() {
                   : 'chat-bg-widget-card chat-text-widget-text chat-border chat-border-widget-border chat-rounded-[20px]'
               )}
             >
-              {msg.text}
+              {msg.attachments && msg.attachments.length > 0 && (
+                <div className="chat-flex chat-gap-2 chat-mb-2 chat-flex-wrap">
+                  {msg.attachments.map((att, i) => (
+                    <img
+                      key={i}
+                      src={att.preview}
+                      alt="Attachment"
+                      className="chat-w-24 chat-h-24 chat-object-cover chat-rounded-lg"
+                    />
+                  ))}
+                </div>
+              )}
+              {msg.text && <span>{msg.text}</span>}
             </div>
           </div>
         ))}
