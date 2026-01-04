@@ -1,7 +1,7 @@
 import { signal } from '@preact/signals';
-import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight, X } from 'lucide-preact';
 import { useEffect } from 'preact/hooks';
+import { cn } from '../../lib';
 
 // Global state for modal
 export const imageModalState = signal<{
@@ -149,7 +149,7 @@ export function ImageModal() {
         <img
           src={images[currentIndex]}
           alt={`Image ${currentIndex + 1}`}
-          className={clsx(
+          className={cn(
             'chat-max-w-full chat-max-h-full chat-object-contain chat-transition-transform chat-duration-75',
             isDragging.value
               ? 'chat-cursor-grabbing'
@@ -189,7 +189,7 @@ export function ImageModal() {
                   imageModalState.value = { ...state, currentIndex: idx };
                 }
               }}
-              className={clsx(
+              className={cn(
                 'chat-w-2.5 chat-h-2.5 chat-rounded-full chat-transition-all',
                 idx === currentIndex
                   ? 'chat-bg-white chat-scale-110'

@@ -1,5 +1,5 @@
-import { clsx } from 'clsx';
 import { X } from 'lucide-preact';
+import { cn } from '../lib';
 import { openImageModal } from './ui';
 
 interface ImageGalleryProps {
@@ -68,7 +68,7 @@ export function ImageGallery({
 
     if (layout === 'flex') {
       // Fixed aspect square for thumbnails
-      return clsx(
+      return cn(
         'chat-object-cover chat-rounded-lg',
         sizeConfig.image // Fixed w & h
       );
@@ -95,7 +95,7 @@ export function ImageGallery({
               src={src}
               alt={`Image ${i + 1}`}
               onClick={() => openImageModal(images, i)}
-              className={clsx(
+              className={cn(
                 'chat-object-cover chat-cursor-pointer hover:chat-opacity-90 chat-transition-opacity',
                 getImageClass()
               )}

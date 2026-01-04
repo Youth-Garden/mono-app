@@ -1,6 +1,8 @@
 import { createContext } from 'preact';
 import { useContext, useEffect, useState } from 'preact/hooks';
+import { cn } from '../lib';
 import {
+  isEmbedded,
   theme as themeSignal,
   toggleTheme as toggleThemeAction,
 } from '../store';
@@ -45,7 +47,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <ThemeContext.Provider value={value}>
       <div
-        className={`spectre-theme ${theme === 'dark' ? 'dark' : ''} chat-font-sans chat-antialiased`}
+        className={cn(
+          'spectre-theme chat-font-sans chat-antialiased',
+          theme === 'dark' && 'dark',
+          isEmbedded.value && 'chat-w-full chat-h-full'
+        )}
       >
         {children}
       </div>

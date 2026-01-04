@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables for Theming - Base class approach for Shadow DOM compatibility */
 .spectre-theme {
   --chat-bg: 255 255 255;
   --chat-card: 244 244 245; /* zinc-100 */

@@ -1,6 +1,6 @@
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import clsx from 'clsx';
+import { cn } from '../lib';
 import { theme } from '../store';
 import { OpenEffect } from './open-effect';
 
@@ -19,7 +19,7 @@ export function EmojiPicker({
 
   return (
     <OpenEffect
-      className={clsx(
+      className={cn(
         'chat-absolute chat-bottom-full chat-right-0 chat-mb-4 chat-z-[60]'
       )}
     >

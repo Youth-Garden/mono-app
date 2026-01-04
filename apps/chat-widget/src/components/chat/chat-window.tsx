@@ -1,8 +1,8 @@
 import { useSignal } from '@preact/signals';
-import { clsx } from 'clsx';
 import { Moon, Paperclip, Send, Smile, Sun, X } from 'lucide-preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { chatService } from '../../api';
+import { cn } from '../../lib';
 import {
   branding,
   isEmbedded,
@@ -78,7 +78,7 @@ export function ChatWindow() {
       }
     : {
         className:
-          'chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-max-h-[calc(100vh-100px)] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border',
+          'chat-absolute chat-bottom-24 chat-right-0 chat-w-[480px] chat-h-[750px] chat-max-h-[calc(100vh-140px)] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border',
       };
 
   if (!isVisible) return null;
@@ -120,7 +120,7 @@ export function ChatWindow() {
             size="icon"
             onClick={toggleTheme}
             title="Toggle theme"
-            className="!chat-text-white hover:chat-bg-white/20"
+            className="!chat-text-white hover:chat-bg-widget-muted/20"
           >
             {theme.value === 'dark' ? <Moon size={22} /> : <Sun size={22} />}
           </Button>
@@ -130,7 +130,7 @@ export function ChatWindow() {
               variant="ghost"
               size="icon"
               onClick={() => chatService.toggleChat()}
-              className="!chat-text-white hover:chat-bg-white/20"
+              className="!chat-text-white hover:chat-bg-widget-muted/20"
             >
               <X size={24} />
             </Button>
@@ -149,13 +149,13 @@ export function ChatWindow() {
         {messages.value.map((msg: Message) => (
           <div
             key={msg.id}
-            className={clsx(
+            className={cn(
               'chat-flex chat-w-full chat-animate-fade-in',
               msg.sender === 'user' ? 'chat-justify-end' : 'chat-justify-start'
             )}
           >
             <div
-              className={clsx(
+              className={cn(
                 'chat-p-3.5 chat-text-base chat-font-normal chat-shadow-sm chat-max-w-[85%] chat-leading-relaxed',
                 msg.sender === 'user'
                   ? 'chat-bg-widget-primary chat-text-white chat-rounded-[20px]'

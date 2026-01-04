@@ -1,6 +1,6 @@
-import { clsx } from 'clsx';
 import { ComponentChildren } from 'preact';
 import { ButtonHTMLAttributes } from 'preact/compat';
+import { cn } from '../../lib';
 
 export type ButtonVariant =
   | 'default'
@@ -48,7 +48,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={clsx(
+      className={cn(
         'chat-inline-flex chat-items-center chat-justify-center chat-rounded-lg chat-font-medium chat-transition-all',
         'focus-visible:chat-outline-none focus-visible:chat-ring-2 focus-visible:chat-ring-widget-ring focus-visible:chat-ring-offset-2',
         'disabled:chat-pointer-events-none disabled:chat-opacity-50',

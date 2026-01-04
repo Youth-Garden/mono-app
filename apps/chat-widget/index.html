@@ -4,24 +4,220 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat Widget Dev</title>
-  </head>
-  <body style="background-color: #333; color: white; font-family: sans-serif">
-    <div style="padding: 2rem">
-      <h1>Chat Widget Dev Environment</h1>
-      <p>The widget should appear in the bottom right.</p>
-      <button onclick="window.spectre.open()">Open via API</button>
-      <button onclick="window.spectre.close()">Close via API</button>
+    <style>
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: #111;
+        color: white;
+        margin: 0;
+        min-height: 100vh;
+      }
+      .header {
+        padding: 20px 40px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #1a1a1a;
+      }
+      .main {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        padding: 40px;
+        max-width: 1600px;
+        margin: 0 auto;
+        height: calc(100vh - 80px);
+      }
+      .section {
+        background: #000;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      .section h2 {
+        margin-top: 0;
+        font-size: 1.1rem;
+        color: #fff;
+        margin-bottom: 8px;
+      }
+      .section p {
+        color: #888;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+        min-height: 40px;
+      }
 
-      <script>
-        window.addEventListener('load', () => {
-          if (window.spectre) {
-            window.spectre.init({
-              projectId: 'demo-project',
-              apiUrl: 'http://localhost:3000',
-            });
-          }
-        });
-      </script>
+      .demo-viewport {
+        flex: 1;
+        background: #0d0d0d;
+        border: 2px dashed #333;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid #444;
+        background: #222;
+        color: white;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      button:hover {
+        background: #333;
+        border-color: #555;
+      }
+      button.primary {
+        background: #2563eb;
+        border-color: #2563eb;
+      }
+      button.primary:hover {
+        background: #1d4ed8;
+      }
+
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+          />
+        </svg>
+        <span style="font-weight: 600; font-size: 1.1rem"
+          >Spectre Widget Dev</span
+        >
+      </div>
+      <div>
+        <span style="color: #666; font-size: 0.85rem">Local Development</span>
+      </div>
     </div>
+
+    <div class="main">
+      <!-- 1. Global Floating -->
+      <div class="section">
+        <h2>Global Floating</h2>
+        <p>Fixed to viewport bottom-right. Standard usage.</p>
+        <div class="controls">
+          <button id="btn-float-global" class="primary">Init Global</button>
+          <button onclick="window.spectre?.open()">Open</button>
+          <button onclick="window.spectre?.close()">Close</button>
+        </div>
+        <div
+          style="
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            border: 1px solid #222;
+            border-radius: 8px;
+          "
+        >
+          (Widget overlays entire page)
+        </div>
+      </div>
+
+      <!-- 2. Floating in Container -->
+      <div class="section">
+        <h2>Floating in Container</h2>
+        <p>Bubble+Window constrained to a specific container (absolute).</p>
+        <div class="controls">
+          <button id="btn-float-check" class="primary">Init Here</button>
+        </div>
+        <div id="float-host" class="demo-viewport">
+          <div
+            style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              color: #444;
+            "
+          >
+            <p>Container #float-host</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Embedded -->
+      <div class="section">
+        <h2>Embedded (Full)</h2>
+        <p>Chat Window fills the container 100%.</p>
+        <div class="controls">
+          <button id="btn-embed-check" class="primary">Init Embed</button>
+        </div>
+        <div id="embed-host" class="demo-viewport">
+          <div
+            style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              text-align: center;
+              color: #444;
+            "
+          >
+            <p>Container #embed-host</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/index.tsx"></script>
+    <script>
+      // 1. Global Floating
+      document
+        .getElementById('btn-float-global')
+        .addEventListener('click', () => {
+          if (!window.spectre) return;
+          window.spectre.init({
+            projectId: 'demo-global',
+            mode: 'floating',
+            apiUrl: 'http://localhost:3000',
+          });
+        });
+
+      // 2. Floating in Container
+      document
+        .getElementById('btn-float-check')
+        .addEventListener('click', () => {
+          if (!window.spectre) return;
+          window.spectre.init({
+            projectId: 'demo-container',
+            mode: 'floating',
+            container: '#float-host', // Mounts floating widget INSIDE this container
+            apiUrl: 'http://localhost:3000',
+          });
+        });
+
+      // 3. Embedded
+      document
+        .getElementById('btn-embed-check')
+        .addEventListener('click', () => {
+          if (!window.spectre) return;
+          window.spectre.init({
+            projectId: 'demo-embedded',
+            mode: 'embedded',
+            container: '#embed-host',
+            apiUrl: 'http://localhost:3000',
+          });
+        });
+    </script>
   </body>
 </html>
