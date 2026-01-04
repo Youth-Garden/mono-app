@@ -1,4 +1,4 @@
-import { ChatBubble, ChatWindow } from './components';
+import { ChatBubble, ChatWindow, ImageModal } from './components';
 import { ThemeProvider } from './providers/theme-provider';
 
 export function App() {
@@ -6,6 +6,7 @@ export function App() {
     <ThemeProvider>
       <ChatBubble />
       <ChatWindow />
+      <ImageModal />
     </ThemeProvider>
   );
 }
