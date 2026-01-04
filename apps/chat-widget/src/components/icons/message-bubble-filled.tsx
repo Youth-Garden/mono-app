@@ -1,9 +1,6 @@
 import { FunctionComponent } from 'preact';
 
-interface IconProps {
-  className?: string;
-  size?: number;
-}
+import { IconProps } from './types';
 
 // Filled message bubble icon - same shape as MessageSquareText but solid
 export const MessageBubbleFilledIcon: FunctionComponent<IconProps> = ({

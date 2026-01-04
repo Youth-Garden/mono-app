@@ -1,9 +1,5 @@
 import { FunctionComponent } from 'preact';
-
-interface IconProps {
-  className?: string;
-  size?: number;
-}
+import { IconProps } from './types';
 
 export const ChatBubbleIcon: FunctionComponent<IconProps> = ({
   className = '',

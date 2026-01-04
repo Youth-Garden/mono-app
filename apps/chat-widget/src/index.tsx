@@ -77,20 +77,33 @@ function injectStylesAndRender(shadow: ShadowRoot) {
 }
 
 /**
- * Auto-init from script attributes
+ * Auto-init from script attributes or URL query params
+ * Supports:
+ * - data-* attributes: <script data-project-id="xxx">
+ * - URL query params: <script src="widget.js?projectId=xxx">
  */
 function autoInit() {
   const script =
     document.currentScript || document.querySelector('script[data-project-id]');
 
-  if (script instanceof HTMLElement) {
-    const projectId = script.getAttribute('data-project-id');
-    const apiUrl = script.getAttribute('data-api-url');
-    const mode = script.getAttribute('data-mode') as
+  if (script instanceof HTMLScriptElement) {
+    // Try data attributes first
+    let projectId = script.getAttribute('data-project-id');
+    let apiUrl = script.getAttribute('data-api-url');
+    let mode = script.getAttribute('data-mode') as
       | 'floating'
       | 'embedded'
       | null;
-    const container = script.getAttribute('data-container');
+    let container = script.getAttribute('data-container');
+
+    // Fallback to URL query params if no data attributes
+    if (!projectId && script.src) {
+      const url = new URL(script.src);
+      projectId = url.searchParams.get('projectId');
+      apiUrl = url.searchParams.get('apiUrl') || apiUrl;
+      mode = (url.searchParams.get('mode') as 'floating' | 'embedded') || mode;
+      container = url.searchParams.get('container') || container;
+    }
 
     if (projectId) {
       console.info('[Spectre] Found embed configuration. Initializing...');

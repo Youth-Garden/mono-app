@@ -12,4 +12,20 @@ export default defineConfig({
       'react-dom': 'preact/compat',
     },
   },
+  output: {
+    // Single file output for CDN distribution
+    filename: {
+      js: 'spectre-widget.js',
+    },
+    // Disable chunk splitting for single bundle
+    distPath: {
+      js: '',
+    },
+  },
+  performance: {
+    // Combine all chunks into one
+    chunkSplit: {
+      strategy: 'all-in-one',
+    },
+  },
 });

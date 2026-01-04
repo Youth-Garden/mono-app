@@ -15,9 +15,9 @@ import {
 import { Message } from '../../types';
 import { EmojiPicker } from '../emoji-picker';
 import { ChatBubbleIcon } from '../icons';
-import { MessageImageGallery } from '../message-image-gallery';
+import { ImageGallery } from '../image-gallery';
 import { OpenEffect } from '../open-effect';
-import { Button, openImageModal } from '../ui';
+import { Button } from '../ui';
 
 export function ChatWindow() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,6 +27,7 @@ export function ChatWindow() {
   const showEmojiPicker = useSignal(false);
   const attachments = useSignal<{ file: File; preview: string }[]>([]);
 
+  // Determine if window should be visible
   const isVisible = isEmbedded.value || isOpen.value;
 
   useEffect(() => {
@@ -69,7 +70,6 @@ export function ChatWindow() {
     inputValue.value += emojiData.native;
   };
 
-  // Wrapper component - OpenEffect for floating, div for embedded
   const Wrapper = isEmbedded.value ? 'div' : OpenEffect;
   const wrapperProps = isEmbedded.value
     ? {
@@ -78,7 +78,7 @@ export function ChatWindow() {
       }
     : {
         className:
-          'chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border',
+          'chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-max-h-[calc(100vh-100px)] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border',
       };
 
   if (!isVisible) return null;
@@ -98,7 +98,7 @@ export function ChatWindow() {
               />
             ) : (
               <div className="chat-w-12 chat-h-12 chat-bg-white chat-rounded-full chat-flex chat-items-center chat-justify-center chat-text-widget-primary chat-shadow-sm">
-                <ChatBubbleIcon size={28} />
+                <ChatBubbleIcon className="chat-text-widget-primary" />
               </div>
             )}
             <span className="chat-absolute chat-bottom-0 chat-right-0 chat-w-3.5 chat-h-3.5 chat-bg-emerald-500 chat-border-2 chat-border-widget-primary chat-rounded-full" />
@@ -163,8 +163,10 @@ export function ChatWindow() {
               )}
             >
               {msg.attachments && msg.attachments.length > 0 && (
-                <MessageImageGallery
+                <ImageGallery
                   images={msg.attachments.map((a) => a.preview)}
+                  maxVisible={6}
+                  size="md"
                 />
               )}
               {msg.text && <span>{msg.text}</span>}
@@ -188,29 +190,14 @@ export function ChatWindow() {
       <div className="chat-p-4 chat-bg-widget-card chat-border-t chat-border-widget-border">
         {/* Attachment Preview */}
         {attachments.value.length > 0 && (
-          <div className="chat-flex chat-gap-2 chat-mb-3 chat-flex-wrap">
-            {attachments.value.map((att, i) => (
-              <div key={i} className="chat-relative chat-group">
-                <img
-                  src={att.preview}
-                  alt="Preview"
-                  onClick={() =>
-                    openImageModal(
-                      attachments.value.map((a) => a.preview),
-                      i
-                    )
-                  }
-                  className="chat-w-16 chat-h-16 chat-object-cover chat-rounded-lg chat-border chat-border-widget-border chat-cursor-pointer hover:chat-opacity-80 chat-transition-opacity"
-                />
-                <button
-                  onClick={() => removeAttachment(i)}
-                  className="chat-absolute -chat-top-1 -chat-right-1 chat-bg-widget-bg chat-text-widget-text chat-rounded-full chat-w-4 chat-h-4 chat-flex chat-items-center chat-justify-center chat-opacity-0 group-hover:chat-opacity-100 chat-transition-all chat-shadow-md hover:chat-opacity-80 chat-border chat-border-widget-border"
-                >
-                  <X size={10} strokeWidth={3} />
-                </button>
-              </div>
-            ))}
-          </div>
+          <ImageGallery
+            images={attachments.value.map((a) => a.preview)}
+            maxVisible={14}
+            size="sm"
+            layout="flex"
+            showRemoveButton
+            onRemove={removeAttachment}
+          />
         )}
 
         <div className="chat-flex chat-gap-2 chat-items-center">

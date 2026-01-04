@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { X } from 'lucide-preact';
 import { chatService } from '../../api';
 import { isEmbedded, isOpen } from '../../store';
-import { MessageBubbleFilledIcon } from '../icons';
+import { ChatTriggerIcon } from '../icons/chat-trigger';
 
 export function ChatBubble() {
   if (isEmbedded.value) return null;
@@ -17,14 +17,14 @@ export function ChatBubble() {
     >
       {/* Animated icon transition */}
       <div className="chat-relative chat-w-10 chat-h-10 chat-flex chat-items-center chat-justify-center">
-        <MessageBubbleFilledIcon
+        <ChatTriggerIcon
           className={clsx(
             'chat-absolute chat-inset-0 chat-transition-all chat-duration-300',
             isOpen.value
               ? 'chat-opacity-0 chat-rotate-90 chat-scale-50'
               : 'chat-opacity-100 chat-rotate-0 chat-scale-100'
           )}
-          size={40}
+          style={{ width: 40, height: 40 }}
         />
 
         <X

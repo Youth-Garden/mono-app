@@ -1,4 +1,4 @@
-// Barrel export for custom icons
-export { ChatBubbleIcon } from './chat-bubble';
-export { MessageBubbleFilledIcon } from './message-bubble-filled';
-export { SpectreLogoIcon } from './spectre-logo';
+export * from './chat-bubble';
+export * from './chat-trigger';
+export * from './message-bubble-filled';
+export * from './spectre-logo';

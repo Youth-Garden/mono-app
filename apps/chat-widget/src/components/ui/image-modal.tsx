@@ -20,19 +20,35 @@ export function closeImageModal() {
 
 export function ImageModal() {
   const state = imageModalState.value;
+  // Local state for zoom and pan
+  const scale = signal(1);
+  const position = signal({ x: 0, y: 0 });
+  const isDragging = signal(false);
+  const dragStart = signal({ x: 0, y: 0 });
+
+  // Reset zoom on open or image change
+  useEffect(() => {
+    if (state?.isOpen) {
+      scale.value = 1;
+      position.value = { x: 0, y: 0 };
+    }
+  }, [state?.isOpen, state?.currentIndex]);
 
   useEffect(() => {
     if (!state?.isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeImageModal();
-      if (e.key === 'ArrowLeft') navigatePrev();
-      if (e.key === 'ArrowRight') navigateNext();
+      // Only navigate if not zoomed in
+      if (scale.value === 1) {
+        if (e.key === 'ArrowLeft') navigatePrev();
+        if (e.key === 'ArrowRight') navigateNext();
+      }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [state?.isOpen]);
+  }, [state?.isOpen, scale.value]);
 
   if (!state?.isOpen) return null;
 
@@ -51,48 +67,111 @@ export function ImageModal() {
     imageModalState.value = { ...state, currentIndex: newIndex };
   };
 
+  // Zoom handlers
+  const handleWheel = (e: WheelEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const delta = -e.deltaY * 0.001;
+    const newScale = Math.min(Math.max(1, scale.value + delta), 4); // Min 1x, Max 4x
+
+    scale.value = newScale;
+
+    // Reset position if zoomed out to 1x
+    if (newScale === 1) {
+      position.value = { x: 0, y: 0 };
+    }
+  };
+
+  // Pan handlers
+  const handleMouseDown = (e: MouseEvent) => {
+    if (scale.value > 1) {
+      e.preventDefault();
+      isDragging.value = true;
+      dragStart.value = {
+        x: e.clientX - position.value.x,
+        y: e.clientY - position.value.y,
+      };
+    }
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isDragging.value && scale.value > 1) {
+      e.preventDefault();
+      position.value = {
+        x: e.clientX - dragStart.value.x,
+        y: e.clientY - dragStart.value.y,
+      };
+    }
+  };
+
+  const handleMouseUp = () => {
+    isDragging.value = false;
+  };
+
   return (
     <div
       className="chat-fixed chat-inset-0 chat-z-[100] chat-flex chat-items-center chat-justify-center chat-bg-black/90 chat-backdrop-blur-sm"
       onClick={closeImageModal}
+      onWheel={handleWheel}
     >
       {/* Close button */}
       <button
         onClick={closeImageModal}
-        className="chat-absolute chat-top-4 chat-right-4 chat-p-2 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
+        className="chat-absolute chat-top-4 chat-right-4 chat-z-50 chat-p-2 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
       >
         <X size={24} />
       </button>
 
       {/* Navigation - Previous */}
-      {hasMultiple && (
+      {hasMultiple && scale.value === 1 && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             navigatePrev();
           }}
-          className="chat-absolute chat-left-4 chat-p-3 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
+          className="chat-absolute chat-left-4 chat-z-50 chat-p-3 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
         >
           <ChevronLeft size={32} />
         </button>
       )}
 
-      {/* Image */}
-      <img
-        src={images[currentIndex]}
-        alt={`Image ${currentIndex + 1}`}
-        className="chat-max-w-[90vw] chat-max-h-[85vh] chat-object-contain chat-rounded-lg chat-shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      />
+      {/* Image Container with Zoom/Pan */}
+      <div
+        className="chat-relative chat-overflow-hidden chat-flex chat-items-center chat-justify-center"
+        style={{ width: '100vw', height: '100vh' }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking image area
+      >
+        <img
+          src={images[currentIndex]}
+          alt={`Image ${currentIndex + 1}`}
+          className={clsx(
+            'chat-max-w-full chat-max-h-full chat-object-contain chat-transition-transform chat-duration-75',
+            isDragging.value
+              ? 'chat-cursor-grabbing'
+              : scale.value > 1
+                ? 'chat-cursor-grab'
+                : 'chat-cursor-default'
+          )}
+          style={{
+            transform: `scale(${scale.value}) translate(${position.value.x / scale.value}px, ${position.value.y / scale.value}px)`,
+          }}
+          draggable={false} // Prevent native drag
+        />
+      </div>
 
       {/* Navigation - Next */}
-      {hasMultiple && (
+      {hasMultiple && scale.value === 1 && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             navigateNext();
           }}
-          className="chat-absolute chat-right-4 chat-p-3 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
+          className="chat-absolute chat-right-4 chat-z-50 chat-p-3 chat-rounded-full chat-bg-white/10 hover:chat-bg-white/20 chat-text-white chat-transition-colors"
         >
           <ChevronRight size={32} />
         </button>
@@ -100,7 +179,7 @@ export function ImageModal() {
 
       {/* Indicators */}
       {hasMultiple && (
-        <div className="chat-absolute chat-bottom-6 chat-flex chat-gap-2">
+        <div className="chat-absolute chat-bottom-6 chat-z-50 chat-flex chat-gap-2">
           {images.map((_, idx) => (
             <button
               key={idx}
@@ -123,7 +202,7 @@ export function ImageModal() {
 
       {/* Counter */}
       {hasMultiple && (
-        <div className="chat-absolute chat-top-4 chat-left-4 chat-px-3 chat-py-1 chat-rounded-full chat-bg-black/50 chat-text-white chat-text-sm chat-font-medium">
+        <div className="chat-absolute chat-top-4 chat-left-4 chat-z-50 chat-px-3 chat-py-1 chat-rounded-full chat-bg-black/50 chat-text-white chat-text-sm chat-font-medium">
           {currentIndex + 1} / {images.length}
         </div>
       )}
