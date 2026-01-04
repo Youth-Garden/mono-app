@@ -1,5 +1,5 @@
 import { computed, signal } from '@preact/signals';
-import { ChatState, Message } from './types';
+import { ChatState, Message } from '../types';
 
 // Helper to get initial theme
 const getInitialTheme = (): 'light' | 'dark' => {
@@ -41,7 +41,7 @@ export const conversationId = computed(() => _state.value.conversationId);
 export const unreadCount = computed(() => _state.value.unreadCount);
 export const theme = computed(() => _state.value.theme);
 
-// --- Actions (Pure State Updates) ---
+// --- Actions ---
 
 export const setOpen = (open: boolean) => {
   _state.value = { ..._state.value, isOpen: open };
@@ -84,6 +84,6 @@ export const toggleTheme = () => {
   localStorage.setItem('spectre_theme', newTheme);
 };
 
-export const resetStore = () => {
+export const resetChatStore = () => {
   _state.value = initialState;
 };

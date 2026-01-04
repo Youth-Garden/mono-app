@@ -1,15 +1,15 @@
 import { render } from 'preact';
 import { App } from './App';
-import { appConfig } from './configs/app-config';
-import eventBus from './configs/event-bus';
-import styles from './style.css?inline';
-import { SpectreAPI } from './types';
+import { eventBus } from './lib';
+import { setConfig, setOpen } from './store';
+import styles from './styles/style.css?inline';
+import { SpectreAPI, SpectreConfig } from './types';
 
 const WIDGET_ID = 'spectre-chat-host';
 
 const spectreAPI: SpectreAPI = {
-  open: () => eventBus.emit('chat:open'),
-  close: () => eventBus.emit('chat:close'),
+  open: () => setOpen(true),
+  close: () => setOpen(false),
   toggle: () => eventBus.emit('chat:toggle'),
   toggleTheme: () => eventBus.emit('chat:toggleTheme'),
 
@@ -17,29 +17,58 @@ const spectreAPI: SpectreAPI = {
   onClose: (cb: () => void) => eventBus.on('chat:close', cb),
   onMessageSent: (cb: (data: any) => void) => eventBus.on('message:sent', cb),
 
-  init: (config: any) => {
-    appConfig.init({
-      projectId: config.projectId,
-      apiUrl: config.apiUrl,
-    });
-    eventBus.emit('config:updated', config);
-    mountWidget();
+  init: (config: SpectreConfig) => {
+    // Set widget configuration
+    setConfig(config);
+
+    // Mount widget based on mode
+    if (config.mode === 'embedded' && config.container) {
+      mountEmbedded(config.container);
+    } else {
+      mountFloating();
+    }
   },
 };
 
 window.spectre = spectreAPI;
 
-function mountWidget() {
+/**
+ * Mount widget in floating mode (fixed position)
+ */
+function mountFloating() {
   if (document.getElementById(WIDGET_ID)) return;
+
   const container = document.createElement('div');
   container.id = WIDGET_ID;
-  container.style.position = 'fixed';
-  container.style.zIndex = '9999';
-  container.style.bottom = '0';
-  container.style.right = '0';
+  container.style.cssText = 'position:fixed;z-index:9999;bottom:0;right:0;';
   document.body.appendChild(container);
 
   const shadow = container.attachShadow({ mode: 'open' });
+  injectStylesAndRender(shadow);
+}
+
+/**
+ * Mount widget in embedded mode (into existing container)
+ */
+function mountEmbedded(selector: string) {
+  const targetEl = document.querySelector(selector);
+  if (!targetEl) {
+    console.error(`[Spectre] Container "${selector}" not found.`);
+    return;
+  }
+
+  // Create a shadow root inside the target element
+  const shadow = targetEl.attachShadow({ mode: 'open' });
+  injectStylesAndRender(shadow);
+
+  // In embedded mode, auto-open the chat
+  setOpen(true);
+}
+
+/**
+ * Inject styles and render the app into shadow root
+ */
+function injectStylesAndRender(shadow: ShadowRoot) {
   const styleTag = document.createElement('style');
   styleTag.textContent = styles;
   shadow.appendChild(styleTag);
@@ -47,6 +76,9 @@ function mountWidget() {
   render(<App />, shadow);
 }
 
+/**
+ * Auto-init from script attributes
+ */
 function autoInit() {
   const script =
     document.currentScript || document.querySelector('script[data-project-id]');
@@ -54,12 +86,19 @@ function autoInit() {
   if (script instanceof HTMLElement) {
     const projectId = script.getAttribute('data-project-id');
     const apiUrl = script.getAttribute('data-api-url');
+    const mode = script.getAttribute('data-mode') as
+      | 'floating'
+      | 'embedded'
+      | null;
+    const container = script.getAttribute('data-container');
 
     if (projectId) {
       console.info('[Spectre] Found embed configuration. Initializing...');
       spectreAPI.init({
         projectId,
         apiUrl: apiUrl || undefined,
+        mode: mode || 'floating',
+        container: container || undefined,
       });
     }
   }

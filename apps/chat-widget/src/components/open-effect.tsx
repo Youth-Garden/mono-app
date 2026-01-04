@@ -1,10 +1,11 @@
 import { clsx } from 'clsx';
 import { PropsWithChildren } from 'preact/compat';
-export type OpenEffect = 'grow' | 'fade' | 'slide';
+
+export type OpenEffectType = 'grow' | 'fade' | 'slide';
 
 interface OpenEffectProps extends PropsWithChildren {
   className?: string;
-  effect?: OpenEffect;
+  effect?: OpenEffectType;
 }
 
 export function OpenEffect({

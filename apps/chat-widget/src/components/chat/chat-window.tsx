@@ -2,13 +2,21 @@ import { useSignal } from '@preact/signals';
 import { clsx } from 'clsx';
 import { Moon, Paperclip, Send, Smile, Sun, X } from 'lucide-preact';
 import { useEffect, useRef } from 'preact/hooks';
-import { chatService } from '../service';
-import { isTyping, messages, theme, toggleTheme } from '../store';
-import { Message } from '../types';
-import { EmojiPicker } from './emoji-picker';
-import { ChatBubbleIcon } from './icons';
-import { OpenEffect } from './open-effect';
-import { Button } from './ui';
+import { chatService } from '../../api';
+import {
+  branding,
+  isEmbedded,
+  isOpen,
+  isTyping,
+  messages,
+  theme,
+  toggleTheme,
+} from '../../store';
+import { Message } from '../../types';
+import { EmojiPicker } from '../emoji-picker';
+import { ChatBubbleIcon } from '../icons';
+import { OpenEffect } from '../open-effect';
+import { Button } from '../ui';
 
 export function ChatWindow() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,6 +25,8 @@ export function ChatWindow() {
   const inputValue = useSignal('');
   const showEmojiPicker = useSignal(false);
   const attachments = useSignal<{ file: File; preview: string }[]>([]);
+
+  const isVisible = isEmbedded.value || isOpen.value;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -58,25 +68,47 @@ export function ChatWindow() {
     inputValue.value += emojiData.native;
   };
 
+  // Wrapper component - OpenEffect for floating, div for embedded
+  const Wrapper = isEmbedded.value ? 'div' : OpenEffect;
+  const wrapperProps = isEmbedded.value
+    ? {
+        className:
+          'chat-w-full chat-h-full chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-border chat-border-widget-border',
+      }
+    : {
+        className:
+          'chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border',
+      };
+
+  if (!isVisible) return null;
+
   return (
-    <OpenEffect className="chat-fixed chat-bottom-28 chat-right-6 chat-w-[480px] chat-h-[750px] chat-flex chat-flex-col chat-rounded-[16px] chat-shadow-2xl chat-bg-widget-bg chat-overflow-hidden chat-z-50 chat-border chat-border-widget-border">
+    <Wrapper {...wrapperProps}>
       {/* Header */}
       <div className="chat-bg-widget-primary chat-p-6 chat-flex chat-items-center chat-justify-between chat-shadow-md">
         <div className="chat-flex chat-items-center chat-gap-3">
-          {/* Avatar */}
+          {/* Avatar / Logo */}
           <div className="chat-relative">
-            <div className="chat-w-12 chat-h-12 chat-bg-white chat-rounded-full chat-flex chat-items-center chat-justify-center chat-text-widget-primary chat-shadow-sm">
-              <ChatBubbleIcon size={28} />
-            </div>
+            {branding.value.logo ? (
+              <img
+                src={branding.value.logo}
+                alt="Logo"
+                className="chat-w-12 chat-h-12 chat-rounded-full chat-object-cover chat-shadow-sm"
+              />
+            ) : (
+              <div className="chat-w-12 chat-h-12 chat-bg-white chat-rounded-full chat-flex chat-items-center chat-justify-center chat-text-widget-primary chat-shadow-sm">
+                <ChatBubbleIcon size={28} />
+              </div>
+            )}
             <span className="chat-absolute chat-bottom-0 chat-right-0 chat-w-3.5 chat-h-3.5 chat-bg-emerald-500 chat-border-2 chat-border-widget-primary chat-rounded-full" />
           </div>
 
           <div>
             <h3 className="chat-font-bold chat-text-white chat-text-xl chat-leading-tight chat-tracking-tight">
-              Chat with us!
+              {branding.value.title}
             </h3>
-            <span className="chat-text-indigo-100 chat-text-sm chat-font-medium">
-              We reply immediately
+            <span className="chat-text-white/80 chat-text-sm chat-font-medium">
+              {branding.value.subtitle}
             </span>
           </div>
         </div>
@@ -87,18 +119,21 @@ export function ChatWindow() {
             size="icon"
             onClick={toggleTheme}
             title="Toggle theme"
-            className="chat-text-white/80 hover:chat-text-white hover:chat-bg-white/10"
+            className="!chat-text-white hover:chat-bg-white/20"
           >
             {theme.value === 'dark' ? <Moon size={22} /> : <Sun size={22} />}
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => chatService.toggleChat(true)}
-            className="chat-text-white/80 hover:chat-text-white hover:chat-bg-white/10"
-          >
-            <X size={24} />
-          </Button>
+          {/* Only show close button in floating mode */}
+          {!isEmbedded.value && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => chatService.toggleChat()}
+              className="!chat-text-white hover:chat-bg-white/20"
+            >
+              <X size={24} />
+            </Button>
+          )}
         </div>
       </div>
 
@@ -226,12 +261,14 @@ export function ChatWindow() {
           </Button>
         </div>
 
-        <div className="chat-text-center chat-mt-3">
-          <span className="chat-text-xs chat-font-semibold chat-text-widget-muted hover:chat-text-widget-primary chat-transition-colors chat-cursor-pointer">
-            Powered by Spectre
-          </span>
-        </div>
+        {branding.value.showPoweredBy && (
+          <div className="chat-text-center chat-mt-3">
+            <span className="chat-text-xs chat-font-semibold chat-text-widget-muted hover:chat-text-widget-primary chat-transition-colors chat-cursor-pointer">
+              Powered by {branding.value.poweredBy}
+            </span>
+          </div>
+        )}
       </div>
-    </OpenEffect>
+    </Wrapper>
   );
 }

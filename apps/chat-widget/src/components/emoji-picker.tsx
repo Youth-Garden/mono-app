@@ -1,7 +1,7 @@
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import clsx from 'clsx';
-import { isOpen, theme } from '../store';
+import { theme } from '../store';
 import { OpenEffect } from './open-effect';
 
 interface EmojiPickerProps {
@@ -13,8 +13,6 @@ export function EmojiPicker({
   onEmojiSelect,
   onClickOutside,
 }: EmojiPickerProps) {
-  if (!isOpen.value) return null;
-
   const handlePickerClick = (e: MouseEvent) => {
     e.stopPropagation();
   };

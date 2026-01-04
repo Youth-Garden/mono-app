@@ -1,13 +1,15 @@
 import { clsx } from 'clsx';
 import { X } from 'lucide-preact';
-import { chatService } from '../service';
-import { isOpen } from '../store';
-import { MessageBubbleFilledIcon } from './icons';
+import { chatService } from '../../api';
+import { isEmbedded, isOpen } from '../../store';
+import { MessageBubbleFilledIcon } from '../icons';
 
 export function ChatBubble() {
+  if (isEmbedded.value) return null;
+
   return (
     <button
-      onClick={() => chatService.toggleChat(isOpen.value)}
+      onClick={() => chatService.toggleChat()}
       className={clsx(
         'chat-fixed chat-bottom-6 chat-right-6 chat-w-20 chat-h-20 chat-flex chat-items-center chat-justify-center chat-rounded-full chat-shadow-xl chat-shadow-blue-500/30 chat-z-50 chat-transition-all chat-duration-300 hover:chat-scale-105 active:chat-scale-95',
         'chat-bg-widget-primary chat-text-white'
