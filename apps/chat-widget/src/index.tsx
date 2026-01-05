@@ -1,36 +1,13 @@
-import { cleanupWidget, eventBus, mountEmbedded, mountFloating } from './lib';
-import { setConfig, setOpen } from './store';
-import { SpectreAPI, SpectreConfig } from './types';
+import { spectreAPI } from './lib';
 
-const spectreAPI: SpectreAPI = {
-  open: () => setOpen(true),
-  close: () => setOpen(false),
-  toggle: () => eventBus.emit('chat:toggle'),
-  toggleTheme: () => eventBus.emit('chat:toggleTheme'),
+function boot() {
+  if (typeof window === 'undefined') return;
 
-  onOpen: (cb: () => void) => eventBus.on('chat:open', cb),
-  onClose: (cb: () => void) => eventBus.on('chat:close', cb),
-  onMessageSent: (cb: (data: any) => void) => eventBus.on('message:sent', cb),
+  // Prevent multiple initializations if already booted
+  if (window.spectre) return;
 
-  init: (config: SpectreConfig) => {
-    cleanupWidget();
+  window.spectre = spectreAPI;
 
-    setConfig(config);
-
-    if (config.mode === 'embedded' && config.container) {
-      mountEmbedded(config.container);
-    } else {
-      mountFloating(config.container);
-    }
-  },
-};
-
-window.spectre = spectreAPI;
-
-/**
- * Auto-init from script attributes or URL query params
- */
-function autoInit() {
   const script =
     document.currentScript || document.querySelector('script[data-project-id]');
 
@@ -53,7 +30,7 @@ function autoInit() {
           (url.searchParams.get('mode') as 'floating' | 'embedded') || mode;
         container = url.searchParams.get('container') || container;
       } catch (e) {
-        // Ignore URL parse errors
+        console.warn('[Spectre] Failed to parse script URL params:', e);
       }
     }
 
@@ -68,4 +45,4 @@ function autoInit() {
   }
 }
 
-autoInit();
+boot();

@@ -1,7 +1,9 @@
 import { createContext } from 'preact';
-import { useContext, useEffect, useState } from 'preact/hooks';
+import { useContext, useEffect, useRef, useState } from 'preact/hooks';
 import { cn } from '../lib';
+import { hexToRgb } from '../lib/colors';
 import {
+  colors,
   isEmbedded,
   theme as themeSignal,
   toggleTheme as toggleThemeAction,
@@ -30,12 +32,43 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(themeSignal.value);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Subscribe to theme signal changes
     const unsubscribe = themeSignal.subscribe((newTheme) => {
       setTheme(newTheme);
     });
+    return unsubscribe;
+  }, []);
+
+  // Sync colors
+  useEffect(() => {
+    const applyColors = () => {
+      const el = containerRef.current;
+      const currentColors = colors.value;
+      if (!el || !currentColors) return;
+
+      if (currentColors.primary) {
+        const rgb = hexToRgb(currentColors.primary);
+        if (rgb) {
+          el.style.setProperty('--chat-primary', `${rgb.r} ${rgb.g} ${rgb.b}`);
+        }
+      }
+
+      if (currentColors.primaryForeground) {
+        const rgb = hexToRgb(currentColors.primaryForeground);
+        if (rgb) {
+          el.style.setProperty(
+            '--chat-primary-foreground',
+            `${rgb.r} ${rgb.g} ${rgb.b}`
+          );
+        }
+      }
+    };
+
+    // Apply on mount and when colors signal changes
+    const unsubscribe = colors.subscribe(applyColors);
     return unsubscribe;
   }, []);
 
@@ -47,6 +80,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <ThemeContext.Provider value={value}>
       <div
+        ref={containerRef}
         className={cn(
           'spectre-theme chat-font-sans chat-antialiased',
           theme === 'dark' && 'dark',

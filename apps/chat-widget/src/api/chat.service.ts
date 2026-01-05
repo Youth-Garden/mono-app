@@ -47,6 +47,10 @@ class ChatService {
       console.error('[Spectre] No Project ID found.');
       return;
     }
+    if (!config.apiUrl) {
+      console.error('[Spectre] No API URL specified.');
+      return;
+    }
 
     const tempId = generateId();
     const userMsg: Message = {
