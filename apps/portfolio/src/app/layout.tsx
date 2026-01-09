@@ -29,6 +29,7 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'QUAN TRAN | Full Stack Architecture',
     description:

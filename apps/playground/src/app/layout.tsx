@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'DevStudio - Universal Playground',
   description: 'A futuristic online code editor.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
