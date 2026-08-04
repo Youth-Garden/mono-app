@@ -1,13 +1,13 @@
-import { CodeIcon, Github, Globe, HomeIcon, NotebookIcon } from 'lucide-svelte';
+import { CodeIcon, Globe, HomeIcon } from 'lucide-svelte';
 // Navbar Icons
-import GithubSvg from '$lib/imgs/github.svg';
 import GithubDarkSvg from '$lib/imgs/github-dark.svg';
+import GithubSvg from '$lib/imgs/github.svg';
 
-import GmailSvg from '$lib/imgs/gmail.svg';
 import GmailDarkSvg from '$lib/imgs/gmail-dark.svg';
+import GmailSvg from '$lib/imgs/gmail.svg';
 
-import LinkedinSvg from '$lib/imgs/linkedin.svg';
 import LinkedinDarkSvg from '$lib/imgs/linkedin-dark.svg';
+import LinkedinSvg from '$lib/imgs/linkedin.svg';
 
 // Your resume data
 export let DATA = {
@@ -42,8 +42,6 @@ export let DATA = {
 		'Redis',
 		'Vercel',
 		'Turborepo',
-		'Cardano / Aiken',
-		'Polkadot',
 		'Web3'
 	],
 	navbar: [

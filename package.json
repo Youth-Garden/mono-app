@@ -1,5 +1,5 @@
 {
-  "name": "scroll-trigger-mono",
+  "name": "mono-app",
   "private": true,
   "scripts": {
     "dev:docs": "turbo run dev --filter=docs",
