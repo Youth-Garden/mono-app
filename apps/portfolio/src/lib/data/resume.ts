@@ -74,6 +74,13 @@ export let DATA = {
 				icon: GmailSvg,
 				navbar: true,
 				dark_icon: GmailDarkSvg
+			},
+			X: {
+				name: 'X',
+				url: 'https://github.com/Quantaphocpython',
+				icon: GithubSvg,
+				navbar: false,
+				dark_icon: GithubDarkSvg
 			}
 		}
 	},
