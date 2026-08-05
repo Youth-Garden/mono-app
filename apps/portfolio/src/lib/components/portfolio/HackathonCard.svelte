@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import ImageModal from '$lib/components/ui/ImageModal.svelte';
 	import { marked } from 'marked';
+
 	export let title: string;
 	export let description: string;
 	export let dates: string;
@@ -12,14 +14,23 @@
 		title: string;
 		href: string;
 	}[] = [];
+
+	let isModalOpen = false;
 </script>
 
 <li class="relative ml-10 py-4">
 	<div class="absolute -left-16 top-2 flex items-center justify-center rounded-full bg-white">
-		<Avatar.Root class="m-auto size-12 border">
-			<Avatar.Image src={image} alt={title} class="object-contain" />
-			<Avatar.Fallback>{title[0]}</Avatar.Fallback>
-		</Avatar.Root>
+		<button
+			type="button"
+			on:click={() => (isModalOpen = true)}
+			class="group rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+			title="Click to view full image"
+		>
+			<Avatar.Root class="m-auto size-12 border transition-transform duration-200 group-hover:scale-105">
+				<Avatar.Image src={image} alt={title} class="size-full object-cover object-center cursor-zoom-in" />
+				<Avatar.Fallback>{title[0]}</Avatar.Fallback>
+			</Avatar.Root>
+		</button>
 	</div>
 	<div class="flex flex-1 flex-col justify-start gap-1">
 		{#if dates}
@@ -47,4 +58,6 @@
 			{/each}
 		</div>
 	{/if}
+
+	<ImageModal src={image} alt={title} bind:isOpen={isModalOpen} />
 </li>

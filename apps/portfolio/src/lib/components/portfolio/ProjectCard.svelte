@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import Badge from '../ui/badge/badge.svelte';
+	import ImageModal from '$lib/components/ui/ImageModal.svelte';
 
 	let _class = '';
 	export { _class as class };
@@ -13,25 +14,38 @@
 	export let image: string = '';
 	export let video: string = '';
 	export let links: { icon: any; type: string; href: string }[] = [];
+
+	let isModalOpen = false;
 </script>
 
 <!-- Card -->
 <div
 	class="flex h-full flex-col overflow-hidden border transition-all duration-300 ease-out hover:shadow-lg rounded-lg bg-card text-card-foreground"
 >
-	<a href={href || '#'} class="block cursor-pointer">
+	<div class="relative h-44 w-full overflow-hidden bg-muted">
 		{#if video}
 			<video
-				class="pointer-events-none mx-auto h-40 w-full object-cover object-top"
+				class="pointer-events-none size-full object-cover object-center"
 				src={video}
 				autoplay
 				loop
 				muted
 			></video>
-		{:else}
-			<img class="h-40 w-full overflow-hidden object-cover object-top" src={image} alt={title} />
+		{:else if image}
+			<button
+				type="button"
+				on:click={() => (isModalOpen = true)}
+				class="group size-full text-left focus:outline-none"
+				title="Click to view full image"
+			>
+				<img
+					class="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105 cursor-zoom-in"
+					src={image}
+					alt={title}
+				/>
+			</button>
 		{/if}
-	</a>
+	</div>
 	<!-- Card Header -->
 	<div class="px-2 flex flex-col">
 		<div class="space-y-1">
@@ -77,3 +91,5 @@
 		{/if}
 	</div>
 </div>
+
+<ImageModal src={image} alt={title} bind:isOpen={isModalOpen} />
