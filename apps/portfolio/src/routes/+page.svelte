@@ -41,16 +41,15 @@
 					<BlurFade
 						delay={BLUR_FADE_DELAY}
 						class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
-						yOffset={8}>Hi, I'm Bhide 👋</BlurFade
+						yOffset={8}>Hi, I'm {DATA.name.split(' ')[DATA.name.split(' ').length - 1]} 👋</BlurFade
 					>
 					<BlurFade class="max-w-[600px] md:text-xl" delay={BLUR_FADE_DELAY}
-						>Software Engineer turned Entrepreneur. I love building things and helping people. Very
-						active on Twitter.</BlurFade
+						>{DATA.description}</BlurFade
 					>
 				</div>
 				<BlurFade delay={BLUR_FADE_DELAY}>
 					<Avatar.Root class="size-28 border">
-						<Avatar.Image alt={DATA.name} src={DATA.avatarUrl} />
+						<Avatar.Image alt={DATA.name} src={DATA.avatarUrl} class="object-contain bg-white" />
 						<Avatar.Fallback>{DATA.initials}</Avatar.Fallback>
 					</Avatar.Root>
 				</BlurFade>

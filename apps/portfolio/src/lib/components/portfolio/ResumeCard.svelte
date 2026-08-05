@@ -40,7 +40,7 @@
 					>
 						{company}
 						{#if badges?.length > 0 && badges[0] !== ''}
-							<span class="inline-flex gap-x-1">
+							<span class="inline-flex gap-x-1 ml-2">
 								{#each badges as badge, index}
 									<Badge variant="secondary" class="align-middle text-xs" key={index}>
 										{badge}

@@ -18,9 +18,9 @@ export let DATA = {
 	location: 'Ho Chi Minh City, Vietnam',
 	locationLink: 'https://www.google.com/maps/place/Ho+Chi+Minh+City',
 	description:
-		'Full Stack & Web3 Developer | Building immutable ledgers and pixel-perfect interfaces with high performance and precision.',
+		'Full Stack Developer (Frontend Focus) from Vietnam specializing in modern web technologies and decentralized systems.',
 	summary:
-		'Frontend & Full Stack Software Engineer specializing in modern web ecosystems (Next.js, SvelteKit, NestJS, TypeScript) and decentralized applications (Cardano, Polkadot, Web3). Passionate about performance, UI/UX precision, and winning competitive hackathons.',
+		'Full Stack Developer with a strong Frontend focus from Vietnam, passionate about decentralized systems and modern web technologies.\n\nCurious, hands-on, and always exploring new ways to build software that feels effortless, reliable, and user-focused. I enjoy tackling challenges, collaborating with teams, and continuously pushing the boundaries of what web applications can achieve.\n\nI specialize in JavaScript, TypeScript, React, Next.js, SvelteKit, and NestJS, with practical experience in building both frontend and backend solutions. My strong English communication skills allow me to work effectively in collaborative environments and contribute meaningfully to team success.',
 	avatarUrl: '/me.jpg',
 	skills: [
 		'TypeScript',
@@ -110,10 +110,10 @@ export let DATA = {
 	],
 	education: [
 		{
-			school: 'University of Transport and Communications',
-			href: 'https://utc.edu.vn',
+			school: 'University of Transport Ho Chi Minh City (UTH)',
+			href: 'https://uth.edu.vn/',
 			degree: 'Bachelor of Information Technology (GPA: 3.64 / 4.0)',
-			logoUrl: '',
+			logoUrl: '/experiences/uth/logo.png',
 			start: '2022',
 			end: '2026'
 		}
@@ -189,7 +189,7 @@ export let DATA = {
 					icon: Globe
 				}
 			],
-			image: '/rewards/reward-2.jpg',
+			image: '/rewards/polkadot/banner.png',
 			video: ''
 		}
 	],
@@ -200,7 +200,7 @@ export let DATA = {
 			location: 'Vietnam / Global',
 			description:
 				'Awarded $3,000 prize for developing InquireA, a blockchain-based Q&A creator platform.',
-			image: '/rewards/builder-jam/reward-1.jpg',
+			image: '/rewards/builder-jam/banner.png',
 			win: '1st Place / $3,000 Reward',
 			links: [
 				{
@@ -221,7 +221,7 @@ export let DATA = {
 			location: 'Vietnam',
 			description:
 				'Awarded $500 Runner-up Prize for HeartGive fundraising smart contract platform built on Cardano & Aiken.',
-			image: '/rewards/cardano/cardano_runner-up.jpg',
+			image: '/rewards/cardano/banner.png',
 			win: 'Runner-up / $500 Reward',
 			links: [
 				{
@@ -242,7 +242,7 @@ export let DATA = {
 			location: 'Vietnam',
 			description:
 				'Awarded Best UI/UX Award ($500) for Transocean ship tracking logistics blockchain platform.',
-			image: '/rewards/reward-2.jpg',
+			image: '/rewards/polkadot/banner.png',
 			win: 'Best UI/UX Award / $500 Reward',
 			links: [
 				{
