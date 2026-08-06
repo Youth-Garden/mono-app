@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import Lenis from 'lenis';
 	import Navbar from '$lib/components/portfolio/Navbar.svelte';
-	import ImageModal from '$lib/components/ui/ImageModal.svelte';
-	import ProjectDetailModal from '$lib/components/ui/ProjectDetailModal.svelte';
+	import ModalProvider from '$lib/components/ui/ModalProvider.svelte';
+	import { modalStack } from '$lib/stores/modalStore';
 	import '../app.css';
 	import { ModeWatcher, setMode } from 'mode-watcher';
 
@@ -29,11 +29,20 @@
 			lenis?.destroy();
 		};
 	});
+
+	$: if (typeof window !== 'undefined') {
+		if ($modalStack.length > 0) {
+			lenis?.stop();
+			document.body.style.overflow = 'hidden';
+		} else {
+			lenis?.start();
+			document.body.style.overflow = '';
+		}
+	}
 </script>
 
 <ModeWatcher />
-<ImageModal />
-<ProjectDetailModal />
+<ModalProvider />
 <div class="relative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24">
 	<slot></slot>
 	<Navbar />

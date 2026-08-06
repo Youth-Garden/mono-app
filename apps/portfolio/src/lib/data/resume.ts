@@ -34,6 +34,10 @@ export let DATA = {
 		{ name: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
 		{ name: 'Shadcn UI', url: 'https://ui.shadcn.com/' },
 		{ name: 'NestJS', url: 'https://nestjs.com/' },
+		{ name: 'Ethers.js', url: 'https://docs.ethers.org/v5/' },
+		{ name: 'WalletConnect', url: 'https://walletconnect.com/' },
+		{ name: 'Viem / Wagmi', url: 'https://viem.sh/' },
+		{ name: 'Web3.js', url: 'https://web3js.org/' },
 		{ name: 'Prisma', url: 'https://www.prisma.io/' },
 		{ name: 'PostgreSQL', url: 'https://www.postgresql.org/' },
 		{ name: 'MongoDB', url: 'https://www.mongodb.com/' },
@@ -41,8 +45,7 @@ export let DATA = {
 		{ name: 'AWS', url: 'https://aws.amazon.com/' },
 		{ name: 'Redis', url: 'https://redis.io/' },
 		{ name: 'Vercel', url: 'https://vercel.com/' },
-		{ name: 'Turborepo', url: 'https://turbo.build/repo' },
-		{ name: 'Web3', url: 'https://web3js.org/' }
+		{ name: 'Turborepo', url: 'https://turbo.build/repo' }
 	],
 	navbar: [{ href: '/', icon: HomeIcon, label: 'Home' }],
 	contact: {
