@@ -1,4 +1,4 @@
-import { Globe, HomeIcon } from 'lucide-svelte';
+import { Globe, HomeIcon, Github, Linkedin, Send, Mail } from 'lucide-svelte';
 // Navbar Icons
 import GithubDarkSvg from '$lib/imgs/github-dark.svg';
 import GithubSvg from '$lib/imgs/github.svg';
@@ -47,7 +47,7 @@ export let DATA = {
 		{ name: 'Vercel', url: 'https://vercel.com/' },
 		{ name: 'Turborepo', url: 'https://turbo.build/repo' }
 	],
-	navbar: [{ href: '/', icon: HomeIcon, label: 'Home' }],
+	navbar: [],
 	contact: {
 		email: 'hoangquan.tran.work@gmail.com',
 		tel: '',
@@ -56,6 +56,7 @@ export let DATA = {
 				name: 'GitHub',
 				url: 'https://github.com/Quantaphocpython',
 				icon: GithubSvg,
+				component: Github,
 				navbar: true,
 				dark_icon: GithubDarkSvg
 			},
@@ -63,6 +64,7 @@ export let DATA = {
 				name: 'LinkedIn',
 				url: 'https://www.linkedin.com/in/qu%C3%A2n-tr%E1%BA%A7n-714134398/',
 				icon: LinkedinSvg,
+				component: Linkedin,
 				navbar: true,
 				dark_icon: LinkedinDarkSvg
 			},
@@ -70,6 +72,7 @@ export let DATA = {
 				name: 'Telegram',
 				url: 'https://t.me/Kaitoudicode',
 				icon: TelegramSvg,
+				component: Send,
 				navbar: true,
 				dark_icon: TelegramDarkSvg
 			},
@@ -77,6 +80,7 @@ export let DATA = {
 				name: 'Send Email',
 				url: 'mailto:hoangquan.tran.work@gmail.com',
 				icon: GmailSvg,
+				component: Mail,
 				navbar: true,
 				dark_icon: GmailDarkSvg
 			}
@@ -248,6 +252,24 @@ export let DATA = {
 					href: 'https://www.facebook.com/share/1AuxKKaVgQ/'
 				}
 			]
+		}
+	],
+	certifications: [
+		{
+			title: 'Google Cloud Skill Boost',
+			issuer: 'Google',
+			dates: '2024',
+			image: '/certificates/GG-cloud-skill-boost-Certificaton.jpg',
+			description: 'Completed Google Cloud Skill Boost hands-on labs and cloud architecture modules.'
+		},
+		{
+			title: 'Excellent Student Award',
+			issuer: 'University of Transport Ho Chi Minh City (UTH)',
+			dates: '2023',
+			image: '/experiences/uth/logo.png',
+			imageFit: 'contain',
+			imageBg: 'bg-white',
+			description: 'Awarded for outstanding academic performance and tech achievements at UTH.'
 		}
 	]
 };

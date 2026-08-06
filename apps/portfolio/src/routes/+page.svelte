@@ -6,6 +6,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import { DATA } from '$lib/data/resume';
+	import { openImageModal } from '$lib/stores/modalStore';
 	import { marked } from 'marked';
 	let BLUR_FADE_DELAY = 0.04;
 </script>
@@ -40,10 +41,10 @@
 				<div class="flex flex-1 flex-col space-y-1.5">
 					<BlurFade
 						delay={BLUR_FADE_DELAY}
-						class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+						class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-heading"
 						yOffset={8}>Hi, I'm {DATA.name.split(' ')[DATA.name.split(' ').length - 1]} 👋</BlurFade
 					>
-					<BlurFade class="max-w-[600px] md:text-xl" delay={BLUR_FADE_DELAY}
+					<BlurFade class="max-w-[600px] text-[1.125rem]/relaxed text-muted-foreground" delay={BLUR_FADE_DELAY}
 						>{DATA.description}</BlurFade
 					>
 				</div>
@@ -134,9 +135,7 @@
 						<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
 							Check out my latest work
 						</h2>
-						<p
-							class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
-						>
+						<p class="text-[1.125rem]/relaxed text-muted-foreground">
 							I&apos;ve worked on a variety of projects, from simple websites to complex web
 							applications. Here are a few of my favorites.
 						</p>
@@ -171,9 +170,7 @@
 							Hackathons
 						</div>
 						<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">I like building things</h2>
-						<p
-							class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
-						>
+						<p class="text-[1.125rem]/relaxed text-muted-foreground">
 							During university, I participated in {DATA.hackathons.length}+ hackathons, collaborating with talented developers to build innovative solutions over 1–2 months of intense building.
 						</p>
 					</div>
@@ -190,6 +187,42 @@
 			</BlurFade>
 		</div>
 	</section>
+	<section id="certifications">
+		<div class="w-full space-y-12 py-12">
+			<BlurFade delay={BLUR_FADE_DELAY}>
+				<div class="flex flex-col items-center justify-center space-y-4 text-center">
+					<div class="space-y-2">
+						<div class="inline-block rounded-lg bg-foreground px-3 py-1 text-sm text-background">
+							Certificates & Awards
+						</div>
+						<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">Certifications & Achievements</h2>
+						<p class="text-[1.125rem]/relaxed text-muted-foreground">
+							Official certifications, awards, and recognitions earned through hands-on technical excellence and academic performance.
+						</p>
+					</div>
+				</div>
+			</BlurFade>
+			{#if DATA.certifications && DATA.certifications.length > 0}
+				<div class="mx-auto grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-2">
+					{#each DATA.certifications as cert, id}
+						<BlurFade delay={BLUR_FADE_DELAY * 1.5 + id * 0.05}>
+							<ProjectCard
+								title={cert.title}
+								description={cert.description}
+								dates={cert.dates}
+								issuer={cert.issuer}
+								image={cert.image}
+								imageFit={cert.imageFit || 'cover'}
+								imageBg={cert.imageBg || ''}
+								type="certificate"
+								hoverLabel="View Certificate"
+							/>
+						</BlurFade>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	</section>
 	<section id="contact">
 		<div class="grid w-full items-center justify-center gap-4 px-4 py-12 text-center md:px-6">
 			<BlurFade delay={BLUR_FADE_DELAY * 2}>
@@ -198,9 +231,7 @@
 						Contact
 					</div>
 					<h2 class="text-3xl font-bold tracking-tight sm:text-5xl">Get in Touch</h2>
-					<p
-						class="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
-					>
+					<p class="mx-auto max-w-[600px] text-[1.125rem]/relaxed text-muted-foreground">
 						Want to chat? Just send an
 						<a href={DATA.contact.social.email.url} class="text-blue-500 hover:underline">
 							email

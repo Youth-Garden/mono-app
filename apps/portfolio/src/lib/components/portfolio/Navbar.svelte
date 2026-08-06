@@ -22,22 +22,6 @@
 		let:distance
 		let:mouseX
 	>
-		{#each DATA.navbar as item}
-			<DockIcon {magnification} {mouseX} {distance}>
-				<Tooltip.Root openDelay={300}>
-					<Tooltip.Trigger>
-						<Button href={item.href} variant="ghost" size="icon" class="size-12 rounded-full">
-							<!-- <item.icon class="size-4" /> -->
-							<svelte:component this={item.icon} class="size-[18px]" strokeWidth={1.5} />
-						</Button>
-					</Tooltip.Trigger>
-					<Tooltip.Content>
-						<p>{item.label}</p>
-					</Tooltip.Content>
-				</Tooltip.Root>
-			</DockIcon>
-		{/each}
-		<Separator orientation="vertical" class="h-full" />
 		{#each Object.entries(DATA.contact.social)
 			.filter(([_, social]) => social.navbar)
 			.map(([_, social]) => social) as social}
@@ -52,9 +36,10 @@
 							size="icon"
 							class="size-12 rounded-full"
 						>
-							<!-- <svelte:component this={social.icon} class="size-4" strokeWidth={1.5} /> -->
-							{#if social?.dark_icon && theme === 'dark'}
-								<img src={social?.dark_icon} class="size-4" alt={social.name} />
+							{#if social.component}
+								<svelte:component this={social.component} class="size-[18px]" strokeWidth={1.5} />
+							{:else if social?.dark_icon && theme === 'dark'}
+								<img src={social?.dark_icon} class="size-[18px]" alt={social.name} />
 							{:else}
 								<img src={social.icon} class="size-[18px]" alt={social.name} />
 							{/if}

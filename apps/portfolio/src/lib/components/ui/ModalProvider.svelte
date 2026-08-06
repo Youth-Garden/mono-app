@@ -11,6 +11,7 @@
 	}
 
 	$: activeModalIndex = $modalStack.length - 1;
+	$: hasImageModal = $modalStack.some((m) => m.type === 'image');
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -26,6 +27,19 @@
 		tabindex="-1"
 		aria-label="Close backdrop"
 	></div>
+
+	<!-- Fixed Top-Right Window Close Button for Image Lightbox (No jump / scale flicker) -->
+	{#if hasImageModal}
+		<button
+			type="button"
+			on:click={() => closeModal()}
+			class="fixed top-6 right-6 z-[99999] flex size-11 items-center justify-center rounded-full bg-black/80 text-white shadow-2xl backdrop-blur-md border border-white/20 transition-all hover:bg-black hover:scale-110 active:scale-95 cursor-pointer"
+			transition:fade={{ duration: 150 }}
+			aria-label="Close modal"
+		>
+			<X class="size-6" />
+		</button>
+	{/if}
 {/if}
 
 <!-- MODALS LAYER -->
@@ -49,7 +63,7 @@
 						/>
 						<div class="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent"></div>
 						
-						<!-- Close Button Top Right -->
+						<!-- Close Button Top Right of Project Modal -->
 						<button
 							type="button"
 							on:click={() => closeModal(modal.id)}
@@ -176,15 +190,6 @@
 			<div
 				class="flex max-h-[88vh] max-w-[92vw] flex-col items-center justify-center"
 			>
-				<button
-					type="button"
-					on:click={() => closeModal(modal.id)}
-					class="fixed top-5 right-5 z-[101] flex size-12 items-center justify-center rounded-full bg-black/60 text-white shadow-2xl backdrop-blur-md border border-white/20 transition-all hover:bg-black hover:scale-110 active:scale-95 cursor-pointer"
-					aria-label="Close image preview"
-				>
-					<X class="size-7" />
-				</button>
-
 				<div class="relative overflow-hidden rounded-2xl border border-white/20 bg-neutral-950/80 shadow-[0_25px_80px_rgba(0,0,0,0.8)] backdrop-blur-sm">
 					<img
 						src={imgData.src}

@@ -5,9 +5,7 @@
 	import ModalProvider from '$lib/components/ui/ModalProvider.svelte';
 	import { modalStack } from '$lib/stores/modalStore';
 	import '../app.css';
-	import { ModeWatcher, setMode } from 'mode-watcher';
-
-	setMode('dark');
+	import { ModeWatcher } from 'mode-watcher';
 
 	let lenis: Lenis | null = null;
 
@@ -41,7 +39,7 @@
 	}
 </script>
 
-<ModeWatcher />
+<ModeWatcher defaultMode="dark" />
 <ModalProvider />
 <div class="relative mx-auto min-h-screen max-w-2xl bg-background px-6 py-12 font-sans antialiased sm:py-24">
 	<slot></slot>

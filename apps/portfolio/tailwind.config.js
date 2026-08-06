@@ -55,7 +55,8 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: ['"Plus Jakarta Sans"', 'Inter var', ...fontFamily.sans]
+				sans: ['Geist', ...fontFamily.sans],
+				heading: ['"Plus Jakarta Sans"', 'Geist', ...fontFamily.sans]
 			}
 		}
 	},
