@@ -108,7 +108,16 @@
 			<div class="flex flex-wrap gap-1">
 				{#each DATA.skills as skill, id}
 					<BlurFade delay={BLUR_FADE_DELAY * id + 0.002}>
-						<Badge>{skill}</Badge>
+						<a
+							href={typeof skill === 'string' ? '#' : skill.url}
+							target="_blank"
+							rel="noreferrer"
+							class="inline-block transition-transform hover:scale-105"
+						>
+							<Badge class="hover:bg-primary/80 transition-colors">
+								{typeof skill === 'string' ? skill : skill.name}
+							</Badge>
+						</a>
 					</BlurFade>
 				{/each}
 			</div>
@@ -144,6 +153,7 @@
 							dates={project.dates}
 							tags={project.technologies}
 							image={project.image}
+							images={project.images}
 							video={project.video}
 							links={project.links}
 						/>
@@ -164,11 +174,7 @@
 						<p
 							class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 						>
-							During my time in university, I attended{' '}
-							{DATA.hackathons.length}+ hackathons. People from around the country would come
-							together and build incredible things in 2-3 days. It was eye-opening to see the
-							endless possibilities brought to life by a group of motivated and passionate
-							individuals.
+							During university, I participated in {DATA.hackathons.length}+ hackathons, collaborating with talented developers to build innovative solutions over 1–2 months of intense building.
 						</p>
 					</div>
 				</div>

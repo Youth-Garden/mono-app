@@ -52,9 +52,38 @@
 	* {
 		@apply border-border;
 	}
+	::selection {
+		background-color: hsl(var(--primary));
+		color: hsl(var(--primary-foreground));
+	}
+	html,
 	body {
 		@apply bg-background text-foreground;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	html::-webkit-scrollbar,
+	body::-webkit-scrollbar {
+		display: none;
 	}
 }
+
+html.lenis,
+html.lenis body {
+	height: auto;
+}
+
+.lenis.lenis-smooth {
+	scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+	overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+	overflow: hidden;
+}
+
 
 

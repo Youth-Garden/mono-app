@@ -44,7 +44,14 @@
 			<DockIcon {magnification} {mouseX} {distance}>
 				<Tooltip.Root openDelay={300}>
 					<Tooltip.Trigger>
-						<Button href={social.url} variant="ghost" size="icon" class="size-12 rounded-full">
+						<Button
+							href={social.url}
+							target="_blank"
+							rel="noreferrer"
+							variant="ghost"
+							size="icon"
+							class="size-12 rounded-full"
+						>
 							<!-- <svelte:component this={social.icon} class="size-4" strokeWidth={1.5} /> -->
 							{#if social?.dark_icon && theme === 'dark'}
 								<img src={social?.dark_icon} class="size-4" alt={social.name} />

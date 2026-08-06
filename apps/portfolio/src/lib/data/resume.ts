@@ -1,4 +1,4 @@
-import { CodeIcon, Globe, HomeIcon } from 'lucide-svelte';
+import { Globe, HomeIcon } from 'lucide-svelte';
 // Navbar Icons
 import GithubDarkSvg from '$lib/imgs/github-dark.svg';
 import GithubSvg from '$lib/imgs/github.svg';
@@ -8,6 +8,9 @@ import GmailSvg from '$lib/imgs/gmail.svg';
 
 import LinkedinDarkSvg from '$lib/imgs/linkedin-dark.svg';
 import LinkedinSvg from '$lib/imgs/linkedin.svg';
+
+import TelegramDarkSvg from '$lib/imgs/telegram-dark.svg';
+import TelegramSvg from '$lib/imgs/telegram.svg';
 
 // Your resume data
 export let DATA = {
@@ -23,31 +26,25 @@ export let DATA = {
 		'Full Stack Developer with a strong Frontend focus from Vietnam, passionate about decentralized systems and modern web technologies.\n\nCurious, hands-on, and always exploring new ways to build software that feels effortless, reliable, and user-focused. I enjoy tackling challenges, collaborating with teams, and continuously pushing the boundaries of what web applications can achieve.\n\nI specialize in JavaScript, TypeScript, React, Next.js, SvelteKit, and NestJS, with practical experience in building both frontend and backend solutions. My strong English communication skills allow me to work effectively in collaborative environments and contribute meaningfully to team success.',
 	avatarUrl: '/me.jpg',
 	skills: [
-		'TypeScript',
-		'JavaScript',
-		'Next.js',
-		'React',
-		'Svelte',
-		'SvelteKit',
-		'GSAP',
-		'Tailwind CSS',
-		'Shadcn UI',
-		'NestJS',
-		'Spring Boot',
-		'Prisma',
-		'PostgreSQL',
-		'MongoDB',
-		'Docker',
-		'AWS',
-		'Redis',
-		'Vercel',
-		'Turborepo',
-		'Web3'
+		{ name: 'TypeScript', url: 'https://www.typescriptlang.org/' },
+		{ name: 'JavaScript', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript' },
+		{ name: 'Next.js', url: 'https://nextjs.org/' },
+		{ name: 'React', url: 'https://react.dev/' },
+		{ name: 'GSAP', url: 'https://gsap.com/' },
+		{ name: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
+		{ name: 'Shadcn UI', url: 'https://ui.shadcn.com/' },
+		{ name: 'NestJS', url: 'https://nestjs.com/' },
+		{ name: 'Prisma', url: 'https://www.prisma.io/' },
+		{ name: 'PostgreSQL', url: 'https://www.postgresql.org/' },
+		{ name: 'MongoDB', url: 'https://www.mongodb.com/' },
+		{ name: 'Docker', url: 'https://www.docker.com/' },
+		{ name: 'AWS', url: 'https://aws.amazon.com/' },
+		{ name: 'Redis', url: 'https://redis.io/' },
+		{ name: 'Vercel', url: 'https://vercel.com/' },
+		{ name: 'Turborepo', url: 'https://turbo.build/repo' },
+		{ name: 'Web3', url: 'https://web3js.org/' }
 	],
-	navbar: [
-		{ href: '/', icon: HomeIcon, label: 'Home' },
-		{ href: '#projects', icon: CodeIcon, label: 'Projects' }
-	],
+	navbar: [{ href: '/', icon: HomeIcon, label: 'Home' }],
 	contact: {
 		email: 'hoangquan.tran.work@gmail.com',
 		tel: '',
@@ -66,19 +63,19 @@ export let DATA = {
 				navbar: true,
 				dark_icon: LinkedinDarkSvg
 			},
+			Telegram: {
+				name: 'Telegram',
+				url: 'https://t.me/Kaitoudicode',
+				icon: TelegramSvg,
+				navbar: true,
+				dark_icon: TelegramDarkSvg
+			},
 			email: {
 				name: 'Send Email',
 				url: 'mailto:hoangquan.tran.work@gmail.com',
 				icon: GmailSvg,
 				navbar: true,
 				dark_icon: GmailDarkSvg
-			},
-			X: {
-				name: 'X',
-				url: 'https://github.com/Quantaphocpython',
-				icon: GithubSvg,
-				navbar: false,
-				dark_icon: GithubDarkSvg
 			}
 		}
 	},
@@ -90,22 +87,22 @@ export let DATA = {
 			location: 'Ho Chi Minh City, Vietnam',
 			title: 'Frontend Developer',
 			logoUrl: '/experiences/alchemy/logo.png',
-			start: 'Apr 2024',
-			end: 'Present',
+			start: 'Apr 2025',
+			end: 'June 2026',
 			description:
-				'Constructed web interfaces, integrated APIs, and implemented blockchain features (token integration). Built creative UIs for short-term campaigns (15-30 days) to maximize user acquisition. Optimized state management, wrote unit tests, and enhanced UI/UX layouts. Developed AI chatbot interfaces to support customer service across multiple platforms (Instagram, X, Zalo, Facebook, Telegram).'
+				'As a Frontend-focused Developer, I bridge the gap between design and technical implementation. I specialize in building high-performance UIs, optimizing large-scale applications, and integrating Web3 features for a seamless user experience.'
 		},
 		{
-			company: 'Freelance',
+			company: 'Hopper SE',
 			href: '#',
-			badges: ['Remote'],
-			location: 'Ho Chi Minh City, Vietnam',
-			title: 'Full Stack Developer',
-			logoUrl: '',
-			start: '2024',
-			end: 'Present',
+			badges: ['Part-time'],
+			location: 'Vietnam',
+			title: 'Fullstack Developer',
+			logoUrl: '/experiences/hopper/logo.png',
+			start: '01/2025',
+			end: '01/2026',
 			description:
-				'Specialized in architecting and delivering high-performance web solutions for diverse business needs. Key projects include a comprehensive personal finance ecosystem with real-time tracking and analytics, as well as various custom enterprise dashboards. Focused on building scalable, type-safe applications using modern stacks (Next.js, NestJS) while ensuring pixel-perfect implementation and seamless user experiences across all devices.'
+				'Fullstack Developer contributing to a modern Fintech platform. Built scalable web applications, engineered type-safe APIs, and delivered high-performance user interfaces for seamless financial transactions.'
 		}
 	],
 	education: [
@@ -126,14 +123,7 @@ export let DATA = {
 			active: true,
 			description:
 				'Built a blockchain-based Q&A platform where user contributions are rewarded with tokens, ensuring every contribution adds value to the community. Awarded $3,000 Prize at Ancient8 Builder Jam.',
-			technologies: [
-				'Blockchain',
-				'Web3',
-				'Next.js',
-				'TypeScript',
-				'TailwindCSS',
-				'Q&A System'
-			],
+			technologies: ['Blockchain', 'Web3', 'Next.js', 'TypeScript', 'TailwindCSS', 'Q&A System'],
 			links: [
 				{
 					type: 'Website',
@@ -141,7 +131,15 @@ export let DATA = {
 					icon: Globe
 				}
 			],
-			image: '/rewards/builder-jam/reward-1.jpg',
+			image: '/rewards/builder-jam/claim-reward.jpg',
+			images: [
+				'/rewards/builder-jam/banner.png',
+				'/rewards/builder-jam/reward-1.jpg',
+				'/rewards/builder-jam/reward-2.jpg',
+				'/rewards/builder-jam/reward-3.jpg',
+				'/rewards/builder-jam/claim-reward.jpg',
+				'/rewards/builder-jam/inform-reward.jpg'
+			],
 			video: ''
 		},
 		{
@@ -151,13 +149,7 @@ export let DATA = {
 			active: true,
 			description:
 				'HeartGive is a blockchain-based fundraising platform enabling transparent donation management. Integrated with Cardano for traceability and verification. Smart contracts via Aiken automate fund allocation. Won Runner-up ($500) at Cardano Vietnam Hackathon 2024.',
-			technologies: [
-				'Cardano',
-				'Aiken',
-				'Smart Contracts',
-				'TypeScript',
-				'Consumer App'
-			],
+			technologies: ['Cardano', 'Aiken', 'Smart Contracts', 'TypeScript', 'Consumer App'],
 			links: [
 				{
 					type: 'Certificate',
@@ -166,6 +158,13 @@ export let DATA = {
 				}
 			],
 			image: '/rewards/cardano/cardano_runner-up.jpg',
+			images: [
+				'/rewards/cardano/banner.png',
+				'/rewards/cardano/cardano_runner-up.jpg',
+				'/rewards/cardano/cardano-runner-up-2.jpg',
+				'/rewards/cardano/certificate-1.jpg',
+				'/rewards/cardano/certificate-2.jpg'
+			],
 			video: ''
 		},
 		{
@@ -175,13 +174,7 @@ export let DATA = {
 			active: true,
 			description:
 				'Decentralized platform for identifying and tracking ports visited by ships during their journeys. Utilizing Polkadot blockchain technology for data transparency and immutability. Awarded Best UI/UX ($500) at Polkadot Vietnam Hackathon 2025.',
-			technologies: [
-				'Polkadot',
-				'Blockchain',
-				'UI/UX',
-				'Tracking',
-				'TypeScript'
-			],
+			technologies: ['Polkadot', 'Blockchain', 'UI/UX', 'Tracking', 'TypeScript'],
 			links: [
 				{
 					type: 'Announcement',
@@ -190,10 +183,27 @@ export let DATA = {
 				}
 			],
 			image: '/rewards/polkadot/banner.png',
+			images: ['/rewards/polkadot/banner.png'],
 			video: ''
 		}
 	],
 	hackathons: [
+		{
+			title: 'Polkadot Vietnam Hackathon 2025',
+			dates: '2025',
+			location: 'Vietnam',
+			description:
+				'Awarded Best UI/UX Award ($500) for Transocean ship tracking logistics blockchain platform.',
+			image: '/rewards/polkadot/banner.png',
+			win: 'Best UI/UX Award / $500 Reward',
+			links: [
+				{
+					title: 'Post',
+					icon: Globe,
+					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/'
+				}
+			]
+		},
 		{
 			title: 'Ancient8 Builder Jam',
 			dates: 'January 2025',
@@ -233,22 +243,6 @@ export let DATA = {
 					title: 'Certificate',
 					icon: Globe,
 					href: 'https://www.facebook.com/share/1AuxKKaVgQ/'
-				}
-			]
-		},
-		{
-			title: 'Polkadot Vietnam Hackathon 2025',
-			dates: '2025',
-			location: 'Vietnam',
-			description:
-				'Awarded Best UI/UX Award ($500) for Transocean ship tracking logistics blockchain platform.',
-			image: '/rewards/polkadot/banner.png',
-			win: 'Best UI/UX Award / $500 Reward',
-			links: [
-				{
-					title: 'Post',
-					icon: Globe,
-					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/'
 				}
 			]
 		}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Badge from '$lib/components/ui/badge/badge.svelte';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import ImageModal from '$lib/components/ui/ImageModal.svelte';
+	import { openImageModal } from '$lib/stores/modal';
 	import { marked } from 'marked';
 
 	export let title: string;
@@ -14,15 +14,13 @@
 		title: string;
 		href: string;
 	}[] = [];
-
-	let isModalOpen = false;
 </script>
 
 <li class="relative ml-10 py-4">
 	<div class="absolute -left-16 top-2 flex items-center justify-center rounded-full bg-white">
 		<button
 			type="button"
-			on:click={() => (isModalOpen = true)}
+			on:click={() => openImageModal(image, title)}
 			class="group rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
 			title="Click to view full image"
 		>
@@ -58,6 +56,4 @@
 			{/each}
 		</div>
 	{/if}
-
-	<ImageModal src={image} alt={title} bind:isOpen={isModalOpen} />
 </li>
