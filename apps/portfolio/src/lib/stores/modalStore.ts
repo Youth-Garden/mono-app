@@ -55,8 +55,22 @@ export function closeProjectModal() {
 	modalStack.update((stack) => stack.filter((item) => item.type !== 'project'));
 }
 
-export function openImageModal(src: string, alt: string = '') {
-	return openModal('image', { src, alt });
+export function openImageModal(
+	srcOrData: string | { images?: string[]; index?: number; src?: string; alt?: string },
+	alt: string = ''
+) {
+	if (typeof srcOrData === 'string') {
+		return openModal('image', { src: srcOrData, alt });
+	} else {
+		const images = srcOrData.images || (srcOrData.src ? [srcOrData.src] : []);
+		const index = srcOrData.index || 0;
+		return openModal('image', {
+			images,
+			index,
+			src: images[index] || srcOrData.src || '',
+			alt: srcOrData.alt || alt
+		});
+	}
 }
 
 export function closeImageModal() {
