@@ -16,6 +16,13 @@
 	export let end: string = '';
 	let isExpanded = false;
 
+	$: bullets = description
+		? description
+				.split('\n')
+				.map((line) => line.trim())
+				.filter(Boolean)
+		: [];
+
 	let handleClick = (e: MouseEvent) => {
 		if (description) {
 			e.preventDefault();
@@ -24,7 +31,7 @@
 	};
 </script>
 
-<a href={href || '#'} on:click={handleClick}>
+<a href={href || '#'} target={href && href !== '#' ? '_blank' : undefined} rel={href && href !== '#' ? 'noreferrer' : undefined} on:click={handleClick}>
 	<div class="flex rounded-lg bg-card text-card-foreground">
 		<div class="flex-none">
 			<Avatar.Root class="bg-muted-background m-auto size-12 border dark:bg-foreground">
@@ -75,7 +82,18 @@
 							easing: quartOut
 						}}
 					>
-						{description}
+						{#if bullets.length > 1}
+							<ul class="space-y-1.5 text-muted-foreground">
+								{#each bullets as bullet}
+									<li class="flex items-start gap-2 leading-relaxed">
+										<span class="select-none text-muted-foreground/70 font-mono">—</span>
+										<span class="flex-1">{bullet.replace(/^[•\-\*–—]\s*/, '')}</span>
+									</li>
+								{/each}
+							</ul>
+						{:else}
+							<p class="leading-relaxed text-muted-foreground">{description}</p>
+						{/if}
 					</div>
 				{/if}
 			{/if}

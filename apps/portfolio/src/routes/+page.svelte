@@ -233,7 +233,7 @@
 					<h2 class="text-3xl font-bold tracking-tight sm:text-5xl">Get in Touch</h2>
 					<p class="mx-auto max-w-[600px] text-[1.125rem]/relaxed text-muted-foreground">
 						Want to chat? Just send an
-						<a href={DATA.contact.social.email.url} class="text-blue-500 hover:underline">
+						<a href={DATA.contact.social.email.url} target="_blank" rel="noreferrer" class="text-blue-500 hover:underline">
 							email
 						</a>
 						and I'll respond whenever I can.

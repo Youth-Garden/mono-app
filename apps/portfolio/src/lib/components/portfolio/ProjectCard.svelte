@@ -123,6 +123,7 @@
 					<a
 						href={linkItem?.href}
 						target="_blank"
+						rel="noreferrer"
 						on:click|stopPropagation
 					>
 						<Badge class="flex gap-1 px-2 py-1 text-[10px] items-center justify-center hover:bg-primary/90 transition-all">
