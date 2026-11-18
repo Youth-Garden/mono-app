@@ -4,14 +4,11 @@
 	import { openProjectModal } from '$lib/stores/projectModal';
 	import { openImageModal } from '$lib/stores/modalStore';
 
-	let _class = '';
-	export { _class as class };
 	export let title: string;
 	export let href: string = '';
 	export let description: string = '';
 	export let dates: string = '';
 	export let tags: readonly string[] = [];
-	export let link: string = '';
 	export let image: string = '';
 	export let images: readonly string[] = [];
 	export let video: string = '';
@@ -48,35 +45,37 @@
 	tabindex="0"
 >
 	<!-- Media Header -->
-	<div class="relative h-44 w-full overflow-hidden bg-muted flex-none">
-		{#if video}
-			<video
-				class="pointer-events-none size-full object-cover object-center"
-				src={video}
-				autoplay
-				loop
-				muted
-			></video>
-		{:else if image}
-			{#if imageFit === 'contain'}
-				<div class="size-full flex items-center justify-center p-6 {imageBg || 'bg-white'}">
-					<img
-						class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-						src={image}
-						alt={title}
-					/>
-				</div>
-			{:else}
-				<div class="size-full">
-					<img
-						class="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-						src={image}
-						alt={title}
-					/>
-				</div>
+	{#if video || image}
+		<div class="relative h-44 w-full overflow-hidden bg-muted flex-none">
+			{#if video}
+				<video
+					class="pointer-events-none size-full object-cover object-center"
+					src={video}
+					autoplay
+					loop
+					muted
+				></video>
+			{:else if image}
+				{#if imageFit === 'contain'}
+					<div class="size-full flex items-center justify-center p-6 {imageBg || 'bg-white'}">
+						<img
+							class="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
+							src={image}
+							alt={title}
+						/>
+					</div>
+				{:else}
+					<div class="size-full">
+						<img
+							class="size-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+							src={image}
+							alt={title}
+						/>
+					</div>
+				{/if}
 			{/if}
-		{/if}
-	</div>
+		</div>
+	{/if}
 
 	<!-- Card Body -->
 	<div class="flex flex-1 flex-col px-3 py-3">

@@ -1,4 +1,4 @@
-import { Globe, HomeIcon, Github, Linkedin, Send, Mail } from 'lucide-svelte';
+import { Globe, HomeIcon, Github, Linkedin, Send, Mail, Phone } from 'lucide-svelte';
 // Navbar Icons
 import GithubDarkSvg from '$lib/imgs/github-dark.svg';
 import GithubSvg from '$lib/imgs/github.svg';
@@ -16,45 +16,51 @@ import TelegramSvg from '$lib/imgs/telegram.svg';
 export let DATA = {
 	name: 'Trần Hoàng Quân',
 	initials: 'THQ',
-	url: 'https://github.com/Quantaphocpython',
+	url: 'https://kaitou.is-a.dev',
 	img: '/me.jpg',
 	location: 'Ho Chi Minh City, Vietnam',
 	locationLink: 'https://www.google.com/maps/place/Ho+Chi+Minh+City',
 	description:
-		'Full Stack Developer (Frontend Focus) from Vietnam specializing in modern web technologies and decentralized systems.',
+		'Fullstack Developer with nearly 2 years of professional experience building fintech, blockchain, and healthcare products with NestJS, TypeScript, React, and React Native.',
 	summary:
-		'Full Stack Developer with a strong Frontend focus from Vietnam, passionate about decentralized systems and modern web technologies.\n\nCurious, hands-on, and always exploring new ways to build software that feels effortless, reliable, and user-focused. I enjoy tackling challenges, collaborating with teams, and continuously pushing the boundaries of what web applications can achieve.\n\nI specialize in JavaScript, TypeScript, React, Next.js, SvelteKit, and NestJS, with practical experience in building both frontend and backend solutions. My strong English communication skills allow me to work effectively in collaborative environments and contribute meaningfully to team success.',
+		'Fullstack developer with nearly 2 years of professional experience building fintech, blockchain, and healthcare products with NestJS, TypeScript, React, and React Native. Hands-on with authentication, rate limiting, input/output validation, payment flows, real-time features, and multichain Web3 (EVM, Solana, TON).\n\nThree-time blockchain hackathon winner who ships features end to end and tests his own work. Experienced in clean architecture, DDD, CQRS, and comfortable with AI-assisted development workflows (Copilot, Cursor, Claude).',
 	avatarUrl: '/me.jpg',
 	skills: [
 		{ name: 'TypeScript', url: 'https://www.typescriptlang.org/' },
 		{ name: 'JavaScript', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript' },
-		{ name: 'Next.js', url: 'https://nextjs.org/' },
 		{ name: 'React', url: 'https://react.dev/' },
-		{ name: 'GSAP', url: 'https://gsap.com/' },
-		{ name: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
-		{ name: 'Shadcn UI', url: 'https://ui.shadcn.com/' },
+		{ name: 'Next.js', url: 'https://nextjs.org/' },
+		{ name: 'React Native (Expo)', url: 'https://expo.dev/' },
 		{ name: 'NestJS', url: 'https://nestjs.com/' },
-		{ name: 'Ethers.js', url: 'https://docs.ethers.org/v5/' },
-		{ name: 'WalletConnect', url: 'https://walletconnect.com/' },
-		{ name: 'Viem / Wagmi', url: 'https://viem.sh/' },
-		{ name: 'Web3.js', url: 'https://web3js.org/' },
-		{ name: 'Prisma', url: 'https://www.prisma.io/' },
+		{ name: 'Fastify', url: 'https://fastify.dev/' },
+		{ name: 'Node.js', url: 'https://nodejs.org/' },
 		{ name: 'PostgreSQL', url: 'https://www.postgresql.org/' },
 		{ name: 'MongoDB', url: 'https://www.mongodb.com/' },
-		{ name: 'Docker', url: 'https://www.docker.com/' },
-		{ name: 'AWS', url: 'https://aws.amazon.com/' },
 		{ name: 'Redis', url: 'https://redis.io/' },
-		{ name: 'Vercel', url: 'https://vercel.com/' },
-		{ name: 'Turborepo', url: 'https://turbo.build/repo' }
+		{ name: 'Prisma', url: 'https://www.prisma.io/' },
+		{ name: 'TypeORM', url: 'https://typeorm.io/' },
+		{ name: 'Docker', url: 'https://www.docker.com/' },
+		{ name: 'Kafka & BullMQ', url: 'https://bullmq.io/' },
+		{ name: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
+		{ name: 'shadcn/ui', url: 'https://ui.shadcn.com/' },
+		{ name: 'Ant Design', url: 'https://ant.design/' },
+		{ name: 'TanStack Query', url: 'https://tanstack.com/query' },
+		{ name: 'Zustand & Redux', url: 'https://zustand.docs.pmnd.rs/' },
+		{ name: 'Socket.IO', url: 'https://socket.io/' },
+		{ name: 'Multichain Web3 (EVM, Solana, TON)', url: 'https://ethereum.org/' },
+		{ name: 'ethers.js & WalletConnect', url: 'https://docs.ethers.org/' },
+		{ name: 'Jest & Playwright', url: 'https://playwright.dev/' },
+		{ name: 'Turborepo', url: 'https://turbo.build/repo' },
+		{ name: 'AWS S3', url: 'https://aws.amazon.com/s3/' }
 	],
 	navbar: [],
 	contact: {
 		email: 'hoangquan.tran.work@gmail.com',
-		tel: '',
+		tel: '0938601892',
 		social: {
 			GitHub: {
 				name: 'GitHub',
-				url: 'https://github.com/Quantaphocpython',
+				url: 'https://github.com/quantaphocpython',
 				icon: GithubSvg,
 				component: Github,
 				navbar: true,
@@ -62,7 +68,7 @@ export let DATA = {
 			},
 			LinkedIn: {
 				name: 'LinkedIn',
-				url: 'https://www.linkedin.com/in/qu%C3%A2n-tr%E1%BA%A7n-714134398/',
+				url: 'https://www.linkedin.com/in/quan-tran-hoang-714134398',
 				icon: LinkedinSvg,
 				component: Linkedin,
 				navbar: true,
@@ -88,35 +94,47 @@ export let DATA = {
 	},
 	work: [
 		{
-			company: 'Alchemy',
+			company: 'Trieu An Hospital',
+			href: 'https://trieuan.com/',
+			badges: ['Contract'],
+			location: 'Ho Chi Minh City, Vietnam',
+			title: 'Software Engineer',
+			logoUrl: '/experiences/trieuan/logo.png',
+			start: 'Jul 2026',
+			end: 'Oct 2026',
+			description:
+				'• Built a cross-platform hospital app with React Native, Expo, and Expo Router, integrating a headless PHP backend and a legacy hospital information system (HIS); Zustand for client state, TanStack Query for server state.\n• Integrated VNPay and Stripe payments and prevented double payments: guarded payment-return handler so confirmation runs exactly once, and reconciled timed-out charges through background polling.\n• Implemented NFC-based scanning of Vietnam\'s chip-embedded citizen ID card (CCCD) with QR/barcode fallback, auto-filling patient info and cutting manual data entry by ~60%.\n• Designed a HIS data-mapping layer normalizing legacy API responses into consistent domain models.\n• Enforced access control and input safety: role-based route groups (patient, doctor, admin) with Expo Router guards, Yup-validated forms, OTP resend cooldown, and credentials in expo-secure-store.\n• Built multi-step appointment booking with React Hook Form, TanStack Query, push notifications, FlashList, Reanimated, and multilingual UI (i18n).'
+		},
+		{
+			company: 'Alchemy Technologies Ltd',
 			href: '#',
 			badges: ['Full-time'],
 			location: 'Ho Chi Minh City, Vietnam',
-			title: 'Frontend Developer',
+			title: 'Software Engineer',
 			logoUrl: '/experiences/alchemy/logo.png',
 			start: 'Apr 2025',
-			end: 'June 2026',
+			end: 'Jul 2026',
 			description:
-				'As a Frontend-focused Developer, I bridge the gap between design and technical implementation. I specialize in building high-performance UIs, optimizing large-scale applications, and integrating Web3 features for a seamless user experience.'
+				'• Developed production Next.js, React, and TypeScript apps for blockchain products, turning Figma designs into reusable, responsive components with Tailwind CSS and Ant Design.\n• Built multichain Web3 integration covering EVM chains (incl. Optimism), Solana, and TON: organized a provider layer for wallet auth, transaction signing, and smart-contract interactions (ethers.js, WalletConnect).\n• Improved Core Web Vitals through rendering-strategy tuning, code splitting, lazy loading, and memoization, reducing bundle size by 30% and raising Lighthouse performance from ~70 to 90+.\n• Implemented real-time features with Socket.IO for live data updates and event-driven interactions.\n• Built type-safe API integration layers with TypeScript and TanStack Query (Redux for global state).\n• Wrote unit, component, and end-to-end tests with Jest, React Testing Library, and Playwright, covering ~70% of core modules.\n• Worked daily in Agile sprints; used AI coding assistants (Copilot, Cursor, Claude) for debugging and code review.'
 		},
 		{
-			company: 'Hopper SE',
+			company: 'Hopper Solutions',
 			href: '#',
 			badges: ['Part-time'],
-			location: 'Vietnam',
+			location: 'Ho Chi Minh City, Vietnam',
 			title: 'Fullstack Developer',
 			logoUrl: '/experiences/hopper/logo.png',
-			start: '01/2025',
-			end: '01/2026',
+			start: 'Jan 2025',
+			end: 'Apr 2025',
 			description:
-				'Fullstack Developer contributing to a modern Fintech platform. Built scalable web applications, engineered type-safe APIs, and delivered high-performance user interfaces for seamless financial transactions.'
+				'• Developed modular backend features with NestJS and Fastify: REST APIs on Prisma and PostgreSQL following Clean Architecture, covering financial workflows.\n• Implemented JWT-based authentication and protected API routes, plus rate limiting on the API to limit abuse and brute-force attempts.\n• Built input/output filtering: request validation with class-validator DTOs, and response serialization with class-transformer.\n• Used Redis in the NestJS backend for caching to reduce repeated database reads.\n• Integrated AWS S3 for file upload and storage, connecting NestJS API with Next.js frontend.\n• Built fintech UI with Next.js, React, and Zustand: transaction workflows, Recharts dashboards, and data tables with infinite scrolling, sorting, and complex filtering.\n• Joined sprint planning and task estimation in an Agile Scrum team.'
 		}
 	],
 	education: [
 		{
 			school: 'University of Transport Ho Chi Minh City (UTH)',
 			href: 'https://uth.edu.vn/',
-			degree: 'Bachelor of Information Technology (GPA: 3.64 / 4.0)',
+			degree: 'B.S. in Information Technology | GPA: 3.66/4',
 			logoUrl: '/experiences/uth/logo.png',
 			start: '2022',
 			end: '2026'
@@ -124,13 +142,32 @@ export let DATA = {
 	],
 	projects: [
 		{
+			title: 'Lumen – Vocabulary Learning Platform',
+			href: 'https://github.com/quantaphocpython',
+			dates: 'Jul 2026 – Present',
+			active: true,
+			description:
+				'Full-stack English-learning platform for Vietnamese learners built as a Turborepo (NestJS + Fastify API, Next.js web app, PWA). Architected with DDD, CQRS, and Clean Architecture on TypeORM & PostgreSQL with Kafka and BullMQ for async jobs. Features SuperMemo SM-2 spaced-repetition engine, automated content pipeline with Oxford 5000 / Free Dictionary API, Anthropic API for reading/dictation generation, and Amazon Polly sentence-level Speech Marks synthesis.',
+			technologies: ['Next.js', 'NestJS', 'Fastify', 'PostgreSQL', 'TypeORM', 'Docker', 'Kafka', 'BullMQ', 'DDD / CQRS', 'Tailwind CSS', 'PWA'],
+			links: [
+				{
+					type: 'GitHub',
+					href: 'https://github.com/quantaphocpython',
+					icon: Globe
+				}
+			],
+			image: '',
+			images: [],
+			video: ''
+		},
+		{
 			title: 'InquireA - Q&A Creator Platform',
 			href: 'https://www.inquirea.tech/',
 			dates: 'Jan 2025',
 			active: true,
 			description:
-				'Built a blockchain-based Q&A platform where user contributions are rewarded with tokens, ensuring every contribution adds value to the community. Awarded $3,000 Prize at Ancient8 Builder Jam.',
-			technologies: ['Blockchain', 'Web3', 'Next.js', 'TypeScript', 'TailwindCSS', 'Q&A System'],
+				'Full-stack decentralized application built on smart contracts where user contributions are rewarded with tokens. Won 1st Place ($3,000 Prize) at Ancient8 Builder Jam 2025 (Consumer App track).',
+			technologies: ['Blockchain', 'Web3', 'Next.js', 'TypeScript', 'TailwindCSS', 'Smart Contracts'],
 			links: [
 				{
 					type: 'Website',
@@ -150,13 +187,32 @@ export let DATA = {
 			video: ''
 		},
 		{
-			title: 'HeartGive - Transparent Fundraising',
-			href: 'https://www.facebook.com/share/1GxEUHWjPd/',
-			dates: '2024',
+			title: 'Transocean - Decentralized Logistics',
+			href: 'https://www.facebook.com/share/p/1BzCCNaWtV/',
+			dates: 'Jan 2025',
 			active: true,
 			description:
-				'HeartGive is a blockchain-based fundraising platform enabling transparent donation management. Integrated with Cardano for traceability and verification. Smart contracts via Aiken automate fund allocation. Won Runner-up ($500) at Cardano Vietnam Hackathon 2024.',
-			technologies: ['Cardano', 'Aiken', 'Smart Contracts', 'TypeScript', 'Consumer App'],
+				'Decentralized platform for tracking visited shipping ports on the Polkadot blockchain with full data transparency and immutability. Awarded Best UI/UX Award among 12 finalist teams at Polkadot Vietnam Hackathon 2025.',
+			technologies: ['Polkadot', 'Blockchain', 'UI/UX', 'TypeScript', 'Tailwind CSS'],
+			links: [
+				{
+					type: 'Announcement',
+					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/',
+					icon: Globe
+				}
+			],
+			image: '/rewards/polkadot/banner.png',
+			images: ['/rewards/polkadot/banner.png'],
+			video: ''
+		},
+		{
+			title: 'HeartGive - Transparent Fundraising',
+			href: 'https://www.facebook.com/share/1GxEUHWjPd/',
+			dates: 'Dec 2024',
+			active: true,
+			description:
+				'Blockchain-based fundraising platform enabling transparent donation tracking and verification on Cardano, featuring smart contracts via Aiken for automated fund distribution. Won 2nd Place at Cardano Vietnam Hackathon 2024.',
+			technologies: ['Cardano', 'Aiken', 'Smart Contracts', 'TypeScript', 'Web3'],
 			links: [
 				{
 					type: 'Certificate',
@@ -173,50 +229,15 @@ export let DATA = {
 				'/rewards/cardano/certificate-2.jpg'
 			],
 			video: ''
-		},
-		{
-			title: 'Transocean - Decentralized Logistics',
-			href: 'https://www.facebook.com/share/p/1BzCCNaWtV/',
-			dates: '2025',
-			active: true,
-			description:
-				'Decentralized platform for identifying and tracking ports visited by ships during their journeys. Utilizing Polkadot blockchain technology for data transparency and immutability. Awarded Best UI/UX ($500) at Polkadot Vietnam Hackathon 2025.',
-			technologies: ['Polkadot', 'Blockchain', 'UI/UX', 'Tracking', 'TypeScript'],
-			links: [
-				{
-					type: 'Announcement',
-					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/',
-					icon: Globe
-				}
-			],
-			image: '/rewards/polkadot/banner.png',
-			images: ['/rewards/polkadot/banner.png'],
-			video: ''
 		}
 	],
 	hackathons: [
 		{
-			title: 'Polkadot Vietnam Hackathon 2025',
-			dates: '2025',
-			location: 'Vietnam',
-			description:
-				'Awarded Best UI/UX Award ($500) for Transocean ship tracking logistics blockchain platform.',
-			image: '/rewards/polkadot/banner.png',
-			win: 'Best UI/UX Award / $500 Reward',
-			links: [
-				{
-					title: 'Post',
-					icon: Globe,
-					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/'
-				}
-			]
-		},
-		{
-			title: 'Ancient8 Builder Jam',
+			title: 'Ancient8 Builder Jam 2025',
 			dates: 'January 2025',
 			location: 'Vietnam / Global',
 			description:
-				'Awarded $3,000 prize for developing InquireA, a blockchain-based Q&A creator platform.',
+				'Won top prize with InquireA, a full-stack decentralized application built on smart contracts (Consumer App track).',
 			image: '/rewards/builder-jam/banner.png',
 			win: '1st Place / $3,000 Reward',
 			links: [
@@ -233,13 +254,29 @@ export let DATA = {
 			]
 		},
 		{
-			title: 'Cardano Vietnam Hackathon 2024',
-			dates: '2024',
+			title: 'Polkadot Vietnam Hackathon 2025',
+			dates: 'January 2025',
 			location: 'Vietnam',
 			description:
-				'Awarded $500 Runner-up Prize for HeartGive fundraising smart contract platform built on Cardano & Aiken.',
+				'Recognized for the best interface among 12 finalist teams across the NFT, PayFi, and DeFi tracks; designed and built the UI of Transocean.',
+			image: '/rewards/polkadot/banner.png',
+			win: 'Best UI/UX Award / $500 Reward',
+			links: [
+				{
+					title: 'Post',
+					icon: Globe,
+					href: 'https://www.facebook.com/share/p/1BzCCNaWtV/'
+				}
+			]
+		},
+		{
+			title: 'Cardano Vietnam Hackathon 2024',
+			dates: 'December 2024',
+			location: 'Vietnam',
+			description:
+				'Placed second among 31 teams at the hackathon run by VBI Academy with the Cardano Foundation, delivering HeartGive platform.',
 			image: '/rewards/cardano/banner.png',
-			win: 'Runner-up / $500 Reward',
+			win: '2nd Place / $500 Reward',
 			links: [
 				{
 					title: 'Post',
@@ -256,11 +293,18 @@ export let DATA = {
 	],
 	certifications: [
 		{
-			title: 'Google Cloud Skill Boost',
-			issuer: 'Google',
-			dates: '2024',
+			title: 'Google Cloud Computing Foundations',
+			issuer: 'Google Cloud',
+			dates: '2025',
 			image: '/certificates/GG-cloud-skill-boost-Certificaton.jpg',
-			description: 'Completed Google Cloud Skill Boost hands-on labs and cloud architecture modules.'
+			description: 'Completed Google Cloud Computing Foundations covering cloud architecture, infrastructure, and core services.'
+		},
+		{
+			title: 'TOEIC Listening & Reading 725',
+			issuer: 'ETS / IIG Vietnam',
+			dates: '2026',
+			image: '/certificates/toeic-725.jpg',
+			description: 'Certified working English proficiency in listening (350) and reading (375) comprehension for professional environments.'
 		},
 		{
 			title: 'Excellent Student Award',

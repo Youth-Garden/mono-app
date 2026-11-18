@@ -62,6 +62,9 @@
 				{#if title}
 					<div class="font-sans text-xs">{title}</div>
 				{/if}
+				{#if subtitle}
+					<div class="font-sans text-xs text-muted-foreground">{subtitle}</div>
+				{/if}
 			</div>
 			{#if description}
 				{#if isExpanded}
